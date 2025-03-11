@@ -34,6 +34,7 @@ bool CreateConsGC(
 {
 	/** assigne the variable for good-circuit */
 	AssigneVarsGC();
+	printf("test");
 
 	/** create the good-circuit constraint */
 	for (int i = 0; i < n_net; i++)
