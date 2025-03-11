@@ -34,10 +34,9 @@ bool CreateConsGC(
 {
 	/** assigne the variable for good-circuit */
 	AssigneVarsGC();
-	printf("test");
 
 	/** create the good-circuit constraint */
-	for (int i = 0; i < n_net; i++)
+	/*for (int i = 0; i < n_net; i++)
 	{
 		switch (nl[i].type)
 		{
@@ -66,8 +65,8 @@ bool CreateConsGC(
 			printf("some gates are not supported. \n\n");
 
 			return TPG_MODEL_ERROR;
-		}
-	}
+		}*/
+	//}
 
 
 #ifdef __DEBUG_OPB_CONS_GC__
@@ -97,6 +96,12 @@ void AssigneVarsGC(
 	for (int i = 0; i < n_pi; i++) {
 		//pi[i]->varsgc:i番目の外部入力信号線に割り当てられた変数インデックス
 		pi[i]->varsgc = ++opb.constant.vars;
+		//PrintDebugMessage("x%d→%s varsgc\n", pi[i]->varsgc, pi[i]->name);
+	}
+	//疑似外部入力に変数インデックス割当て
+	for (int i = 0; i < n_ppi; i++) {
+		//pi[i]->varsgc:i番目の外部入力信号線に割り当てられた変数インデックス
+		ppi[i]->varsgc = ++opb.constant.vars;
 		//PrintDebugMessage("x%d→%s varsgc\n", pi[i]->varsgc, pi[i]->name);
 	}
 	/** assigne the variable for others */
