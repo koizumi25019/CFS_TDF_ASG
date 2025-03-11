@@ -14,9 +14,6 @@
 #define SOL_SEED          0
 #define SOL_TP            1
 
-#define CLASP_DIR          "clasp"
-#define CLASP_PBO_FILE     "pbo.txt"
-#define CLASP_LOG_FILE     "clasp_result.txt"
 #define CLASP_OKAY		  true
 #define CLASP_ERROR		  false
 #define CLASP_STATUS_ERROR -1

@@ -26,62 +26,27 @@ bool CLASP(
 	FILE* fileptr = (FILE*)NULL;
 	int resolving_flag = 0;
 	char txt_cmd[200];
-	/** call the CLASP */
-	//_CALL_CLASP_LIMIT_TIME_10_;
 
-	//while (true)
-	//{
-		//koizumiコメントアウト
-		/** open the "clasp log file" in read-mode */
-        //fileOpen(&fileptr, CLASP_LOG_FILE, "r");
-		
-		//clasp logファイルオープン
-		sprintf(txt_cmd, "%sclasp_log_mttg.txt", folder_out);
-		if ((fileptr = (fopen(txt_cmd, "r"))) == NULL) {
-			printf("【ERROR】:File open clasp_log_mttg.txt(clasp.c)\n");
-			return ERROR;
-		}
+	//clasp logファイルオープン
+	sprintf(txt_cmd, "%sclasp_log_mttg.txt", folder_out);
+	if ((fileptr = (fopen(txt_cmd, "r"))) == NULL) {
+		printf("【ERROR】:File open clasp_log_mttg.txt(clasp.c)\n");
+		return ERROR;
+	}
 
+	/** get the objective value */
+	CLASPgetObjVal(fileptr);
 
-		/** get the objective value */
-		//CLASPgetObjVal(fileptr);
+	if (clasp.status == CLASP_UNSAT)
+	{
+		/** remove redeundant fault */
+		/** close the "clasp log file" in read-mode */
+		printf("CLASPエラー\n");
+		return ERROR;
+	}
 
-		//if (clasp.status == CLASP_UNSAT)
-		//{
-		//	/** remove redeundant fault */
-		//	/** close the "clasp log file" in read-mode */
-		//	break;
-		//}
-		//else if (clasp.status == CLASP_STATUS_UNKNOWN)
-		//{
-			/** unknown error */
-			/** close the "clasp log file" in read-mode */
-			//fclose(fileptr);
-
-			//if (resolving_flag == 0)
-			//{
-			//	/** resolving */
-			//	_CALL_CLASP_LIMIT_TIME_120_;
-			//	resolving_flag = 1;
-			//}
-			//else if (resolving_flag == 1)
-			//{
-			//	/** resolving */
-			//	_CALL_CLASP_SOL_1_;
-			//	resolving_flag = 2;
-			//}
-			//else
-			//{
-			//	return CLASP_ERROR;
-			//}
-		//}
-		//else
-		//{
-			/** get the SCIP solution */
-			CLASPgetSol(fileptr);
-			//break;
-	//	}
-	//}
+	/** get the CLASP solution */
+		CLASPgetSol(fileptr);
 
 	/** close the "scip log file" in read-mode */
 	fclose(fileptr);
