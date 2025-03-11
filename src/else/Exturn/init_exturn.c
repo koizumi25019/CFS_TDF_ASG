@@ -6,11 +6,17 @@
 #include<stdlib.h>
 #include<string.h>
 #include<direct.h>
+#include<sys/stat.h>
 
 //------------------------------------------------------------------------
 //自作インクルード
 //------------------------------------------------------------------------
 #include"../../header/Define.h"
+
+//int folder_exists(const char* name) {
+//	struct stat st;
+//	return (stat(name, &st) == 0 && (st.st_mode & S_IFDIR));
+//}
 
 //===================================================
 //関数名:init_exturn
@@ -67,7 +73,18 @@ int init_exturn(void) {
 	str_file = strlen(fi[FOLDER].name) - 1;
 	fi[FOLDER].name[str_file] = '\0';
 
-	if (_mkdir(fi[FOLDER].name) != 0) {
+	//char new_name[100];
+	//int cnt = 0;
+	//strcpy(new_name, folder_out);
+	//while (folder_exists(new_name)) {
+	//	cnt++;
+	//	snprintf(new_name, sizeof(new_name), "%s_%d", fi[FOLDER].name, cnt);
+	//}
+
+	//// folder_outをnew_nameに更新
+	//strcpy(folder_out, new_name);
+
+	if (_mkdir(folder_out) != 0) {
 		printf("【ERROR】:Please Delete Same name Folder(init_exturn.c)\n");
 		return ERROR;
 	}

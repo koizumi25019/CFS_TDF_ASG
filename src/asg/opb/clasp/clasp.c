@@ -39,14 +39,12 @@ bool CLASP(
 
 	if (clasp.status == CLASP_UNSAT)
 	{
-		/** remove redeundant fault */
-		/** close the "clasp log file" in read-mode */
-		printf("CLASPエラー\n");
-		return ERROR;
+		printf("CLASPエラー：制約式が間違っている可能性があります。CLASPのLOGファイルを確認してください\n");
+		exit(1);
 	}
 
 	/** get the CLASP solution */
-		CLASPgetSol(fileptr);
+	CLASPgetSol(fileptr);
 
 	/** close the "scip log file" in read-mode */
 	fclose(fileptr);

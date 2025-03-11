@@ -144,8 +144,7 @@ int mttg_main(void) {
 		//clasp情報取得
 		if (CLASP() != CLASP_OKAY) {
 			printf("\n	SYSTEM ERROR: solver error. ");
-			printf("Clasp status is unknown Redeundant fault for the Automatic Seed Generator...\n");
-				break;
+			return ERROR;
 		}
 
 		//故障シミュレーション用テストパターンファイルオープン
