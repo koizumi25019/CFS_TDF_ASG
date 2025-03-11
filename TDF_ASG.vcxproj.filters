@@ -1,0 +1,255 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="asg">
+      <UniqueIdentifier>{df5a1adf-1dcd-43dc-9803-51f47d521562}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="else">
+      <UniqueIdentifier>{81f2693f-9f96-4850-aece-33754a38ff28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="header">
+      <UniqueIdentifier>{72c7afbd-1ddd-4bb2-8287-b339980015b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lib">
+      <UniqueIdentifier>{057831c9-b309-4373-9aa9-b87b851ccdd4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="main">
+      <UniqueIdentifier>{e942188b-a45c-47f4-9021-662464897702}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mttg">
+      <UniqueIdentifier>{bc3e9010-c1f7-42c5-b104-186b90fe2aac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="opt">
+      <UniqueIdentifier>{7f40ac9a-6cd6-491e-823b-431f70e6b0bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="asg\opb">
+      <UniqueIdentifier>{0302b845-c58e-4058-9359-80c6307d1e8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="asg\opb\clasp">
+      <UniqueIdentifier>{8102beca-2690-4472-83cc-e3364fd94f91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="else\exturn">
+      <UniqueIdentifier>{5a95db5e-78ef-4ea0-b341-c55817ceb305}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="else\fsim">
+      <UniqueIdentifier>{0637a052-dc98-47e4-88ed-7fa21be424cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="else\levelize">
+      <UniqueIdentifier>{ec455717-a5ba-4e74-84f3-9584ecd06e7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="else\logic">
+      <UniqueIdentifier>{df03546e-683b-420d-af7b-8fe18d2ef6dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="else\netlist">
+      <UniqueIdentifier>{9dfd2512-836e-48de-ac4e-4bd41f819e2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="else\output">
+      <UniqueIdentifier>{65eb3d96-ee47-47e1-a5b9-04a3dadb307b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="else\logic\gate">
+      <UniqueIdentifier>{781d8a4f-433b-49df-aff9-27a1c99ec54c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mttg\minipbo">
+      <UniqueIdentifier>{1d239bc5-684e-48b9-bf89-9c33ccae6e50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mttg\untest_delete">
+      <UniqueIdentifier>{b48c0bd8-ff12-4702-a449-f717b661447e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\asg\opb\clasp\clasp.c">
+      <Filter>asg\opb\clasp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\else\Exturn\init_exturn.c">
+      <Filter>else\exturn</Filter>
+    </ClCompile>
+    <ClCompile Include="src\else\Fsim\fault_judge.c">
+      <Filter>else\fsim</Filter>
+    </ClCompile>
+    <ClCompile Include="src\else\Levelize\Level_stack.c">
+      <Filter>else\levelize</Filter>
+    </ClCompile>
+    <ClCompile Include="src\else\Levelize\levelize.c">
+      <Filter>else\levelize</Filter>
+    </ClCompile>
+    <ClCompile Include="src\else\Levelize\Qsort.c">
+      <Filter>else\levelize</Filter>
+    </ClCompile>
+    <ClCompile Include="src\else\Levelize\set_literal_id.c">
+      <Filter>else\levelize</Filter>
+    </ClCompile>
+    <ClCompile Include="src\else\Logic\Gate\and.c">
+      <Filter>else\logic\gate</Filter>
+    </ClCompile>
+    <ClCompile Include="src\else\Logic\Gate\fout.c">
+      <Filter>else\logic\gate</Filter>
+    </ClCompile>
+    <ClCompile Include="src\else\Logic\Gate\inv.c">
+      <Filter>else\logic\gate</Filter>
+    </ClCompile>
+    <ClCompile Include="src\else\Logic\Gate\nand.c">
+      <Filter>else\logic\gate</Filter>
+    </ClCompile>
+    <ClCompile Include="src\else\Logic\Gate\nor.c">
+      <Filter>else\logic\gate</Filter>
+    </ClCompile>
+    <ClCompile Include="src\else\Logic\Gate\or.c">
+      <Filter>else\logic\gate</Filter>
+    </ClCompile>
+    <ClCompile Include="src\else\Logic\logic_sim.c">
+      <Filter>else\logic</Filter>
+    </ClCompile>
+    <ClCompile Include="src\else\Logic\logic_sim_1time.c">
+      <Filter>else\logic</Filter>
+    </ClCompile>
+    <ClCompile Include="src\else\Logic\logic_sim_2time.c">
+      <Filter>else\logic</Filter>
+    </ClCompile>
+    <ClCompile Include="src\else\Logic\ppo_ppi_cat.c">
+      <Filter>else\logic</Filter>
+    </ClCompile>
+    <ClCompile Include="src\else\Logic\test_v_read.c">
+      <Filter>else\logic</Filter>
+    </ClCompile>
+    <ClCompile Include="src\else\Netlist\make_ppo_ppi.c">
+      <Filter>else\netlist</Filter>
+    </ClCompile>
+    <ClCompile Include="src\else\Netlist\Netlist.c">
+      <Filter>else\netlist</Filter>
+    </ClCompile>
+    <ClCompile Include="src\else\OUTPUT\file_output.c">
+      <Filter>else\output</Filter>
+    </ClCompile>
+    <ClCompile Include="src\else\OUTPUT\make_test_set.c">
+      <Filter>else\output</Filter>
+    </ClCompile>
+    <ClCompile Include="src\else\OUTPUT\pin_make.c">
+      <Filter>else\output</Filter>
+    </ClCompile>
+    <ClCompile Include="src\else\OUTPUT\standard_output.c">
+      <Filter>else\output</Filter>
+    </ClCompile>
+    <ClCompile Include="src\else\cmdline.c">
+      <Filter>else</Filter>
+    </ClCompile>
+    <ClCompile Include="src\else\Que.c">
+      <Filter>else</Filter>
+    </ClCompile>
+    <ClCompile Include="src\else\reset_flag.c">
+      <Filter>else</Filter>
+    </ClCompile>
+    <ClCompile Include="src\else\transition_delay_fault_set.c">
+      <Filter>else</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\lib.c">
+      <Filter>lib</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main\check_open_pass.c">
+      <Filter>main</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main\main.c">
+      <Filter>main</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main\open_stack.c">
+      <Filter>main</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mttg\MiniPBO\fault_select.c">
+      <Filter>mttg\minipbo</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mttg\MiniPBO\mini_calc_pbo_size.c">
+      <Filter>mttg\minipbo</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mttg\MiniPBO\mini_pbo_generate.c">
+      <Filter>mttg\minipbo</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mttg\Untest_delete\untest_calc_pbo_size.c">
+      <Filter>mttg\untest_delete</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mttg\Untest_delete\untest_pbo_generate.c">
+      <Filter>mttg\untest_delete</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mttg\mttg_calc_pbo_size.c">
+      <Filter>mttg</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mttg\mttg_check_wsa.c">
+      <Filter>mttg</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mttg\mttg_main.c">
+      <Filter>mttg</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mttg\mttg_pbo_generate.c">
+      <Filter>mttg</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mttg\specific_fault_range.c">
+      <Filter>mttg</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mttg\undet_fault_delete.c">
+      <Filter>mttg</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mttg\unsat_dicision.c">
+      <Filter>mttg</Filter>
+    </ClCompile>
+    <ClCompile Include="src\opt\opt.c">
+      <Filter>opt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\asg\opb\cons_lfsr.c">
+      <Filter>asg\opb</Filter>
+    </ClCompile>
+    <ClCompile Include="src\asg\opb\size.c">
+      <Filter>asg\opb</Filter>
+    </ClCompile>
+    <ClCompile Include="src\asg\init.c">
+      <Filter>asg</Filter>
+    </ClCompile>
+    <ClCompile Include="src\asg\read.c">
+      <Filter>asg</Filter>
+    </ClCompile>
+    <ClCompile Include="src\asg\opb\makeProbFilePS_clasp.c">
+      <Filter>asg\opb</Filter>
+    </ClCompile>
+    <ClCompile Include="src\asg\opb\cons_gc.c">
+      <Filter>asg\opb</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\asg\opb\clasp\clasp.h">
+      <Filter>asg\opb\clasp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\header\Command_Info.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="src\header\Define.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="src\header\Fault.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="src\header\Netlist.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="src\header\Stack.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\lib.h">
+      <Filter>lib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\opt\opt.h">
+      <Filter>opt</Filter>
+    </ClInclude>
+    <ClInclude Include="src\asg\opb\opb.h">
+      <Filter>asg\opb</Filter>
+    </ClInclude>
+    <ClInclude Include="src\asg\createSGmodel.h">
+      <Filter>asg</Filter>
+    </ClInclude>
+    <ClInclude Include="src\asg\init.h">
+      <Filter>asg</Filter>
+    </ClInclude>
+    <ClInclude Include="src\asg\polynomial.h">
+      <Filter>asg</Filter>
+    </ClInclude>
+    <ClInclude Include="src\asg\read.h">
+      <Filter>asg</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
