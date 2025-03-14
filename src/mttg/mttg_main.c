@@ -67,7 +67,7 @@ int mttg_main(void) {
 	standard_output();
 
 	/** create the constraint for good-circuit */
-	if (CreateConsGC() != TPG_MODEL_OKAY) return 0;
+	AssigneVarsGC();
 
     //LFSR+PS§–ñ®æ“¾
 	CreateLFSRmodel();
