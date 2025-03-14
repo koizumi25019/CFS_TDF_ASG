@@ -35,38 +35,6 @@ bool CreateConsGC(
 	/** assigne the variable for good-circuit */
 	AssigneVarsGC();
 
-	/** create the good-circuit constraint */
-	/*for (int i = 0; i < n_net; i++)
-	{
-		switch (nl[i].type)
-		{
-		case AND:	CreateConsGC_AND(&nl[i]);	break;
-
-		case NAND:	CreateConsGC_NAND(&nl[i]);	break;
-
-		case OR:	CreateConsGC_OR(&nl[i]);	break;
-
-		case NOR:	CreateConsGC_NOR(&nl[i]);	break;
-
-		case INV:	CreateConsGC_INV(&nl[i]);	break;
-
-		case BUF:
-		case FOUT:	CreateConsGC_BUF(&nl[i]);	break;
-
-     	case EXOR:	CreateConsGC_XOR(&nl[i]);	break;
-
-		case EXNOR:	CreateConsGC_XNOR(&nl[i]);	break;
-
-		case DFF:
-		case IN:								break;
-
-		default:
-			printf("\n	SYSTEM ERROR: test pattern model generation failed. ");
-			printf("some gates are not supported. \n\n");
-
-			return TPG_MODEL_ERROR;
-		}*/
-	//}
 
 
 #ifdef __DEBUG_OPB_CONS_GC__
