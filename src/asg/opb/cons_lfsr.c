@@ -218,9 +218,10 @@ bool CreateConsPhaseShifter(
 				/**	 xN	■---／／	／				*
 				/**	        　 ￣￣  　　　　		*
 				/*********************************************************************/					
-				for (int j = 0; j < (int)pow(2, nin); j++)												
+				for (int j = 0; j < (int)pow(2, nin); j++)//2のphase-shifterの入力数乗												
 				{
-					one_flag = 0;
+					one_flag = 0;//入力が0のときカウントされ、最終的にone_flagで入力の0の数を数えている
+					//one_flagはXORの出力が0か1かの判定に使用する
 
 					/** input +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+- */
 					for (int k = 0; k < nin; k++)														
@@ -233,7 +234,7 @@ bool CreateConsPhaseShifter(
 							if (k == 0)
 							{
 								sprintf_s(readdata.psnet.nlist[i].cons, MAXSIZE_CONS,
-									"%s1 x%d ", readdata.psnet.nlist[i].cons, in[k]);
+									"%s1 x%d ", readdata.psnet.nlist[i].cons, in[k]);//in[k]:Phase-Shifterの入力がLFSRのどの位置になっているかを格納
 							}
 							else
 							{
@@ -242,7 +243,7 @@ bool CreateConsPhaseShifter(
 							}
 						}
 						/** n-bit =0  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+ */						
-						else
+						else//入力が0の場合は否定~がつく
 						{
 							/**          ~x                                          */
 							if (k == 0)
@@ -262,13 +263,13 @@ bool CreateConsPhaseShifter(
 
 					/** output +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ */
 					/**     n-bit =1  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+ */
-					if (one_flag % 2 == 1)
+					if (one_flag % 2 == 1)//XORの出力が１になる場合
 					{
 						sprintf_s(readdata.psnet.nlist[i].cons, MAXSIZE_CONS,
 							/**   z   >=1									         */
 							"%s+1 x%d >=1; \n",
 							readdata.psnet.nlist[i].cons,
-							readdata.psnet.nlist[i].out_schain[mcycle]->varsgc
+							readdata.psnet.nlist[i].out_schain[mcycle]->varsgc//Phase - ShifterのXORの出力をスキャンチェーンの変数番号
 						);
 					}
 					/**     n-bit =0  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+ */
