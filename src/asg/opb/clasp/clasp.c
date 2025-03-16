@@ -43,6 +43,8 @@ bool CLASP(
 		exit(1);
 	}
 
+	printf("debag_clasp‚Ì‰ðŒ©‚Â‚©‚è‚Ü‚µ‚½‚æ^^");
+
 	/** get the CLASP solution */
 	CLASPgetSol(fileptr);
 

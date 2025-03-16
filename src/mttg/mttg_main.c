@@ -26,18 +26,17 @@ int mttg_main(void) {
 	char txt_cmd[200];
 	char cmd[500];
 	int unsat_flag = OFF;
-	UNDET_FAULT_LIST *head,*next;
+	UNDET_FAULT_LIST* head, * next;
 	int det_fault_clasp_num;
-	suffix = 100;
 
-    //シードファイルオープン
+	//シードファイルオープン
 	sprintf(txt_cmd, "%sseed.txt", folder_out);
 	if ((fout_seed = (fopen(txt_cmd, "w"))) == NULL) {
 		printf("【ERROR】:File open seed.txt(mttg_main.c)\n");
 		return ERROR;
 	}
 
-    //ファイル読み込み
+	//ファイル読み込み
 	if (ReadFile() != true) return ERROR;
 
 	//PINファイル生成
@@ -69,8 +68,10 @@ int mttg_main(void) {
 	/** create the constraint for good-circuit */
 	AssigneVarsGC();
 
-    //LFSR+PS制約式取得
+	//LFSR+PS制約式取得
 	CreateLFSRmodel();
+
+	printf("debag_テスト生成前のsuffixの値：%d\n", suffix);
 
 	//テスト生成
 	while (ufl_num != 0) {
@@ -98,7 +99,9 @@ int mttg_main(void) {
 		//正常回路の記述
 		pbo_generate_normal_c(fout_mttg_pbo);
 
+		printf("debag_正常回路記述後のsuffixの値：%d\n", suffix);
 		suffix = n_net * 2 + 1;
+		printf("debag_正常回路記述後のsuffixの値を上書き後：%d\n", suffix);
 		head = tfl;
 		i = 0;
 		while (head != NULL) {
@@ -138,7 +141,7 @@ int mttg_main(void) {
 		//	clasp ⇒ テストベクトル生成
 		//========================================================================
 		//Clasp
-		sprintf(cmd, "clasp.exe --verbose=2 %smttg_pbo.txt --time-limit %d > %sclasp_log_mttg.txt",folder_out, fi[TIME].value,folder_out);
+		sprintf(cmd, "clasp.exe --verbose=2 %smttg_pbo.txt --time-limit %d > %sclasp_log_mttg.txt", folder_out, fi[TIME].value, folder_out);
 		system(cmd);
 
 		//clasp情報取得
@@ -149,13 +152,13 @@ int mttg_main(void) {
 
 		//故障シミュレーション用テストパターンファイルオープン
 		sprintf(txt_cmd, "%stp.txt", folder_out);
-		FILE* fp = fopen(txt_cmd, "w");
-		if (fp == NULL) {
+		FILE* fout_tp = fopen(txt_cmd, "w");
+		if (fout_tp == NULL) {
 			printf("【ERROR】:File open tp.txt(mttg_main.c)\n");
 			return ERROR;
 		}
-		fprintf(fp, "%s\n", clasp.sol[SOL_TP]);
-		fclose(fp);
+		fprintf(fout_tp, "%s\n", clasp.sol[SOL_TP]);
+		fclose(fout_tp);
 
 		//低消費テストパターンか確認(消費電力指向時のみ)
 		if ((mttg_check_wsa() != SAT) && (strcmp(fi[LOW_POWER].name, "ON") == 0)) {
@@ -175,18 +178,18 @@ int mttg_main(void) {
 		//========================================================================
 		//	故障シミュレーション
 		//========================================================================
-		sprintf(cmd, "XID2.exe -c %s -tx %stp.txt -pin %spin.txt -fm TDF -fsim YES -dic %sfsim_log.txt -det %sxid_det.txt -undet %sxid_undet.txt", fi[CIRCUIT].name,folder_out, folder_out, folder_out,folder_out,folder_out);
+		sprintf(cmd, "XID2.exe -c %s -tx %stp.txt -pin %spin.txt -fm TDF -fsim YES -dic %sfsim_log.txt -det %sxid_det.txt -undet %sxid_undet.txt", fi[CIRCUIT].name, folder_out, folder_out, folder_out, folder_out, folder_out);
 		system(cmd);
 
 		//コンソールアプリケーションの初期化
 		system("cls");
 
 		//検出故障特定&検出故障数を未検出故障から削除
-		if ((det_fault_clasp_num=fault_judge()) == ERROR) {
+		if ((det_fault_clasp_num = fault_judge()) == ERROR) {
 			printf("【ERROR】:Fault Judge(mttg_main.c)\n");
 			return ERROR;
 		}
-		
+
 		//例外終了条件
 		if (det_fault_clasp_num == 0) {
 			unsat_flag = ON;
@@ -195,7 +198,6 @@ int mttg_main(void) {
 
 	}
 
-	fclose(fout_tp);
 	fclose(fout_seed);
 
 	return SUCCESS;
