@@ -43,7 +43,7 @@ void mttg_pbo_generate_min(FILE* fp) {
 	}
 	else if (strcmp(fi[LOW_POWER].name, "ON") == 0) {
 		fprintf(fp, "* #variable= %d ", size_pbo.val);
-		fprintf(fp, "#constraint= %d ", size_pbo.h_constraint + opb.total.cons);//koizumi’Ç‰Á
+		fprintf(fp, "#constraint= %d ", size_pbo.h_constraint + opb.total.cons);//koizumi’Ç‰Á + opb.total.cons
 		fprintf(fp, "#product= %d sizeproduct= %d\n", 2 * size_pbo.s_constraint, 4 * size_pbo.s_constraint);
 		fprintf(fp, "*\n");
 		fprintf(fp, "*  this is a dummy instance\n");
