@@ -99,9 +99,8 @@ int mttg_main(void) {
 		//正常回路の記述
 		pbo_generate_normal_c(fout_mttg_pbo);
 
-		printf("debag_正常回路記述後のsuffixの値：%d\n", suffix);
-		suffix = n_net * 2 + 1;
-		printf("debag_正常回路記述後のsuffixの値を上書き後：%d\n", suffix);
+		suffix = n_net * 2 + 101;
+
 		head = tfl;
 		i = 0;
 		while (head != NULL) {
