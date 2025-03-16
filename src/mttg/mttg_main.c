@@ -71,8 +71,6 @@ int mttg_main(void) {
 	//LFSR+PS制約式取得
 	CreateLFSRmodel();
 
-	printf("debag_テスト生成前のsuffixの値：%d\n", suffix);
-
 	//テスト生成
 	while (ufl_num != 0) {
 

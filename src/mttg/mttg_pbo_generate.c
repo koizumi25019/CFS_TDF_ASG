@@ -82,13 +82,9 @@ void pbo_generate_fdetect_c_mttg(FILE *fp, UNDET_FAULT_LIST* node) {
 		if (nl[i].fault_pass == YES && nl[i].ppo_flag == 1 ) {
 			//●EXOR
 			fprintf(fp, "1 ~x%d +1 ~x%d +1 ~x%d >=1;\n", nl[i].suf_2t, nl[i].suf_fc, suffix);
-			printf("1 ~x%d +1 ~x%d +1 ~x%d >=1;\n", nl[i].suf_2t, nl[i].suf_fc, suffix);
 			fprintf(fp, "1 x%d +1 x%d +1 ~x%d >=1;\n", nl[i].suf_2t, nl[i].suf_fc, suffix);
-			printf("1 x%d +1 x%d +1 ~x%d >=1;\n", nl[i].suf_2t, nl[i].suf_fc, suffix);
 			fprintf(fp, "1 x%d +1 ~x%d +1 x%d >=1;\n", nl[i].suf_2t, nl[i].suf_fc, suffix);
-			printf("1 x%d +1 ~x%d +1 x%d >=1;\n", nl[i].suf_2t, nl[i].suf_fc, suffix);
 			fprintf(fp, "1 ~x%d +1 x%d +1 x%d >=1;\n", nl[i].suf_2t, nl[i].suf_fc, suffix);
-			printf("1 ~x%d +1 x%d +1 x%d >=1;\n", nl[i].suf_2t, nl[i].suf_fc, suffix);
 			if (fc_ppo == 1) {
 				node->tfl_det_suffix = suffix;
 			}
@@ -101,14 +97,11 @@ void pbo_generate_fdetect_c_mttg(FILE *fp, UNDET_FAULT_LIST* node) {
 	if (fc_ppo != 1) {//fc_ppo:故障回路の外部出力の数が複数の場合制約式を追加。追加するのはORゲート
 		for (i = 0; (unsigned int)i < fc_ppo; i++) { 
 			fprintf(fp, "1 ~x%d +1 x%d >=1;\n", fdetct_in[i], suffix); 
-			printf("1 ~x%d +1 x%d >=1;\n", fdetct_in[i], suffix);
 		}
 		for (i = 0; (unsigned int)i < fc_ppo; i++) { 
 			fprintf(fp, "1 x%d +", fdetct_in[i]);
-			printf("1 x%d +", fdetct_in[i]);
 		}
 		fprintf(fp, "1 ~x%d >=1;\n", suffix);
-		printf("1 ~x%d >=1;\n", suffix);
 		node->tfl_det_suffix = suffix;
 		suffix++;
 	}
