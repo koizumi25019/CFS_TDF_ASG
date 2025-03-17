@@ -1,0 +1,2 @@
+TDF_ASG.exe -net ./input/circuit/s1423.v -fault ./input/rprf/s1423_rpr_10_1.txt -seed seed.txt -xor_tap ./input/xor_tap/tap_16.txt -scan_chain ./input/scan_chain/s1423_sc_16.txt -power ON -target_limit 300 -time 120 -rand ON -folder ./s1423_output/
+pause

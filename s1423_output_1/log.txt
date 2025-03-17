@@ -1,0 +1,20 @@
+//---------------------------------------------------
+//	    Transition Fault ASG   Information
+//---------------------------------------------------
+// Target Circuit              :./input/circuit/s1423.v
+// Fault Type                  :NODE
+// Test Generation             :STTG
+// Number of Total Faults      :667
+// Number of Untestable Faults :0
+// Number of High Power Faults :0
+// Number of Detected Faults   :667
+// Number of Undetected Faults :0
+// Number of Seeds             :150
+// Rate of Detected Faults     :100.00%
+// Elapsed time                :118.93sec
+// Time to abort solver        :300sec
+// Target faults limit         :1
+// Rand Optiont                :ON
+// Low Power Mode              :ON
+// WSA                         :20[Åì]
+//---------------------------------------------------
