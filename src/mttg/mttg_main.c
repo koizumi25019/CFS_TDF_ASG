@@ -138,7 +138,7 @@ int mttg_main(void) {
 		//	clasp ⇒ テストベクトル生成
 		//========================================================================
 		//Clasp
-		sprintf(cmd, "clasp.exe --verbose=2 %smttg_pbo.txt --time-limit %d > %sclasp_log_mttg.txt", folder_out, fi[TIME].value, folder_out);
+		sprintf(cmd, "clasp.exe %smttg_pbo.txt --time-limit %d > %sclasp_log_mttg.txt", folder_out, fi[TIME].value, folder_out);
 		system(cmd);
 
 		//clasp情報取得
@@ -179,7 +179,7 @@ int mttg_main(void) {
 		system(cmd);
 
 		//コンソールアプリケーションの初期化
-		system("cls");
+		//system("cls");
 
 		//検出故障特定&検出故障数を未検出故障から削除
 		if ((det_fault_clasp_num = fault_judge()) == ERROR) {
