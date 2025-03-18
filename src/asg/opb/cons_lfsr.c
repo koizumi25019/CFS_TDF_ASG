@@ -372,7 +372,7 @@ int PSgetInputBit(
 		if (bitintGetNbit(xor, (unsigned int)i) == true)
 		{
 			(*in)[index++] = i + 1;
-			printf("in[%d]=%d\n", index - 1, i + 1);
+			//printf("in[%d]=%d\n", index - 1, i + 1);
 		}
 	}
 
