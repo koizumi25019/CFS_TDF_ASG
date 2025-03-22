@@ -146,6 +146,14 @@ bool OPTset(
 		else if (strcmp(argv[i], "-xor_tap") == 0)
 			opt.file.input.xortap = _strdup(argv[++i]);
 
+		/** necessary */
+		else if (strcmp(argv[i], "-nece") == 0)
+			opt.file.input.necessary = _strdup(argv[++i]);
+
+		/** graph */
+		else if (strcmp(argv[i], "-graph") == 0)
+			opt.file.input.graph = _strdup(argv[++i]);
+
 		/** lfsr bits */
 		else if (strcmp(argv[i], "-b") == 0)
 			opt.file.input.lfsr = atoi(argv[++i]);

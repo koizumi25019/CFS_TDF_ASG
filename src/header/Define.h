@@ -193,7 +193,7 @@ NLIST* open_pop(void);
 //transition_delay_fault_set.c
 int transition_delay_fault_set(void);
 //fault_select.c
-int fault_select(int unsat_flag);
+int fault_select(int unsat_flag,int loop);
 //mini_calc_pbo_size.c
 PBO mini_calc_pbo_size(void);
 int mini_calc_hard_constraint(void);
@@ -216,7 +216,7 @@ int unsat_dicision(UNDET_FAULT_LIST* node, UNDET_FAULT_LIST* pre_node,int mode);
 //untest_delete_main.c
 int untest_delete_main(void);
 //fault_select.c
-int fault_select(int unsat_flag);
+int fault_select(int unsat_flag,int loop);
 //mttg_calc_pbo_size.c
 PBO mttg_calc_pbo_size(void);
 PBO mttg_calc_hard_constraint(void);

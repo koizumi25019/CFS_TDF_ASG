@@ -78,6 +78,7 @@
     <ClInclude Include="src\asg\opb\opb.h" />
     <ClInclude Include="src\asg\polynomial.h" />
     <ClInclude Include="src\asg\read.h" />
+    <ClInclude Include="src\asg\target.h" />
     <ClInclude Include="src\header\Command_Info.h" />
     <ClInclude Include="src\header\Define.h" />
     <ClInclude Include="src\header\Fault.h" />

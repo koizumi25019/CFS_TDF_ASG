@@ -41,6 +41,9 @@
 #define READER_NECESSARY_ON		if (opt.file.input.necessary != FILE_NOSET)
 #define READER_NECESSARY_OFF	if (opt.file.input.necessary == FILE_NOSET)
 
+#define READER_GRAPH_ON			if (opt.file.input.graph != FILE_NOSET)
+#define READER_GRAPH_OFF		if (opt.file.input.graph == FILE_NOSET)
+
 /** compare string and "End-Of-File" */
 #define COMP_EOF(string)		string != (char*)NULL
 
@@ -122,33 +125,33 @@ while (false);
 //-------------------------------------------------------------------------------------------------------------
 
 /** fault node structre */
-typedef struct FaultNode
-{
-	char* string;					 /**< string */
-	char* name;						 /**< name */
-	int					  type;			      /**< fault type */
-	int					  relax;			  /**< relaxation varaibales */
-	int					  detect;			  /**< detected??? */
-	NLIST* netptr;					 /**< pointer to netlist */
-	struct FaultNode* nextptr;				  /**< pointer to next node */
-	char* nece;						/**< info necessary */
-	BIT_INT_XP* necenet;			/**< bit int necessary */
-	BIT_INT* edge;				    /**< compatible edge */
-	int n_edge;					    /**< num edge */
-	int id;							/**< id */
-}
-FNODE;
+//typedef struct FaultNode
+//{
+//	char* string;					 /**< string */
+//	char* name;						 /**< name */
+//	int					  type;			      /**< fault type */
+//	int					  relax;			  /**< relaxation varaibales */
+//	int					  detect;			  /**< detected??? */
+//	NLIST* netptr;					 /**< pointer to netlist */
+//	struct FaultNode* nextptr;				  /**< pointer to next node */
+//	char* nece;						/**< info necessary */
+//	BIT_INT_XP* necenet;			/**< bit int necessary */
+//	BIT_INT* edge;				    /**< compatible edge */
+//	int n_edge;					    /**< num edge */
+//	int id;							/**< id */
+//}
+//FNODE;
 
 /** fault list structres */
-typedef struct FaultList
-{
-	int					  numrema;			  /**< number of remaining faults */
-	int					  numinit;			  /**< number of initial faults */
-	int					  numdete;			  /**< number of detected faults */
-	int					  numred;			  /**< number of redundant faults */
-	struct FaultNode* list[MAXSIZE_HASH]; /**< fault list */
-}
-FLIST;
+//typedef struct FaultList
+//{
+//	int					  numrema;			  /**< number of remaining faults */
+//	int					  numinit;			  /**< number of initial faults */
+//	int					  numdete;			  /**< number of detected faults */
+//	int					  numred;			  /**< number of redundant faults */
+//	struct FaultNode* list[MAXSIZE_HASH]; /**< fault list */
+//}
+//FLIST;
 
 /** phase-shifter net structres */
 typedef struct PhaseShifterNetList
@@ -194,7 +197,7 @@ NECESSARY;
 /** read data structres */
 typedef struct ReadData
 {
-	struct FaultList	  fault;			  /**< fault list data */
+	//struct FaultList	  fault;			  /**< fault list data */
 	struct PhaseShitfter  psnet;			  /**< phase-shifter net  */
 	struct LinearFeedbackShiftRegister lfsrnet;/** lfsr net */
 	struct Necessary	necenet;			  /**< necessary net */
@@ -210,11 +213,36 @@ typedef struct LFSRNetList
 }
 LFSR_NLIST;
 
+/** necessary net structre */
+typedef struct NecessaryNetlist
+{
+	char* string;			  /**< string */
+	int					  id;			      /**< id */
+	char* nece;				  /**< Info necessary */
+	char* name;				  /**< Name */
+	int					  type;				  /**< fault type */
+}
+NECE_NLIST;
+
+/** clique node structre */
+typedef struct CliqueNode
+{
+	int					  depth;			  /**< depth */
+	int					  select;			  /**< depth */
+	int					  num_r;			  /**< relaxation varaibales :ŠÉ˜a•Ï””H*/
+	BIT_INT* edge;			  //•Ó‚ªŒq‚ª‚Á‚Ä‚¢‚é‚©‚ðŽ¦‚·(edge==1‚È‚çŒq‚ª‚Á‚Ä‚¢‚é)
+	struct CliqueNode* nextptr;				  /**< pointer to next node */
+}
+CNODE;
+
 //-------------------------------------------------------------------------------------------------------------
 //	global variable
 //-------------------------------------------------------------------------------------------------------------
 READDATA			      readdata;			  /**< reading data */
+int						num_clique;			  /**< num of clique */
 int						num_seed;			  /**< num of seed */
+bool					num_clique_flag;
+clock_t					time_graph;
 
 //-------------------------------------------------------------------------------------------------------------
 //	prototype declaration
@@ -260,4 +288,22 @@ int getMaxScanLength(
 /** create the lfsr list */
 bool CreateLFSRList(
 	void
+);
+
+/** reading the necessary */
+bool ReadNecessary(
+	void
+);
+
+/** search for necessary node */
+bool searchNnode(
+	char* buffer,			  /**< buffer (key) */
+	//FNODE* tmp,				  /**< pointer to hash-fault list */
+	int no					  /**< No. */
+);
+
+CNODE* CreateCliqueNode(
+	int depth,				/* depth */
+	int select,				/* select no. */
+	int num					/* remain->num */
 );

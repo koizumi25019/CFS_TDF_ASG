@@ -251,5 +251,8 @@
     <ClInclude Include="src\asg\read.h">
       <Filter>asg</Filter>
     </ClInclude>
+    <ClInclude Include="src\asg\target.h">
+      <Filter>asg</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

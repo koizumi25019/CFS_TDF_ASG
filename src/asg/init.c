@@ -30,7 +30,7 @@ bool InitGlobalVars(
 {
 	InitGlobalVarsOPB();
 
-	InitGlobalVarsREADDATA();
+	//InitGlobalVarsREADDATA();
 
 	InitGlobalVarsCLASP();
 
@@ -70,22 +70,22 @@ void InitGlobalVarsOPB(
 //	@function	：	initialize the reading data
 //	@return		：	(void) 
 //*************************************************************************************************************
-void InitGlobalVarsREADDATA(
-	void
-)
-{
-	
-	for (int i = 0; i < MAXSIZE_HASH; i++)
-	{
-		readdata.fault.list[i] = (FNODE*)NULL;
-	}
-	readdata.fault.numdete = 0;
-	readdata.fault.numinit = 0;
-	readdata.fault.numrema = 0;
-	readdata.fault.numred = 0;
-	num_seed = 0;
-	return;
-}
+//void InitGlobalVarsREADDATA(
+//	void
+//)
+//{
+//	
+//	for (int i = 0; i < MAXSIZE_HASH; i++)
+//	{
+//		readdata.fault.list[i] = (FNODE*)NULL;
+//	}
+//	readdata.fault.numdete = 0;
+//	readdata.fault.numinit = 0;
+//	readdata.fault.numrema = 0;
+//	readdata.fault.numred = 0;
+//	num_seed = 0;
+//	return;
+//}
 
 //*************************************************************************************************************
 //	@name		：　InitGlobalVarsCLASP
