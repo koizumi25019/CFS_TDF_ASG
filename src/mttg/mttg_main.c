@@ -36,9 +36,6 @@ int mttg_main(void) {
 		return ERROR;
 	}
 
-	//ファイル読み込み
-	if (ReadFile() != true) return ERROR;
-
 	//PINファイル生成
 	if (pin_make() != SUCCESS) {
 		printf("【ERROR】:pin make(mttg_main.c)\n");
@@ -58,6 +55,9 @@ int mttg_main(void) {
 			return ERROR;
 		}
 	}
+
+	//ファイル読み込み
+	if (ReadFile() != true) return ERROR;
 
 	//全故障数の格納
 	all_num = ufl_num;

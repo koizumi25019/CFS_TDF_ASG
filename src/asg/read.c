@@ -36,7 +36,7 @@ bool ReadFile(
 )
 {
 	//koizumi’Ç‰Á
-/** create the detection infomation list */
+    /** create the detection infomation list */
 	detflag = (BIT_INT*)allocMemory(1, sizeof(BIT_INT));
 	detflag->int_num = all_num / MAXSIZE_BITINT + 1;
 	detflag->flag = (unsigned int*)allocMemory(detflag->int_num, sizeof(unsigned int));
@@ -534,14 +534,21 @@ bool ReadNecessary(
 	printf("\n");
 	if (cnt != /*readdata.fault.numinit*/ufl_num)
 	{
-		//PrintErrorMessage("\n	SYSTEM ERROR: Reading necessary file error. ");
-		//PrintErrorMessage("	Not enough necessary information. ");
-		//PrintErrorMessage("\n	num of necessary info = %d", cnt);
-		//PrintErrorMessage("		num of target fault   = %d\n", readdata.fault.numinit);
+		printf("\n	SYSTEM ERROR: Reading necessary file error. ");
+		printf("	Not enough necessary information. ");
+		printf("\n	num of necessary info = %d", cnt);
+		printf("		num of target fault   = %d\n", ufl_num);
 
 		return READ_ERROR;
 	}
-	else { readdata.necenet.num = cnt; }
+	else if(cnt==0){
+		printf("ERROR:ŒÌáƒŠƒXƒg‚Æˆê’v‚·‚é•K{Š„“–î•ñ‚ª‘¶İ‚µ‚Ü‚¹‚ñ\n");
+
+	    return READ_ERROR;
+	}
+	else {
+		readdata.necenet.num = cnt;
+	}
 	fclose(fileptr);
 	}
 

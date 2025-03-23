@@ -100,6 +100,9 @@ int cmdline(int argc, char *argv[])
 		else if (!strcmp(argv[i], "-scan_chain")) {
 			i++;
 		}
+		else if (!strcmp(argv[i], "-nece")) {//necessary
+			i++;
+		}
 
 		/* 未定義のオプションが指定された場合 */
 		else
