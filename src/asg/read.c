@@ -521,7 +521,6 @@ bool ReadNecessary(
 				printf("\rsearchNnode‚É“ü‚è‚Ü‚µ‚½F%d‰ñ–Ú",debag_count);
 				debag_count++;
 				//•K{Š„‚è“–‚Äî•ñæ“¾(ex:G16=0 G15=1......‚È‚Ç)
-				//
 				token2 = strtok_s(NULL, "\n\0", &context);
 
 				readdata.necenet.necelist[cnt].nece = (char*)allocMemory(MAXSIZE_BUFFER, sizeof(char));

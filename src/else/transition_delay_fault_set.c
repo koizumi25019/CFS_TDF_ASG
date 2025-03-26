@@ -26,6 +26,7 @@ int transition_delay_fault_set(void) {
 
 	int id = 0;
 	char line[100];//ファイルの1行分を取得
+	char n_line[100];//ファイルの一行分を順序変更用
 	char fault_type[10];
 	char net_name[50];
 	UNDET_FAULT_LIST* head = NULL;
@@ -41,6 +42,16 @@ int transition_delay_fault_set(void) {
 
 	// ファイルから各行を読み取って解析
 	while (fgets(line, sizeof(line), fp) != NULL) {//ファイルの1行分を取得
+
+		// 新しい未検出故障ノードを作成
+		node = (UNDET_FAULT_LIST*)malloc(sizeof(UNDET_FAULT_LIST));
+		if (node == NULL) {
+			printf("【ERROR】: Memory allocation failed\n");
+			fclose(fp);
+			return ERROR;
+		}
+
+		// sscanf で fault_type と net_name を読み取る
 		if (sscanf(line, "%s %s", net_name, fault_type) != 2) {
 			printf("【WARNING】: Invalid format in line: %s", line);
 			continue;//現在の反復(itertion)をスキップし、次の反復に移る
@@ -53,24 +64,23 @@ int transition_delay_fault_set(void) {
 			continue;
 		}
 
-		// 新しい未検出故障ノードを作成
-		node = (UNDET_FAULT_LIST*)malloc(sizeof(UNDET_FAULT_LIST));
-		if (node == NULL) {
-			printf("【ERROR】: Memory allocation failed\n");
-			fclose(fp);
-			return ERROR;
-		}
-
 		// 故障情報の格納 (NLIST の情報を UNDET_FAULT_LIST に反映)
 		node->netlist = net_info;  // NLIST のポインタをそのまま使用可能
 		strcpy(node->name, net_name);
 
 		// 故障タイプの設定
-		if (_stricmp(fault_type, "STR") == 0) {
+	    //nece.txtのstring:G16\tsa0\nと同じような記述形式にしたいので順序変更
+		if (strcmp(fault_type, "STR") == 0 || strcmp(fault_type, "sa0") == 0) {
 			node->type = STR;
+			sprintf(n_line, "%s\t%s\n", net_name, "sa0");
+			node->string = _strdup(n_line);
+			//STRなら故障回路の2時刻目の信号線はs-a-0と等価
 		}
-		else if (_stricmp(fault_type, "STF") == 0) {
+		else if (strcmp(fault_type, "STF") == 0 || strcmp(fault_type, "sa1") == 0) {
 			node->type = STF;
+			sprintf(n_line, "%s\t%s\n", net_name, "sa1");
+			node->string = _strdup(n_line);
+			//STFなら故障回路の2時刻目の信号線はs-a-1と等価
 		}
 		else {
 			printf("【WARNING】: Unknown fault type (%s)\n", fault_type);
