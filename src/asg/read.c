@@ -725,7 +725,7 @@ bool CreateCompatibleEdge(
 		}
 		//koizumi追加
 		ufl_i = ufl_i->next;
-		ufl_j = ufl;//ufl_jが更新されたままになってしまうのでポインタをリセット
+		ufl_j = ufl;//ufl_jのポインタが更新されたままになってしまうのでポインタをuflでリセット
 
 		printf("\r	            Generating graph progress  >> %.2f%%", ((float)(i + 1) / (float)ufl_num) * 100);
 	}
