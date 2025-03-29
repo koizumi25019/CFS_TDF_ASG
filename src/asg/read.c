@@ -760,8 +760,14 @@ bool RealTarget(
 	//int now_id = 0;		/*  initial remain number */
 	int flag = 0, select_flag = 0, end_flag = 0, d_flag = 0;
 	int count = 0;
+
 	int* select_id;
 	select_id = (int*)calloc(ufl_num + 1, sizeof(int));//select_id‚Íƒ\[ƒg‚³‚ê‚½W‡‚Ì”‚Æˆê’v‚·‚é‚Ì‚Åufl‚Å‚¢‚¢
+	if (select_id == NULL) {
+		printf("yERRORz: Memory allocation failed.\n");
+		return ERROR;
+	}
+
 	for (int i = 0; i < ufl_num; i++) select_id[i] = -1;
 
 

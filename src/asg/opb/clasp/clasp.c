@@ -39,7 +39,7 @@ bool CLASP(
 
 	if (clasp.status == CLASP_UNSAT)
 	{
-		printf("CLASPエラー：制約式が間違っている可能性があります。CLASPのLOGファイルを確認してください\n");
+		printf("CLASPエラー：UNSATです。解が存在しないか制約式が間違っています\n");
 		exit(1);
 	}
 
