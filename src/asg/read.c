@@ -523,7 +523,6 @@ bool ReadNecessary(
 				debag_count++;
 				//•K{Š„‚è“–‚Äî•ñŽæ“¾(ex:G16=0 G15=1......‚È‚Ç)
 				token2 = strtok_s(NULL, "\n\0", &context);
-				printf("searchNnode‚É“ü‚è‚Ü‚µ‚½%d", debag_count);
 				readdata.necenet.necelist[cnt].nece = (char*)allocMemory(MAXSIZE_BUFFER, sizeof(char));
 				//readdata.necenet.necelist[cnt].nece‚É‚ÍG16=0‚È‚Ç‚ªŠi”[
 				sprintf_s(readdata.necenet.necelist[cnt].nece, MAXSIZE_BUFFER, "%s", token2);
@@ -577,7 +576,6 @@ bool searchNnode(
 		if (!strcmp(current->string, buffer))
 		{
 			//searchNnode‚Ìcurrent->string(–¢ŒŸoŒÌá‚Ìstring)‚Æbuffer(G16_sa1)
-			printf("debag_current->string:%s\n",current->string);
 			readdata.necenet.necelist[no].string = (char*)allocMemory(MAXSIZE_BUFFER, sizeof(char));
 			sprintf_s(readdata.necenet.necelist[no].string, 200, "%s", current->string);
 			printf("%s\n", readdata.necenet.necelist[no].string);
