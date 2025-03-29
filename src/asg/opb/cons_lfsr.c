@@ -68,7 +68,7 @@ bool CreateLFSRmodel(
 	//2次元配列にすることで異なる種類のclaspの応答を管理
 	//clasp.sol[0]にはシードに関するclasp応答を、clasp.sol[1]にはテストパターンに対するclasp応答を格納するような感じ
 	clasp.sol[SOL_SEED] = (char*)allocMemory(readdata.lfsrnet.num + 1, sizeof(char));
-	clasp.sol[SOL_SEED][readdata.lfsrnet.num + 1] = '\0';
+	clasp.sol[SOL_SEED][readdata.lfsrnet.num] = '\0';
 
 #ifdef __DEBUG_OPB_CONS_PS__
 	_CALL_DEBUG_OPB_CONS_PS_

@@ -66,7 +66,7 @@ void mttg_pbo_generate_min(FILE* fp) {
 //=========================================================================
 void pbo_generate_fdetect_c_mttg(FILE *fp, UNDET_FAULT_LIST* node) {
 
-	int i, j, k;
+	int i, j/*, k*/;
 	unsigned int *fdetct_in;
 
 	if ((fdetct_in = (unsigned int*)calloc(fc_ppo, sizeof(unsigned int))) == NULL) {
@@ -115,7 +115,7 @@ void pbo_generate_fdetect_c_mttg(FILE *fp, UNDET_FAULT_LIST* node) {
 //=========================================================================
 void pbo_generate_fault_ex(FILE *fp, UNDET_FAULT_LIST* node,int mode) {
 
-	int i;
+	//int i;
 
 
 	//目標故障1個目(ハード)

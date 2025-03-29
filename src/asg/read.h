@@ -15,7 +15,7 @@
 #include <stdio.h>
 #include <time.h>
 
-//#include "target.h"
+#include "target.h"
 //#include "read.h"
 #include "../opt/opt.h"
 #include "../header/Netlist.h"

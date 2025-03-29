@@ -396,19 +396,21 @@ void CreateCompatibleInfo(
 	/* variable declaration */
 	int j = 0;
 	int type = 0;
-
+	UNDET_FAULT_LIST* current = ufl;
 
 	/** add necessary to structure  */
 
 	for (int i = 0; i < ufl_num; i++)
 	{
 		for (j = 0; j < readdata.necenet.num; j++) {
-			if (!strcmp(ufl->string, readdata.necenet.necelist[j].string))
+			//未検出故障リストの読み込んだ必須割当て情報の信号線名と故障タイプが一致すれば未検出故障リストの必須割当情報をコピーする
+			if (!strcmp(current->string, readdata.necenet.necelist[j].string))
 			{
-				sprintf_s(ufl->nece, MAXSIZE_BUFFER, "%s", readdata.necenet.necelist[j].nece);
+				sprintf_s(current->nece, MAXSIZE_BUFFER, "%s", readdata.necenet.necelist[j].nece);
 				break;
 			}
 		}
+		current = current->next;
 	}
 	return;
 }
@@ -500,13 +502,13 @@ bool ReadNecessary(
 			token2 = strtok_s(NULL, ", \n\0", &context);//token2:故障タイプ(ex:SF1,SF0)
 			if (!strcmp(token2, "SF0"))
 			{
-				type = SF0;
+				//type = SF0;おそらくいらない
 				sprintf_s(string, MAXSIZE_BUFFER, "%s\tsa0\n", string);
 				//string:G16\tsa0\n
 			}
 			else if (!strcmp(token2, "SF1"))
 			{
-				type = SF1;
+				//type = SF1;おそらくいらない
 				sprintf_s(string, MAXSIZE_BUFFER, "%s\tsa1\n", string);
 				//string:G16\tsa1\n
 			}
@@ -518,11 +520,10 @@ bool ReadNecessary(
 			//未検出故障リスト(線形)から一致する文字列を探索
 			if (searchNnode(string/*readdata.fault.list[hash]*/ , cnt) != NOT_FOUND)
 			{
-				printf("\rsearchNnodeに入りました：%d回目",debag_count);
 				debag_count++;
 				//必須割り当て情報取得(ex:G16=0 G15=1......など)
 				token2 = strtok_s(NULL, "\n\0", &context);
-
+				printf("searchNnodeに入りました%d", debag_count);
 				readdata.necenet.necelist[cnt].nece = (char*)allocMemory(MAXSIZE_BUFFER, sizeof(char));
 				//readdata.necenet.necelist[cnt].neceにはG16=0などが格納
 				sprintf_s(readdata.necenet.necelist[cnt].nece, MAXSIZE_BUFFER, "%s", token2);
@@ -530,7 +531,10 @@ bool ReadNecessary(
 			}
 		}
 	}
+	free(buffer);
+	free(string);
 	printf("\n");
+	printf("一致した文字列の数:%d\n", debag_count);
 	if (cnt != /*readdata.fault.numinit*/ufl_num)
 	{
 		printf("\n	SYSTEM ERROR: Reading necessary file error. ");
@@ -572,8 +576,11 @@ bool searchNnode(
 		//buffer:G16\tsa1\n
 		if (!strcmp(current->string, buffer))
 		{
+			//searchNnodeのcurrent->string(未検出故障のstring)とbuffer(G16_sa1)
+			printf("debag_current->string:%s\n",current->string);
 			readdata.necenet.necelist[no].string = (char*)allocMemory(MAXSIZE_BUFFER, sizeof(char));
 			sprintf_s(readdata.necenet.necelist[no].string, 200, "%s", current->string);
+			printf("%s\n", readdata.necenet.necelist[no].string);
 			readdata.necenet.necelist[no].id = no;
 			readdata.necenet.necelist[no].type = current->type;
 			readdata.necenet.necelist[no].name = (char*)allocMemory(200, sizeof(char));
@@ -674,7 +681,7 @@ bool CreateCompatibleEdge(
 
 	half_start = clock();
 	comp = (BIT_INT_XP*)allocMemory(1, sizeof(BIT_INT_XP));
-	comp->int_num = n_net / MAXSIZE_BITINT + 1;
+	comp->int_num = n_net / MAXSIZE_BITINT + 1;//信号線数/32+1
 	comp->x_buf = (unsigned int*)allocMemory(comp->int_num, sizeof(unsigned int));
 	comp->p_buf = (unsigned int*)allocMemory(comp->int_num, sizeof(unsigned int));
 	All_Bit_X_XP(comp);
@@ -720,6 +727,8 @@ bool CreateCompatibleEdge(
 		}
 		//koizumi追加
 		ufl_i = ufl_i->next;
+		ufl_j = ufl;//ufl_jが更新されたままになってしまうのでポインタをリセット
+
 		printf("\r	            Generating graph progress  >> %.2f%%", ((float)(i + 1) / (float)ufl_num) * 100);
 	}
 #ifdef __DEBUG_SET_TARGET_COMP__

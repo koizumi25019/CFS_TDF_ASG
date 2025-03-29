@@ -13,6 +13,7 @@
 //	include
 //-------------------------------------------------------------------------------------------------------------
 #include "read.h"
+#include "../header/Fault.h"
 
 
 //-------------------------------------------------------------------------------------------------------------
@@ -41,18 +42,18 @@
 //TARGET;
 
 /* sort structure*/
-//typedef struct Sorted {
-//	unsigned int num;						/**< number of sort strcuture */
-//	struct Edge* sort;					/**< sort list */
-//}SORTED;//頂点リストをソートしたもの
+typedef struct Sorted {
+	unsigned int num;						/**< number of sort strcuture */
+	struct Edge* sort;					/**< sort list */
+}SORTED;//頂点リストをソートしたもの
 
 /* edge structure*/
-//typedef struct Edge {
-//	unsigned int id;						/**< id *///頂点に一意に割り当てられるid？？
-//	unsigned int n_edge;					/*繋がっている辺の数*/
-//	//koizumi追加
-//	BIT_INT* edge;				    /**< compatible edge */
-//}EDGE;//頂点
+typedef struct Edge {
+	unsigned int id;						/**< id *///頂点に一意に割り当てられるid？？
+	unsigned int n_edge;					/*繋がっている辺の数*/
+	//koizumi追加
+	BIT_INT* edge;				    /**< compatible edge */
+}EDGE;//頂点
 //-------------------------------------------------------------------------------------------------------------
 //	global variable
 //-------------------------------------------------------------------------------------------------------------

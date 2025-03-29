@@ -26,7 +26,7 @@ int mttg_main(void) {
 	char txt_cmd[200];
 	char cmd[500];
 	int unsat_flag = OFF;
-	UNDET_FAULT_LIST* head, * next;
+	UNDET_FAULT_LIST* head/*, * next*/;
 	int det_fault_clasp_num;
 	int loop = 0;
 	//シードファイルオープン
@@ -56,11 +56,11 @@ int mttg_main(void) {
 		}
 	}
 
-	//ファイル読み込み
-	if (ReadFile() != true) return ERROR;
-
 	//全故障数の格納
 	all_num = ufl_num;
+
+	//ファイル読み込み
+	if (ReadFile() != true) return ERROR;
 
 	//標準出力
 	standard_output();

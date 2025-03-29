@@ -48,6 +48,4 @@ void make_ppo_ppi(void) {
 	//‹^—ŠO•”o—Í”İ’è
 	n_ppo = n_dff;
 
-	return SUCCESS;
-
 }

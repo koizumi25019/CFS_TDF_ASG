@@ -26,7 +26,7 @@
 //===================================================
 int init_exturn(void) {
 	char txt_cmd[300];
-	char* file_n;
+	//char* file_n;
 	int str_file;
 
 	//‘JˆÚŒÌáŠÖ˜A

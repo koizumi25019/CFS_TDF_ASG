@@ -23,7 +23,6 @@ int mttg_check_wsa(void) {
 	char cmd[500];
 	char str[20000];
 	char txt_cmd[100];
-	char txt_cmd2[100];
 	FILE* fout_high;
 	FILE* fout_low;
 	int flag = ERROR;

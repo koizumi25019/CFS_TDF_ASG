@@ -26,7 +26,9 @@ int transition_delay_fault_set(void) {
 
 	int id = 0;
 	char line[100];//ファイルの1行分を取得
-	char n_line[100];//ファイルの一行分を順序変更用
+	//char n_line[100];//ファイルの一行分を順序変更用
+	char *n_line=NULL;//ファイルの一行分を順序変更用
+	n_line = (char*)allocMemory(50000, sizeof(char));
 	char fault_type[10];
 	char net_name[50];
 	UNDET_FAULT_LIST* head = NULL;
@@ -72,13 +74,15 @@ int transition_delay_fault_set(void) {
 	    //nece.txtのstring:G16\tsa0\nと同じような記述形式にしたいので順序変更
 		if (strcmp(fault_type, "STR") == 0 || strcmp(fault_type, "sa0") == 0) {
 			node->type = STR;
-			sprintf(n_line, "%s\t%s\n", net_name, "sa0");
+			//sprintf(n_line, "%s\t%s\n", net_name, "sa0");
+			sprintf_s(n_line, 50000, "%s\t%s\n", net_name, "sa0");
 			node->string = _strdup(n_line);
 			//STRなら故障回路の2時刻目の信号線はs-a-0と等価
 		}
 		else if (strcmp(fault_type, "STF") == 0 || strcmp(fault_type, "sa1") == 0) {
 			node->type = STF;
-			sprintf(n_line, "%s\t%s\n", net_name, "sa1");
+			//sprintf(n_line, "%s\t%s\n", net_name, "sa1");
+			sprintf_s(n_line, 50000, "%s\t%s\n", net_name, "sa1");
 			node->string = _strdup(n_line);
 			//STFなら故障回路の2時刻目の信号線はs-a-1と等価
 		}
