@@ -1,2 +1,2 @@
-TDF_ASG.exe -net ./input/circuit/s38584.v -fault ./input/rprf/s38584_rpr_10_1.txt -seed seed.txt -xor_tap ./input/xor_tap/tap_64.txt -scan_chain ./input/scan_chain/s38584_sc_64.txt -power ON -target_limit 1 -rand ON -folder ./s38584_output/
+TDF_ASG.exe -net ./input/circuit/s38584.v -fault ./input/rprf/s38584_rpr_10_1.txt -seed seed.txt -xor_tap ./input/xor_tap/tap_64.txt -scan_chain ./input/scan_chain/s38584_sc_64.txt -power ON -target_limit 1 -rand ON -time 15000 -folder ./s38584_output/
 pause
