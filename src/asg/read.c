@@ -533,7 +533,7 @@ bool ReadNecessary(
 	free(buffer);
 	free(string);
 	printf("\n");
-	printf("ˆê’v‚µ‚½•¶š—ñ‚Ì”:%d\n", debag_count);
+	printf("ˆê’v‚µ‚½•¶š—ñ‚Ì”:%d\n", debag_count-1);
 	if (cnt != /*readdata.fault.numinit*/ufl_num)
 	{
 		printf("\n	SYSTEM ERROR: Reading necessary file error. ");
