@@ -30,7 +30,7 @@ int fault_select(int unsat_flag) {
     UNDET_FAULT_LIST** rand_node;
 
     // 単一に切り替えてテスト生成
-    if (unsat_flag == ON) {
+    if (unsat_flag == ON || target_limit==1) {
         // 未検出故障リストの先頭の故障を目標故障として設定
         if (ufl == NULL) {
             printf("【WARNING】: No undetected faults available.\n");
