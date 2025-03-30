@@ -1,4 +1,0 @@
-0: tfl_num:1	tfl_det_fault:0	det_fault:0
-1: tfl_num:1	tfl_det_fault:1	det_fault:141
-2: tfl_num:1	tfl_det_fault:1	det_fault:128
-3: tfl_num:1	tfl_det_fault:1	det_fault:171
