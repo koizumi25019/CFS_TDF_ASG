@@ -776,21 +776,21 @@ bool RealTarget(
 	//両立可能故障における目標故障選択
 
 	//元の未検出故障数が300以下の場合の処理
-	if (all_num < 300)
-	{
-		if (num_clique_flag == false)
-		{
-			num_clique = loop + 1;
-			num_clique_flag = true;
-		}
-		//DirectInputTarget(target);//ufl(未検出故障集合をそのままtfl(目標故障集合)としている
-		//koizumi追加
-		tfl = ufl;//DirectInputTargetと同様のことをしている
-		tfl_num = ufl_num;
-		return TARGET_OKAY;
-	}
-	else
-	{
+	//if (all_num < 300)
+	//{
+	//	if (num_clique_flag == false)
+	//	{
+	//		num_clique = loop + 1;
+	//		num_clique_flag = true;
+	//	}
+	//	//DirectInputTarget(target);//ufl(未検出故障集合をそのままtfl(目標故障集合)としている
+	//	//koizumi追加
+	//	tfl = ufl;//DirectInputTargetと同様のことをしている
+	//	tfl_num = ufl_num;
+	//	return TARGET_OKAY;
+	//}
+	//else
+	//{
 		//シード生成の最初は故障が繋がる辺の数を基準に降順ソードする
 		//繋がった辺の数が多いやつからグラフを作成していくため
 		//辺の数が多いやつから選択することで効率的にグラフを作成
@@ -798,7 +798,7 @@ bool RealTarget(
 		if (loop == 0) {
 			SortEdgeDescend(sorted);
 		}
-	}
+	//}
 
 
 	/* first process */
@@ -812,14 +812,14 @@ bool RealTarget(
 	/* initialized to fault detection information */
 	//detflagはすべて1で初期化されているので、
 	//それと同じアルゴリズムを用いるedge_flagにもオール1を代入している
-	for (int k = 0; k </* head->edge->int_num*/all_num; k++)//int_numは未検出故障数と一致 32bit配列を未検出故障分つくる
+	for (int k = 0; k <head->edge->int_num; k++)//cnodeptr->edge->int_num = ufl_num / 32 + 1;
 	{
-		head->edge->flag[k] = detflag->flag[k];//detflagは全故障分,edgeflagはその時点での未検出故障分だが、問題は起きないと思う
+		head->edge->flag[k] = detflag->flag[k];//detflag[]で32故障分。これをk分繰り返すと全故障参照できる
 	}
 
 	/* Counting the number of adjacent vertices */
 	//隣接する頂点の数を数える
-	for (int k = 0; k < /*head->edge->int_num*/all_num; k++)
+	for (int k = 0; k < head->edge->int_num; k++)
 	{
 		count += CountBits(head->edge->flag[k]);//1の数(隣接する頂点が1)をカウント
 	}
@@ -830,11 +830,11 @@ bool RealTarget(
 	//詳しくは両立可能故障集合_グラフ生成アルゴリズム参照
 	//ここからクリーク抽出
 	//head->num_r==countでcountが0になったらループ抜ける。0になると繋がる辺がなくなったということ
-	while ((depth < ufl_num) && (head->num_r != 0))
+	while ((depth < ufl_num) && (head->num_r != 0))//head->num_r：隣接する頂点数
 	{
 		j = 0;
 		select_flag = 0;
-		while (j < all_num) {//ここほんとにall_num???????
+		while (j < all_num) {//ここほんとにall_num???????uflじゃない？
 			if (select_flag == 1)break;
 			select = sorted->node_id;//ex;sorted->sort[0].id 一番つながっている辺の数が多い節の故障id．これはufl(未検出故障集合)に対してloop回数1回目に定義
 			//辺が繋がっているか(edge==1)かを取得して,それが何ビット目かをselectに取得
@@ -1035,8 +1035,7 @@ CNODE* CreateCliqueNode(
 	/** set the edge */
 	cnodeptr->edge = (BIT_INT*)allocMemory(1, sizeof(BIT_INT));
 	cnodeptr->edge->int_num = num / 32 + 1;
-	cnodeptr->edge->flag = (unsigned int*)allocMemory(
-		cnodeptr->edge->int_num, sizeof(unsigned int));
+	cnodeptr->edge->flag = (unsigned int*)allocMemory(cnodeptr->edge->int_num, sizeof(unsigned int));
 
 
 	/** set the pointer to next node */
