@@ -775,8 +775,8 @@ bool RealTarget(
 	/* fault selection from compatible fault sets */
 	//両立可能故障における目標故障選択
 
-	//元の未検出故障数が300以下の場合の処理
-	//if (all_num < 300)
+	//未検出故障数が300以下の場合の処理
+	//if (ufl_num < 300)
 	//{
 	//	if (num_clique_flag == false)
 	//	{
