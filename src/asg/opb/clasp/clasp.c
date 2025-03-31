@@ -110,6 +110,7 @@ void CLASPgetObjVal(
 	{
 		if (strstr(buffer, "Answer:") != NULL)
 		{
+			printf("Answer\n");
 			for (int i = 0; i < strlen(buffer); i++)
 			{
 				if (isdigit(buffer[i]) != 0)
@@ -122,11 +123,13 @@ void CLASPgetObjVal(
 		}
 		if (strstr(buffer, "UNSATISFIABLE") != NULL)
 		{
+			printf("UNSAT\n");
 			clasp.status = CLASP_UNSAT;
 			break;
 		}
 		if (strstr(buffer, "UNKNOWN") != NULL)
 		{
+			printf("UNKNOWN\n");
 			clasp.status = CLASP_STATUS_UNKNOWN;
 			break;
 		}

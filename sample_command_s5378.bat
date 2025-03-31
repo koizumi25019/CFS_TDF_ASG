@@ -1,2 +1,2 @@
-TDF_ASG.exe -net ./input/circuit/s5378.v -fault ./input/rprf/s5378_rpr_10_1.txt -seed seed.txt -xor_tap ./input/xor_tap/tap_32.txt -scan_chain ./input/scan_chain/s5378_sc_32.txt -power ON -target_limit 1 -time 10000 -rand ON -folder ./s5378_output/
+TDF_ASG.exe -net ./input/circuit/s5378.v -fault ./input/rprf/s5378_rpr_10_1.txt -seed seed.txt -xor_tap ./input/xor_tap/tap_32.txt -scan_chain ./input/scan_chain/s5378_sc_32.txt -power ON -target_limit 1 -time 1000 -rand ON -folder ./s5378_output/
 pause

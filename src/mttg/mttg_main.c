@@ -155,6 +155,7 @@ int mttg_main(void) {
 			return ERROR;
 		}
 		fprintf(fout_tp, "%s\n", clasp.sol[SOL_TP]);
+		printf("%s\n", clasp.sol[SOL_TP]);
 		fclose(fout_tp);
 
 		//低消費テストパターンか確認(消費電力指向時のみ)

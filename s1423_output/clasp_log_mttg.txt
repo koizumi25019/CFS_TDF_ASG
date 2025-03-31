@@ -1,0 +1,10 @@
+c clasp version 3.3.4
+c Reading from ./s1423_output/mttg_pbo.txt
+c Solving...
+s UNKNOWN
+c 
+c INTERRUPTED    : 1
+c Models         : 0+
+c Calls          : 1
+c Time           : 0.027s (Solving: 0.02s 1st Model: 0.00s Unsat: 0.00s)
+c CPU Time       : 0.016s
