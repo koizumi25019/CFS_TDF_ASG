@@ -143,7 +143,7 @@ int mttg_main(void) {
 
 		//claspî•ñæ“¾
 		if (CLASP() != CLASP_OKAY) {
-			printf("\n	SYSTEM ERROR: solver error. ");
+			printf("CLASP_UNSAT\n ");
 			return ERROR;
 		}
 
