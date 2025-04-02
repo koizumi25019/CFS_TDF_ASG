@@ -51,8 +51,6 @@ bool CreateLFSRmodel(
 		if (CreateConsPhaseShifter(lfsr, i) != LFSR_MODEL_OKAY) return LFSR_MODEL_ERROR;
 	}
 
-	printf("debag_%d", opb.total.cons);
-
 	/** free the memory */
 	free(poly->flag);
 	free(poly);
