@@ -30,7 +30,7 @@ int fault_select(int unsat_flag) {
     UNDET_FAULT_LIST** rand_node;
 
     // ’Pˆê‚ÉØ‚è‘Ö‚¦‚ÄƒeƒXƒg¶¬
-    if (unsat_flag == ON /*|| target_limit==1*/) {
+    if (unsat_flag == ON || target_limit==1) {
         // –¢ŒŸoŒÌáƒŠƒXƒg‚Ìæ“ª‚ÌŒÌá‚ğ–Ú•WŒÌá‚Æ‚µ‚Äİ’è
         if (ufl == NULL) {
             printf("yWARNINGz: No undetected faults available.\n");
@@ -55,7 +55,7 @@ int fault_select(int unsat_flag) {
         tfl = tfl_node;
         tfl_num = 1;
 
-        printf("yINFOz: Switched to single fault test generation.\n");
+        printf("yINFOz: single fault test generation.\n");
         return SUCCESS;
     }
 
