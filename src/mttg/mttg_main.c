@@ -116,6 +116,7 @@ int mttg_main(void) {
 		//ŒÌá—ã‹N
 		head = tfl;
 		i = 0;
+		printf("1ŽŸŒÌáF%s\n", head->name);
 		while (head != NULL) {
 			if (i == 0) {
 				pbo_generate_fault_ex(fout_mttg_pbo, head,0);
