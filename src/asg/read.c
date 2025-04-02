@@ -440,8 +440,7 @@ void COMPinti(
 		ufl->nece = (char*)allocMemory(MAXSIZE_BUFFER, sizeof(char));//必須割り当て情報ファイルを1行ずつ格納
 		ufl->edge = (BIT_INT*)allocMemory(1, sizeof(BIT_INT));
 		ufl->edge->int_num = ufl_num / MAXSIZE_BITINT + 1;
-		ufl->edge->flag = (unsigned int*)allocMemory(
-			ufl->edge->int_num, sizeof(unsigned int));
+		ufl->edge->flag = (unsigned int*)allocMemory(ufl->edge->int_num, sizeof(unsigned int));
 		bitintSetAll_Zero(ufl->edge);//オール0：すべて未検出
 		for (int j = 0; j < ufl_num; j++)
 		{
@@ -889,7 +888,7 @@ bool RealTarget(
 							//300 / 32 ＝ 約 9.3 …
 							//よって 10 個前後の 32 bit 変数に分割して「ビット AND」をしないといけません。
 							= (head->nextptr->edge->flag[k])//後ろのcnodeのflag
-							& (remain->list[now_id]->edge->flag[k]/*sorted->edge->flag[k]*/);//koizumi追加
+							& (1/*remain->list[now_id]->edge->flag[k]*//*sorted*//*->edge*//*->flag[k]*/);//koizumi追加
 						//後ろのedge_flagと今のedge_flagの積をとると、次の深さのedge
 					}
 					//koizumi追加
@@ -908,26 +907,26 @@ bool RealTarget(
 				else return TARGET_ERROR;
 
 				/* debug bitint */
-				unsigned int decimalNumber;
-				unsigned int binaryNumber[32]; // 32ビットの2進数を仮定
-				int k = 0;
-				int l = 0;
-				for (int m = 0;m < head->edge->int_num;m++)
-				{
-					k = 0;
-					decimalNumber = head->edge->flag[m];
-					while (decimalNumber > 0)
-					{
-						binaryNumber[k] = decimalNumber % 2;
-						decimalNumber /= 2;
-						k++;
-					}
-					printf("\n[%d]\thead  ->  edge[%d]     \t:  ", depth, m);
-					for (l = k - 1;l >= 0;l--)
-					{
-						printf("%d", binaryNumber[l]);
-					}
-				}
+				//unsigned int decimalNumber;
+				//unsigned int binaryNumber[32]; // 32ビットの2進数を仮定
+				//int k = 0;
+				//int l = 0;
+				//for (int m = 0;m < head->edge->int_num;m++)
+				//{
+				//	k = 0;
+				//	decimalNumber = head->edge->flag[m];
+				//	while (decimalNumber > 0)
+				//	{
+				//		binaryNumber[k] = decimalNumber % 2;
+				//		decimalNumber /= 2;
+				//		k++;
+				//	}
+				//	printf("\n[%d]\thead  ->  edge[%d]     \t:  ", depth, m);
+				//	for (l = k - 1;l >= 0;l--)
+				//	{
+				//		printf("%d", binaryNumber[l]);
+				//	}
+				//}
 
 				depth++;//koizumi追加
 
@@ -1016,7 +1015,7 @@ void SortEdgeDescend(
 	for (int i = 0; i < sorted->num; i++)
 	{
 		sorted->sort[i].id = i;
-		sorted->sort[i].n_edge = current->n_edge;
+		sorted->sort[i].n_edge = current->n_edge;//繋がっている辺の数　CreateCompatibleEdgeで辺がつながっている数をカウントしている
 		//koizumi追加 これなに？？
 		//for (int j = 0; j < ufl->edge->int_num; j++) {
 		//	sorted->sort[i].edge->flag[j] = ufl->edge->flag[j];
