@@ -28,7 +28,7 @@ int fault_select(int unsat_flag,int loop) {
     UNDET_FAULT_LIST* tfl_node;
     UNDET_FAULT_LIST* head = NULL;
     UNDET_FAULT_LIST** rand_node;
-    UNDET_FAULT_LIST** sorted;//ソートテーブル
+    SORTED** sorted;//ソートテーブル
 
     // 単一に切り替えてテスト生成
     if (unsat_flag == ON) {
@@ -74,13 +74,14 @@ int fault_select(int unsat_flag,int loop) {
         printf("【ERROR】: Memory allocation failed.\n");
         return ERROR;
     }
+
     //koizumi追加 ソート用構造体確保
-    sorted = (UNDET_FAULT_LIST*)malloc(sizeof(UNDET_FAULT_LIST));
+    sorted = (SORTED*)malloc(sizeof(SORTED));
     if (sorted == NULL) {
         printf("【ERROR】: Memory allocation failed.\n");
         return ERROR;
     }
-    sorted = ufl;
+
 
     //必須割り当てファイル情報ファイルがある場合の処理
     READER_NECESSARY_ON

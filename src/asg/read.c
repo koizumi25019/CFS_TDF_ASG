@@ -746,7 +746,7 @@ bool CreateCompatibleEdge(
 //*************************************************************************************************************
 bool RealTarget(
 	/*TARGET* target,*/			  /**< target-fault list */
-	UNDET_FAULT_LIST* sorted,			  /**< sorted list */
+	SORTED* sorted,			  /**< sorted list */
 	int loop				  /**< loop variable */
 )
 {
@@ -757,7 +757,7 @@ bool RealTarget(
 	int depth = 0;				/* depth */
 	int select;				/* select no. */
 	int j = 0;
-	//int now_id = 0;		/*  initial remain number */
+	int now_id = 0;		/*  initial remain number */
 	int flag = 0, select_flag = 0, end_flag = 0, d_flag = 0;
 	int count = 0;
 
@@ -827,21 +827,42 @@ bool RealTarget(
 
 	//depth:深さ　深さ優先探索の深さ　深くないやつ程多くの辺を持つ故障
 	//depth-1の数がRealTarget数を一致
-	//詳しくは両立可能故障集合_グラフ生成アルゴリズム参照
 	//ここからクリーク抽出
 	//head->num_r==countでcountが0になったらループ抜ける。0になると繋がる辺がなくなったということ
 	while ((depth < ufl_num) && (head->num_r != 0))//head->num_r：隣接する頂点数
 	{
 		j = 0;
 		select_flag = 0;
-		while (j < all_num) {//ここほんとにall_num???????uflじゃない？
+		while (j < ufl_num) {
 			if (select_flag == 1)break;
-			select = sorted->node_id;//ex;sorted->sort[0].id 一番つながっている辺の数が多い節の故障id．これはufl(未検出故障集合)に対してloop回数1回目に定義
+			select = sorted->sort[j].id;//ex;sorted->sort[0].id 一番つながっている辺の数が多い節の故障id．これはufl(未検出故障集合)に対してloop回数1回目に定義
 			//辺が繋がっているか(edge==1)かを取得して,それが何ビット目かをselectに取得
 			if (bitintGetNbit(head->edge, select) == 1) {//select番目のbitが1か0かを返す関数　つまりselect番目の故障が隣接する頂点数が一番多いので、その故障の番号を選択している
-				//select_id[depth] = select;//select_id[depth];深さがdepthの時の故障の番号を記憶
+				select_id[depth] = select;//select_id[depth];深さがdepthの時の故障の番号を記憶
 				select_flag = 1;
 				bitintSetNbit_Zero(head->edge, select);//故障を選択したのでその故障番号を0に設定
+
+				/* debug bitint */
+				unsigned int decimalNumber;
+				unsigned int binaryNumber[32]; // 32ビットの2進数を仮定
+				int k = 0;
+				int l = 0;
+				for (int m = 0;m < head->edge->int_num;m++)
+				{
+					k = 0;
+					decimalNumber = head->edge->flag[m];
+					while (decimalNumber > 0)
+					{
+						binaryNumber[k] = decimalNumber % 2;
+						decimalNumber /= 2;
+						k++;
+					}
+					printf("\n[%d]\thead  ->  edge[%d]     \t:  ", depth, m);
+					for (l = k - 1;l >= 0;l--)
+					{
+						printf("%d", binaryNumber[l]);
+					}
+				}
 
 				/* create next depth node */
 				if ((cnodeptr = CreateCliqueNode(depth, select, ufl_num/*readdata.fault.numinit*/)) != NULL)//未検出故障数分クリークを作成 depthは1からスタート
@@ -868,14 +889,14 @@ bool RealTarget(
 							//300 / 32 ＝ 約 9.3 …
 							//よって 10 個前後の 32 bit 変数に分割して「ビット AND」をしないといけません。
 							= (head->nextptr->edge->flag[k])//後ろのcnodeのflag
-							& (sorted->edge->flag[k]);//koizumi追加
+							& (remain->list[now_id]->edge->flag[k]/*sorted->edge->flag[k]*/);//koizumi追加
 						//後ろのedge_flagと今のedge_flagの積をとると、次の深さのedge
 					}
 					//koizumi追加
-					tfl = sorted;
-					tfl = tfl->next;
-					//koizumi追加
-					sorted = sorted->next;
+					//tfl = sorted;
+					//tfl = tfl->next;
+					////koizumi追加
+					//sorted = sorted->next;
 
 					count = 0;
 					for (int k = 0; k < head->edge->int_num; k++)
@@ -885,6 +906,29 @@ bool RealTarget(
 					head->num_r = count;
 				}
 				else return TARGET_ERROR;
+
+				/* debug bitint */
+				unsigned int decimalNumber;
+				unsigned int binaryNumber[32]; // 32ビットの2進数を仮定
+				int k = 0;
+				int l = 0;
+				for (int m = 0;m < head->edge->int_num;m++)
+				{
+					k = 0;
+					decimalNumber = head->edge->flag[m];
+					while (decimalNumber > 0)
+					{
+						binaryNumber[k] = decimalNumber % 2;
+						decimalNumber /= 2;
+						k++;
+					}
+					printf("\n[%d]\thead  ->  edge[%d]     \t:  ", depth, m);
+					for (l = k - 1;l >= 0;l--)
+					{
+						printf("%d", binaryNumber[l]);
+					}
+				}
+
 				depth++;//koizumi追加
 
 				j++;
@@ -909,9 +953,6 @@ bool RealTarget(
 		/*target->list[i]*///tfl = remain->list[select_id[i + 1]];//select_idの0番目の要素は-1で意味のない数字
 		//tfl = tfl->next;
 	//}
-	//koizumiコメントアウト
-	//後に緩和変数導入
-	//target->list[0]->relax = false;
 
 	/* free structure */
 	while (head)
@@ -964,25 +1005,30 @@ bool RealTarget(
 //	@return		：	null
 //*************************************************************************************************************
 void SortEdgeDescend(
-	UNDET_FAULT_LIST* sorted 			  /**< sorted list */
+	SORTED* sorted 			  /**< sorted list */
 )
 {
-	//sorted->num = ufl_num;
-	//sorted->sort = (EDGE*)allocMemory(sorted->num, sizeof(EDGE));
+	UNDET_FAULT_LIST* current = ufl;
+	sorted->num = ufl_num;
+	sorted->sort = (EDGE*)allocMemory(sorted->num, sizeof(EDGE));
 
 
-	//for (int i = 0; i < sorted->num; i++)
-	//{
-	//	sorted->sort[i].id = i;
-	//	sorted->sort[i].n_edge = ufl->n_edge;
-	//	//koizumi追加
-	//	for (int j = 0; j < ufl->edge->int_num; j++) {
-	//		sorted->sort[i].edge->flag[j] = ufl->edge->flag[j];
-	//	}
-	//	ufl = ufl->next;
-	//}
-	sorted = ufl;
-	qsort(sorted, ufl_num, sizeof(UNDET_FAULT_LIST), FuncSortDescend);
+	for (int i = 0; i < sorted->num; i++)
+	{
+		sorted->sort[i].id = i;
+		sorted->sort[i].n_edge = current->n_edge;
+		//koizumi追加 これなに？？
+		//for (int j = 0; j < ufl->edge->int_num; j++) {
+		//	sorted->sort[i].edge->flag[j] = ufl->edge->flag[j];
+		//}
+		current = current->next;
+	}
+	qsort(sorted, ufl_num, sizeof(EDGE), FuncSortDescend);
+
+	for (int i = 0; i < sorted->num; i++)
+	{
+		printf("sort[%d].id:%d---n_edge:%d\n",i, sorted->sort[i].id, sorted->sort[i].n_edge);
+	}
 
 	return;
 }
@@ -1075,10 +1121,10 @@ int FuncSortDescend(
 	const void* n1, const void* n2
 )
 {
-	if (((UNDET_FAULT_LIST*)n1)->n_edge > ((UNDET_FAULT_LIST*)n2)->n_edge) {
+	if (((EDGE*)n1)->n_edge > ((EDGE*)n2)->n_edge) {
 		return -1;
 	}
-	else if (((UNDET_FAULT_LIST*)n1)->n_edge < ((UNDET_FAULT_LIST*)n2)->n_edge) {
+	else if (((EDGE*)n1)->n_edge < ((EDGE*)n2)->n_edge) {
 		return 1;
 	}
 	else {

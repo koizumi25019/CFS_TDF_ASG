@@ -118,7 +118,7 @@ void COMPinti(
 /** set the real-target-fault list */
 bool RealTarget(
 	//TARGET* target,			  /**< target-fault list */
-	UNDET_FAULT_LIST* sorted, 			  /**< sorted list */
+	SORTED* sorted, 			  /**< sorted list */
 	int loop				  /**< loop variable */
 );
 

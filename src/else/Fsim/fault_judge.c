@@ -101,6 +101,9 @@ int fault_judge(void) {
 						dfl_num++;//検出故障数更新
 						det_fault_num_clasp++;//1テストパターンでの検出故障数
 
+						//koizumi追加
+						bitintSetNbit_Zero(detflag, u_head->node_id);//node_idは故障に一意に割り当てられているもの
+
 						//検出故障を未検出故障リストから削除
 						ufl_free(u_head, NULL, -1);
 						/*pre_node = u_head->next;
@@ -117,7 +120,7 @@ int fault_judge(void) {
 			while (u_head != NULL) {
 				if (p_type == u_head->type) {
 					if (strcmp(u_head->name, p_str_net) == 0) {
-							//検出故障ノード」
+							//検出故障ノード
 							df_node = (UNDET_FAULT_LIST*)malloc(sizeof(UNDET_FAULT_LIST));
 
 							//情報コピー
@@ -125,7 +128,7 @@ int fault_judge(void) {
 							df_node->type = u_head->type;
 							df_node->netlist = u_head->netlist;
 
-							//目標故障設定
+							//目標故障
 							if (u_head->netlist->tf_flag == FLAG_UP) {
 								count++;
 							}
