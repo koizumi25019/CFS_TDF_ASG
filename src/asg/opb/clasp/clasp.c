@@ -84,7 +84,7 @@ bool CLASP(
 	/** close the "clasp log file" in read-mode */
 	fclose(fileptr);
 
-	//assert(remove(CLASP_LOG_FILE) == 0);
+	assert(remove(txt_cmd) == 0);
 
 	return	CLASP_OKAY;
 }
