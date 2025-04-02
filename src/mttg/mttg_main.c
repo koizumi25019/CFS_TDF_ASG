@@ -71,8 +71,6 @@ int mttg_main(void) {
 	//LFSR+PS制約式取得
 	CreateLFSRmodel();
 
-	printf("debag_テスト生成前のsuffixの値：%d\n", suffix);
-
 	//テスト生成
 	while (ufl_num != 0) {
 
@@ -140,12 +138,12 @@ int mttg_main(void) {
 		//	clasp ⇒ テストベクトル生成
 		//========================================================================
 		//Clasp
-		sprintf(cmd, "clasp.exe --verbose=2 %smttg_pbo.txt --time-limit %d > %sclasp_log_mttg.txt", folder_out, fi[TIME].value, folder_out);
+		sprintf(cmd, "clasp.exe %smttg_pbo.txt --time-limit %d > %sclasp_log_mttg.txt", folder_out, fi[TIME].value, folder_out);
 		system(cmd);
 
 		//clasp情報取得
 		if (CLASP() != CLASP_OKAY) {
-			printf("\n	SYSTEM ERROR: solver error. ");
+			printf("CLASP_UNSAT\n ");
 			return ERROR;
 		}
 
@@ -157,6 +155,7 @@ int mttg_main(void) {
 			return ERROR;
 		}
 		fprintf(fout_tp, "%s\n", clasp.sol[SOL_TP]);
+		printf("%s\n", clasp.sol[SOL_TP]);
 		fclose(fout_tp);
 
 		//低消費テストパターンか確認(消費電力指向時のみ)
@@ -181,7 +180,7 @@ int mttg_main(void) {
 		system(cmd);
 
 		//コンソールアプリケーションの初期化
-		system("cls");
+		//system("cls");
 
 		//検出故障特定&検出故障数を未検出故障から削除
 		if ((det_fault_clasp_num = fault_judge()) == ERROR) {

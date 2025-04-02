@@ -14,6 +14,7 @@
 #define SOL_SEED          0
 #define SOL_TP            1
 
+
 #define CLASP_OKAY		  true
 #define CLASP_ERROR		  false
 #define CLASP_STATUS_ERROR -1
@@ -35,6 +36,89 @@
 #define CLASP_STATUS_RESTARTLIMIT	14
 #define CLASP_STATUS_INFORUNBD		15
 
+char cmd[100];
+
+/** call clasp (limit times =120[s]) */
+#define	_CALL_CLASP_LIMIT_TIME_120_ do     \
+{                                         \
+    printf("	resolving time limit 1000...\n");              \
+    sprintf(cmd, "clasp.exe %smttg_pbo.txt --time-limit 120 > %sclasp_log_mttg.txt", folder_out,folder_out);          \
+    system(cmd);          \
+}       \
+while (false);
+
+/** call clasp (limit times =1000[s]) */
+#define	_CALL_CLASP_LIMIT_TIME_1000_	do\
+{																											  \
+	printf("	resolving time limit 1000...\n");																		  \																							  \
+    sprintf(cmd, "clasp.exe %smttg_pbo.txt --time-limit 1000 > %sclasp_log_mttg.txt", folder_out,folder_out);\
+    system(cmd);																																			  \
+}																											  \
+while (false);
+
+/** call clasp (limit times =3000[s]) */
+#define	_CALL_CLASP_LIMIT_TIME_3000_	do																  		  \
+{																											  \
+	printf("	resolving time limit 3000...\n");														  \																									  \
+    sprintf(cmd, "clasp.exe %smttg_pbo.txt --time-limit 3000 > %sclasp_log_mttg.txt", folder_out,folder_out);\
+    system(cmd);																				  \																								  \
+}																											  \
+while (false);
+
+/** call clasp (limit times =5000[s]) */
+#define	_CALL_CLASP_LIMIT_TIME_5000_	do																  		  \
+{																											  \
+	printf("	resolving time limit 5000...\n");														  \
+    sprintf(cmd, "clasp.exe %smttg_pbo.txt --time-limit 5000 > %sclasp_log_mttg.txt", folder_out,folder_out);\
+    system(cmd);																																		  \
+}																											  \
+while (false);
+
+/** call clasp (limit times =8000[s]) */
+#define	_CALL_CLASP_LIMIT_TIME_8000_	do																  		  \
+{																											  \
+	printf("	resolving time limit 8000...\n");														  \
+    sprintf(cmd, "clasp.exe %smttg_pbo.txt --time-limit 8000 > %sclasp_log_mttg.txt", folder_out,folder_out);\
+    system(cmd);																																		  \
+}																											  \
+while (false);
+
+/** call clasp (limit times =10000[s]) */
+#define	_CALL_CLASP_LIMIT_TIME_10000_	do																  		  \
+{																											  \
+	printf("	resolving time limit 10000...\n");														  \
+    sprintf(cmd, "clasp.exe %smttg_pbo.txt --time-limit 10000 > %sclasp_log_mttg.txt", folder_out,folder_out);\
+    system(cmd);																																			  \
+}																											  \
+while (false);
+
+/** call clasp (limit times =15000[s]) */
+#define	_CALL_CLASP_LIMIT_TIME_15000_	do																  		  \
+{																											  \
+	printf("	resolving time limit 15000...\n");														  \
+    sprintf(cmd, "clasp.exe %smttg_pbo.txt --time-limit 15000 > %sclasp_log_mttg.txt", folder_out,folder_out);\
+    system(cmd);																																			  \
+}																											  \
+while (false);
+
+/** call clasp (limit times =20000[s]) */
+#define	_CALL_CLASP_LIMIT_TIME_20000_	do		 \
+{                                                \
+    printf("	resolving time limit 200000...\n");     \
+    sprintf(cmd, "clasp.exe %smttg_pbo.txt --time-limit 20000 > %sclasp_log_mttg.txt", folder_out,folder_out);\
+    system(cmd);																																			  \
+}																											  \
+while (false);
+
+/** call clasp (solution =1) */
+#define	_CALL_CLASP_SOL_1_	do																  				  \
+{																											  \
+	printf("	resolving solution 1...\n");														  \
+    sprintf(cmd, "clasp.exe %smttg_pbo.txt --models=1 > %sclasp_log_mttg.txt", folder_out, folder_out); \
+	system(cmd);					 \
+																								  \
+}																											  \
+while (false);
 
 //-------------------------------------------------------------------------------------------------------------
 //	structre
