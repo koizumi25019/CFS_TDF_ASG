@@ -87,7 +87,7 @@ bool CreateCompatibleEdge(
 
 /* sort edge Descend*/
 void SortEdgeDescend(
-	UNDET_FAULT_LIST* sorted 			  /**< sorted list */
+	SORTED* sorted 			  /**< sorted list */
 );
 
 /* sort edge Ascend*/

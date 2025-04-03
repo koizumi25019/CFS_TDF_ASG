@@ -911,28 +911,27 @@ bool RealTarget(
 
 				/* debug bitint */
 				unsigned int decimalNumber_;
-				unsigned int binaryNumber[32]; // 32ビットの2進数を仮定
-				int k = 0;
-				int l = 0;
+				unsigned int binaryNumber_[32]; // 32ビットの2進数を仮定
+				int p = 0;
+				int q = 0;
 				for (int m = 0;m < head->edge->int_num;m++)
 				{
-					k = 0;
-					decimalNumber = head->edge->flag[m];
-					while (decimalNumber > 0)
+					p = 0;
+					decimalNumber_ = head->edge->flag[m];
+					while (decimalNumber_ > 0)
 					{
-						binaryNumber[k] = decimalNumber % 2;
-						decimalNumber /= 2;
-						k++;
+						binaryNumber_[p] = decimalNumber_ % 2;
+						decimalNumber_ /= 2;
+						p++;
 					}
 					printf("\n[%d]\thead  ->  edge[%d]     \t:  ", depth, m);
-					for (l = k - 1;l >= 0;l--)
+					for (q = p - 1;q >= 0;q--)
 					{
-						printf("%d", binaryNumber[l]);
+						printf("%d", binaryNumber_[q]);
 					}
 				}
-
-				j++;
 			}
+			j++;
 		}
 	}
 	//ここまでクリーク抽出
@@ -946,14 +945,26 @@ bool RealTarget(
 	//目標故障集合作成
 	/* set target fault */
 	UNDET_FAULT_LIST* current = ufl;
+	UNDET_FAULT_LIST* tfl = NULL;
+	UNDET_FAULT_LIST* tfl_head = NULL;
 	for (int i = 0; i < tfl_num; i++)
 	{
 		for (int j = 0; j < select_id[i + 1]; j++) {
 			current = current->next;
 		}
-		tfl = current;
-		tfl = tfl->next;
+		if (tfl == NULL) {
+			tfl = current;
+			tfl = tfl->next;
+			tfl_head = current;
+		}
+		else {
+			tfl = current;
+			tfl = tfl->next;
+		}
+		current = ufl;
 	}
+	tfl = tfl_head;
+
 
 	/* free structure */
 	while (head)

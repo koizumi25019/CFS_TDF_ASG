@@ -101,7 +101,7 @@ int fault_select(int unsat_flag,int loop) {
             if (RealTarget(/*target,*/ sorted, loop) != true) return false;
         }
     }
-    printf("READER_NECESSARY_ON終了\n");
+    printf("\nREADER_NECESSARY_ON終了\n");
     //必須割り当て情報ファイル無しで、両立可能故障ファイルがある場合
     READER_NECESSARY_OFF
     {
