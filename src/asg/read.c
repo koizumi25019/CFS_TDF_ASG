@@ -612,7 +612,6 @@ bool CreateNecessaryNet(
 
 	buffer = (char*)allocMemory(MAXSIZE_BUFFER, sizeof(char));
 
-	printf("\n");
 	//koizumi追加
 	//リストの先頭を保持するhead
 	UNDET_FAULT_LIST* head = ufl;
@@ -870,25 +869,29 @@ bool RealTarget(
 					head = cnodeptr;
 
 					/* Search for the current ID of the selected fault */
-					//for (now_id = 0; now_id < all_num; now_id++)
+					//for (now_id = 0; now_id < ufl_num; now_id++)
 					//{
 					//	if (select == remain->list[now_id]->id)//uflのidは飛び飛びだから齟齬が生じる
 					//	{
 					//		break;
 					//	}
-
 					//}
-					//select_id[depth++] = ;//なんで上書きしてるん
+					//select_id[depth++] = select;//なんで上書きしてるん
+					depth++;
 					//edge->int_num:32bit_flag確保数
+					UNDET_FAULT_LIST* current = ufl;
+					for (int i = 0; i < select; i++) {
+						current = current->next;
+					}
 					for (int k = 0; k < cnodeptr->edge->int_num; k++)
 					{
-						head->edge->flag[k]//flag[k]は各要素が32bitのデータを持つ
-							//flag[k] は「k 番目の 32 bit」を指しており、ビットフラグをまとめて 32 bit 単位で管理している
-							//たとえば、故障(ノード)数が 300 個くらいあるとすると、300 ビットをひとつの変数には収められません。
-							//300 / 32 ＝ 約 9.3 …
-							//よって 10 個前後の 32 bit 変数に分割して「ビット AND」をしないといけません。
-							= (head->nextptr->edge->flag[k])//後ろのcnodeのflag
-							& (1/*remain->list[now_id]->edge->flag[k]*//*sorted*//*->edge*//*->flag[k]*/);//koizumi追加
+						//flag[k]は各要素が32bitのデータを持つ
+						//flag[k] は「k 番目の 32 bit」を指しており、ビットフラグをまとめて 32 bit 単位で管理している
+						//たとえば、故障(ノード)数が 300 個くらいあるとすると、300 ビットをひとつの変数には収められません。
+						//300 / 32 ＝ 約 9.3 …
+						//よって 10 個前後の 32 bit 変数に分割して「ビット AND」をしないといけません。
+						head->edge->flag[k]= (head->nextptr->edge->flag[k])//後ろのcnodeのflag
+							& (current->edge->flag[k]/*sorted->edge->flag[k]*/);//koizumi追加
 						//後ろのedge_flagと今のedge_flagの積をとると、次の深さのedge
 					}
 					//koizumi追加
@@ -907,28 +910,26 @@ bool RealTarget(
 				else return TARGET_ERROR;
 
 				/* debug bitint */
-				//unsigned int decimalNumber;
-				//unsigned int binaryNumber[32]; // 32ビットの2進数を仮定
-				//int k = 0;
-				//int l = 0;
-				//for (int m = 0;m < head->edge->int_num;m++)
-				//{
-				//	k = 0;
-				//	decimalNumber = head->edge->flag[m];
-				//	while (decimalNumber > 0)
-				//	{
-				//		binaryNumber[k] = decimalNumber % 2;
-				//		decimalNumber /= 2;
-				//		k++;
-				//	}
-				//	printf("\n[%d]\thead  ->  edge[%d]     \t:  ", depth, m);
-				//	for (l = k - 1;l >= 0;l--)
-				//	{
-				//		printf("%d", binaryNumber[l]);
-				//	}
-				//}
-
-				depth++;//koizumi追加
+				unsigned int decimalNumber_;
+				unsigned int binaryNumber[32]; // 32ビットの2進数を仮定
+				int k = 0;
+				int l = 0;
+				for (int m = 0;m < head->edge->int_num;m++)
+				{
+					k = 0;
+					decimalNumber = head->edge->flag[m];
+					while (decimalNumber > 0)
+					{
+						binaryNumber[k] = decimalNumber % 2;
+						decimalNumber /= 2;
+						k++;
+					}
+					printf("\n[%d]\thead  ->  edge[%d]     \t:  ", depth, m);
+					for (l = k - 1;l >= 0;l--)
+					{
+						printf("%d", binaryNumber[l]);
+					}
+				}
 
 				j++;
 			}
@@ -938,20 +939,21 @@ bool RealTarget(
 
 	/* initialize target-list*/
 	//koizumi変更
-	/*target->num*/tfl_num = depth - 1;
-	//target->listがReal Targetつまり両立可能故障集合
-	//koizumiコメントアウト target->listはtflと同等だと思う
+	tfl_num = depth - 1;
 	//target->list = (UNDET_FAULT_LIST**)allocMemory(target->num, sizeof(UNDET_FAULT_LIST*));
 
+	//koizumi変更
+	//目標故障集合作成
 	/* set target fault */
-	//for (int i = 0; i < tfl_num; i++)
-	//{
-	// 
-		//koizumi変更
-		//目標故障集合をtarget->listに入れている。つまりreal_targetを作成している
-		/*target->list[i]*///tfl = remain->list[select_id[i + 1]];//select_idの0番目の要素は-1で意味のない数字
-		//tfl = tfl->next;
-	//}
+	UNDET_FAULT_LIST* current = ufl;
+	for (int i = 0; i < tfl_num; i++)
+	{
+		for (int j = 0; j < select_id[i + 1]; j++) {
+			current = current->next;
+		}
+		tfl = current;
+		tfl = tfl->next;
+	}
 
 	/* free structure */
 	while (head)
@@ -1022,7 +1024,7 @@ void SortEdgeDescend(
 		//}
 		current = current->next;
 	}
-	qsort(sorted, ufl_num, sizeof(EDGE), FuncSortDescend);
+	qsort(sorted->sort, ufl_num, sizeof(EDGE), FuncSortDescend);
 
 	for (int i = 0; i < sorted->num; i++)
 	{
