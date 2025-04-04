@@ -89,6 +89,10 @@ PBO mttg_calc_hard_constraint(void) {
 	p.val = 0;
 	p.h_constraint = 0;
 
+	if (tfl == NULL) {
+		printf("目標故障集合設定エラー\n");
+		exit(1);
+	}
 	head = tfl;
 
 	//-------------------------------------------------------------------------------------

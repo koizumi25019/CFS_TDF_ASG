@@ -64,8 +64,6 @@ int file_output(clock_t time,int mode) {
 		for (int i = 0; i < n_net; i++) {
 			fprintf(fout_literal,"Name            :%s\n", nl[i].name);
 			fprintf(fout_literal,"  ID            :%d\n", nl[i].n);
-			fprintf(fout_literal,"  1time-literal :%d\n", nl[i].suf_1t);
-			fprintf(fout_literal,"  2time-literal :%d\n\n", nl[i].suf_2t);
 		}
 
 		node = red;

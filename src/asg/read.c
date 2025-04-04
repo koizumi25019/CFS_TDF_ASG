@@ -939,31 +939,39 @@ bool RealTarget(
 	/* initialize target-list*/
 	//koizumi変更
 	tfl_num = depth - 1;
-	//target->list = (UNDET_FAULT_LIST**)allocMemory(target->num, sizeof(UNDET_FAULT_LIST*));
 
 	//koizumi変更
 	//目標故障集合作成
 	/* set target fault */
 	UNDET_FAULT_LIST* current = ufl;
-	UNDET_FAULT_LIST* tfl = NULL;
+	tfl = NULL;
 	UNDET_FAULT_LIST* tfl_head = NULL;
 	for (int i = 0; i < tfl_num; i++)
 	{
 		for (int j = 0; j < select_id[i + 1]; j++) {
+			if (current == NULL) {
+				printf("両立可能故障_目標故障設定ミス\n");
+				exit(1);
+			}
 			current = current->next;
 		}
 		if (tfl == NULL) {
 			tfl = current;
-			tfl = tfl->next;
 			tfl_head = current;
 		}
 		else {
-			tfl = current;
+			tfl->next = current;
 			tfl = tfl->next;
 		}
 		current = ufl;
 	}
+	//tflの末尾にNULLを設定
+	tfl->next = NULL;
+	//tflを先頭に戻す
 	tfl = tfl_head;
+	if (tfl == NULL) {
+		printf("両立可能故障集合設定エラー\n");
+	}
 
 
 	/* free structure */

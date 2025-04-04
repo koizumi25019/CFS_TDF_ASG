@@ -89,6 +89,7 @@ int mttg_main(void) {
 		file_output(0, 3);
 
 		//PBOサイズ記述
+
 		mttg_pbo_generate_min(fout_mttg_pbo);
 
 		//PS制約式記述
@@ -138,7 +139,7 @@ int mttg_main(void) {
 		//	clasp ⇒ テストベクトル生成
 		//========================================================================
 		//Clasp
-		sprintf(cmd, "clasp.exe %smttg_pbo.txt --time-limit %d > %sclasp_log_mttg.txt　--parallel-mode 24　--mode 1", folder_out, fi[TIME].value, folder_out);
+		sprintf(cmd, "clasp.exe %smttg_pbo.txt --time-limit %d > %sclasp_log_mttg.txt --mode 1", folder_out, fi[TIME].value, folder_out);
 		system(cmd);
 
 		//clasp情報取得
