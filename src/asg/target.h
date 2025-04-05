@@ -115,9 +115,8 @@ void COMPinti(
 	void
 );
 
-/** set the real-target-fault list */
-bool RealTarget(
-	//TARGET* target,			  /**< target-fault list */
+/** set the CompatibleFaultSet*/
+bool CompatibleFaultSet(
 	SORTED* sorted, 			  /**< sorted list */
 	int loop				  /**< loop variable */
 );

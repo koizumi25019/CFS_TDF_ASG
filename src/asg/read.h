@@ -228,7 +228,7 @@ NECE_NLIST;
 typedef struct CliqueNode
 {
 	int					  depth;			  /**< depth */
-	int					  select;			  /**< depth */
+	int					  select;			  
 	int					  num_r;			  /**< relaxation varaibales :ŠÉ˜a•Ï””H*/
 	BIT_INT* edge;			  //•Ó‚ªŒq‚ª‚Á‚Ä‚¢‚é‚©‚ðŽ¦‚·(edge==1‚È‚çŒq‚ª‚Á‚Ä‚¢‚é)
 	struct CliqueNode* nextptr;				  /**< pointer to next node */

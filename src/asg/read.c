@@ -1,13 +1,3 @@
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*																											 */
-/*	program		:	ASG																						 */
-/*	file		:	./src/asg/read.c																		 */
-/*	deginer		:	R.miura			covered T.sone													  		 */
-/*	date		:	2022.10.01		(2023.10.10)											  				 */
-/*																											 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-
 //-------------------------------------------------------------------------------------------------------------
 //	include
 //-------------------------------------------------------------------------------------------------------------
@@ -564,7 +554,6 @@ bool ReadNecessary(
 //*************************************************************************************************************
 bool searchNnode(
 	char* buffer,			  /**< buffer (key) */
-	//FNODE* tmp,				  /**< pointer to hash-fault list */
 	int no
 )
 {
@@ -742,8 +731,7 @@ bool CreateCompatibleEdge(
 //	@function	：	set the real target-fault list
 //	@return		：	(bool) okay, error
 //*************************************************************************************************************
-bool RealTarget(
-	/*TARGET* target,*/			  /**< target-fault list */
+bool CompatibleFaultSet(
 	SORTED* sorted,			  /**< sorted list */
 	int loop				  /**< loop variable */
 )
@@ -773,17 +761,15 @@ bool RealTarget(
 	/* fault selection from compatible fault sets */
 	//両立可能故障における目標故障選択
 
-	//未検出故障数が300以下の場合の処理
-	//if (ufl_num < 300)
+	//未検出故障数が100以下の場合の処理
+	//if (ufl_num < 100)
 	//{
 	//	if (num_clique_flag == false)
 	//	{
 	//		num_clique = loop + 1;
 	//		num_clique_flag = true;
 	//	}
-	//	//DirectInputTarget(target);//ufl(未検出故障集合をそのままtfl(目標故障集合)としている
-	//	//koizumi追加
-	//	tfl = ufl;//DirectInputTargetと同様のことをしている
+	//	tfl = ufl;
 	//	tfl_num = ufl_num;
 	//	return TARGET_OKAY;
 	//}
@@ -792,15 +778,11 @@ bool RealTarget(
 		//シード生成の最初は故障が繋がる辺の数を基準に降順ソードする
 		//繋がった辺の数が多いやつからグラフを作成していくため
 		//辺の数が多いやつから選択することで効率的にグラフを作成
-		/* sort edge */
 		if (loop == 0) {
 			SortEdgeDescend(sorted);
 		}
 	//}
 
-
-	/* first process */
-	/* maximum clique extraction from compatible fault set */
 	//両立可能故障集合から最大クリークを抽出
 
 	//両立可能故障グラフの頂点の構造体を作成、初期化
@@ -840,6 +822,7 @@ bool RealTarget(
 				select_flag = 1;
 				bitintSetNbit_Zero(head->edge, select);//故障を選択したのでその故障番号を0に設定
 
+				printf("選択した故障を0に設定(select:故障ID)：%d\n", select);
 				/* debug bitint */
 				unsigned int decimalNumber;
 				unsigned int binaryNumber[32]; // 32ビットの2進数を仮定
@@ -855,7 +838,7 @@ bool RealTarget(
 						decimalNumber /= 2;
 						k++;
 					}
-					printf("\n[%d]\thead  ->  edge[%d]     \t:  ", depth, m);
+					printf("\ndepth:[%d]\thead  ->  edge[%d]     \t:  ", depth, m);
 					for (l = k - 1;l >= 0;l--)
 					{
 						printf("%d", binaryNumber[l]);
@@ -868,16 +851,8 @@ bool RealTarget(
 					cnodeptr->nextptr = head;//一つ後ろのクリークノードのポインタ
 					head = cnodeptr;
 
-					/* Search for the current ID of the selected fault */
-					//for (now_id = 0; now_id < ufl_num; now_id++)
-					//{
-					//	if (select == remain->list[now_id]->id)//uflのidは飛び飛びだから齟齬が生じる
-					//	{
-					//		break;
-					//	}
-					//}
-					//select_id[depth++] = select;//なんで上書きしてるん
 					depth++;
+
 					//edge->int_num:32bit_flag確保数
 					UNDET_FAULT_LIST* current = ufl;
 					for (int i = 0; i < select; i++) {
@@ -891,15 +866,9 @@ bool RealTarget(
 						//300 / 32 ＝ 約 9.3 …
 						//よって 10 個前後の 32 bit 変数に分割して「ビット AND」をしないといけません。
 						head->edge->flag[k]= (head->nextptr->edge->flag[k])//後ろのcnodeのflag
-							& (current->edge->flag[k]/*sorted->edge->flag[k]*/);//koizumi追加
+							& (current->edge->flag[k]);//koizumi変更
 						//後ろのedge_flagと今のedge_flagの積をとると、次の深さのedge
 					}
-					//koizumi追加
-					//tfl = sorted;
-					//tfl = tfl->next;
-					////koizumi追加
-					//sorted = sorted->next;
-
 					count = 0;
 					for (int k = 0; k < head->edge->int_num; k++)
 					{
@@ -924,7 +893,7 @@ bool RealTarget(
 						decimalNumber_ /= 2;
 						p++;
 					}
-					printf("\n[%d]\thead  ->  edge[%d]     \t:  ", depth, m);
+					printf("\ndepth:[%d]\thead  ->  edge[%d]     \t:  ", depth, m);
 					for (q = p - 1;q >= 0;q--)
 					{
 						printf("%d", binaryNumber_[q]);
@@ -936,13 +905,9 @@ bool RealTarget(
 	}
 	//ここまでクリーク抽出
 
-	/* initialize target-list*/
-	//koizumi変更
-	tfl_num = depth - 1;
-
 	//koizumi変更
 	//目標故障集合作成
-	/* set target fault */
+	tfl_num = depth - 1;
 	UNDET_FAULT_LIST* current = ufl;
 	tfl = NULL;
 	UNDET_FAULT_LIST* tfl_head = NULL;
@@ -973,7 +938,6 @@ bool RealTarget(
 		printf("両立可能故障集合設定エラー\n");
 	}
 
-
 	/* free structure */
 	while (head)
 	{
@@ -981,7 +945,7 @@ bool RealTarget(
 		head = head->nextptr;
 		free(p);
 	}
-	//free(sorted->sort);
+	free(sorted->sort);
 #ifdef __DEBUG_SET_TARGET__
 	_CALL_DEBUG_SET_TARGET_(target);
 #endif // __DEBUG_SET_TARGET__
@@ -1151,6 +1115,67 @@ int FuncSortDescend(
 		return 0;
 	}
 }
+
+//*************************************************************************************************************
+//	@name		：　OutGraphLogfile
+//	@function	：	output the log
+//	@return		：	null
+//*************************************************************************************************************
+//void OutGraphLogfile(
+//	TARGET* remain			  /**< target-fault list */
+//)
+//{
+//	/* variable declaration */
+//	int min = 0;
+//	int max = 0;
+//	int sum = 0;
+//
+//	/* calulate */
+//	min = remain->list[0]->n_edge;
+//	for (int i = 0; i < remain->num; i++)
+//	{
+//		if (min > remain->list[i]->n_edge)
+//		{
+//			min = remain->list[i]->n_edge;
+//		}
+//		if (max < remain->list[i]->n_edge)
+//		{
+//			max = remain->list[i]->n_edge;
+//		}
+//		sum += remain->list[i]->n_edge;
+//	}
+//
+//	/** output graph log file */
+//	FILE* fileptr = (FILE*)NULL;
+//	fileOpen(&fileptr, opt.file.output.graphlog, "w");
+//	fprintf(fileptr, "//-------------------------------------------------------\n");
+//	fprintf(fileptr, "//          Compatible Fault Graph infomation\n");
+//	fprintf(fileptr, "//-------------------------------------------------------\n");
+//	fprintf(fileptr, "//  Number of vertex                : %d\n", readdata.fault.numinit);
+//	fprintf(fileptr, "//  Number of edges                 : %d\n", sum / 2);
+//	fprintf(fileptr, "//  Number of minimum degree        : %d\n", min);
+//	fprintf(fileptr, "//  Number of maximum degree        : %d\n", max);
+//	fprintf(fileptr, "//  Number of average degree        : %d\n", sum / remain->num);
+//	fprintf(fileptr, "//  Percentage of branch density    : %.2f%%\n", ((float)sum / (float)(remain->num * (remain->num - 1)) * 100));
+//	fprintf(fileptr, "//-------------------------------------------------------\n\n");
+//
+//	/** output number of adjacent vertices in graph */
+//	for (int i = 0; i < remain->num; i++)
+//	{
+//		if (remain->list[i]->type == SF1)
+//		{
+//			fprintf(fileptr, "%30s\tsa1    %3d\n", remain->list[i]->name, remain->list[i]->n_edge);
+//		}
+//		else
+//		{
+//			fprintf(fileptr, "%30s\tsa0    %3d\n", remain->list[i]->name, remain->list[i]->n_edge);
+//		}
+//	}
+//
+//	fclose(fileptr);
+//	return;
+//}
+
 //*************************************************************************************************************
 //	@name		：  ReadGraph
 //	@function	：	Reading File Graph

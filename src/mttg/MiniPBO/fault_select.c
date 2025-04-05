@@ -94,11 +94,11 @@ int fault_select(int unsat_flag,int loop) {
             CreateCompatibleInfo();//neceにG16=0など、ある故障に対する必須割り当て情報を入れる
             if (CreateNecessaryNet() != true) return false;//necenetに必須割り当て情報ファイルから信号線の値を入れる(0か1)
             if (CreateCompatibleEdge() != true) return false;//両立可能故障グラフ
-            //OutGraphLogfile(tfl);これはグラフログファイル出力ASGのtarget.cに記述してあるから後に実装したいかな
-            if (RealTarget(/*target, */sorted, loop) != true) return false;//RealTargetは両立可能なグラフをしたあとの目標故障集合
+            //OutGraphLogfile(tfl);これはグラフログファイル出力後に実装したいかな
+            if (CompatibleFaultSet(sorted, loop) != true) return false;//RealTargetは両立可能なグラフをしたあとの目標故障集合
         }
         else {
-            if (RealTarget(/*target,*/ sorted, loop) != true) return false;
+            if (CompatibleFaultSet(sorted, loop) != true) return false;
         }
     }
     printf("\nREADER_NECESSARY_ON終了\n");
@@ -112,11 +112,11 @@ int fault_select(int unsat_flag,int loop) {
                 //if (ReadGraph() != READ_OKAY) return READ_ERROR;
                 printf("readgraphは未実装_頑張ります\n");
                 //OutGraphLogfile(tfl);
-                if (RealTarget(/*target,*/sorted,loop) != true) return false;
+                if (CompatibleFaultSet(/*target,*/sorted,loop) != true) return false;
             }
             else
             {
-                if (RealTarget(/*tfl, target,*/ sorted, loop) != true) return false;
+                if (CompatibleFaultSet(/*tfl, target,*/ sorted, loop) != true) return false;
             }
         }
 
