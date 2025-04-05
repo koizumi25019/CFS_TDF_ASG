@@ -13,7 +13,7 @@
 #include"../../asg/read.h"
 //===================================================
 // 関数名: fault_select_transition
-// 機能: 遷移故障の未検出故障集合からランダムに目標故障を選択し、構造体に格納
+// 機能: 遷移故障の未検出故障集合から両立可能故障集合を生成するか、ランダムに未検出故障集合から故障を選択
 //       unsat_flag が ON の場合、単一故障を目標故障として設定
 // 戻り値：int 正常終了:SUCCESS(=0) , 異常終了:ERROR(=-1)
 // 引数：int unsat_flag - UNSATフラグ (ON または OFF)
@@ -56,7 +56,7 @@ int fault_select(int unsat_flag,int loop) {
         tfl = tfl_node;
         tfl_num = 1;
 
-        printf("【INFO】: Switched to single fault test generation.\n");
+        printf("【INFO】: single fault test generation.\n");
         return SUCCESS;
     }
 
@@ -65,13 +65,6 @@ int fault_select(int unsat_flag,int loop) {
     // 未検出故障が存在しない場合
     if (ufl_num == 0) {
         printf("【WARNING】: No undetected faults available.\n");
-        return ERROR;
-    }
-
-    //koizumi追加 両立可能故障集合の処理
-    tfl_node = (UNDET_FAULT_LIST**)malloc(sizeof(UNDET_FAULT_LIST*) * ufl_num);
-    if (tfl_node == NULL) {
-        printf("【ERROR】: Memory allocation failed.\n");
         return ERROR;
     }
 
@@ -86,11 +79,8 @@ int fault_select(int unsat_flag,int loop) {
     //必須割り当てファイル情報ファイルがある場合の処理
     READER_NECESSARY_ON
     {
-        printf("READER_NECESSARY_ON開始\n");
         if (loop == 0) {
-            /** include necessary info for target fault */
             COMPinti();//グラフ関連変数の初期化
-            //Compatible:両立可能,互換性のある
             CreateCompatibleInfo();//neceにG16=0など、ある故障に対する必須割り当て情報を入れる
             if (CreateNecessaryNet() != true) return false;//necenetに必須割り当て情報ファイルから信号線の値を入れる(0か1)
             if (CreateCompatibleEdge() != true) return false;//両立可能故障グラフ
@@ -101,7 +91,6 @@ int fault_select(int unsat_flag,int loop) {
             if (CompatibleFaultSet(sorted, loop) != true) return false;
         }
     }
-    printf("\nREADER_NECESSARY_ON終了\n");
     //必須割り当て情報ファイル無しで、両立可能故障ファイルがある場合
     READER_NECESSARY_OFF
     {
@@ -111,12 +100,12 @@ int fault_select(int unsat_flag,int loop) {
                 COMPinti();//両立可能グラフの初期化
                 //if (ReadGraph() != READ_OKAY) return READ_ERROR;
                 printf("readgraphは未実装_頑張ります\n");
-                //OutGraphLogfile(tfl);
-                if (CompatibleFaultSet(/*target,*/sorted,loop) != true) return false;
+                //OutGraphLogfile();
+                if (CompatibleFaultSet(sorted,loop) != true) return false;
             }
             else
             {
-                if (CompatibleFaultSet(/*tfl, target,*/ sorted, loop) != true) return false;
+                if (CompatibleFaultSet(sorted, loop) != true) return false;
             }
         }
 
@@ -165,7 +154,7 @@ int fault_select(int unsat_flag,int loop) {
             }
 
             // 故障を順に選択
-            for (index = 0; /*i < ufl_num && */index < select_faults_num; index++) {
+            for (index = 0;index < select_faults_num; index++) {
                 if (rand_node[index]->netlist->tf_flag == OFF) {
                     rand_node[index]->netlist->tf_flag = ON;
 
@@ -186,7 +175,6 @@ int fault_select(int unsat_flag,int loop) {
                     tfl_node->next = head;
                     head = tfl_node;
 
-                    //index++;
                 }
             }
 

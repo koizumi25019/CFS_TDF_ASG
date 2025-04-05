@@ -1,13 +1,3 @@
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*																											 */
-/*	program		:	ASG																						 */
-/*	file		:	./src/asg/read.h																	     */
-/*	deginer		:	R.miura			covered T.sone													  		 */
-/*	date		:	2022.10.01		(2023.10.10)											  				 */
-/*																											 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-
 #pragma once
 //-------------------------------------------------------------------------------------------------------------
 //	include
@@ -64,54 +54,7 @@
 
 #define	DETECTED		  7					  /**< fault detected */
 #define	UNDETECTED		  17				  /**< fault undetected */
-#define	REDEUNDANT		  27				  /**< fault redeundant */
-
-/** set the type of fault  */
-#define	fnodeptr_type___setFaultType(type)	do																  \
-{																											  \
-	context = strtok_s(NULL, " \n\0", &context);															  \
-	if(context == NULL)																						  \
-	{																										  \
-		printf("\n	FILE ERROR: fault file reading failed. ");									  \
-		printf("type of fault error.\n\n");														  \
-		return (FNODE*)NULL;																			      \
-	}																										  \
-	if (!strcmp(context, "sa0"))																			  \
-	{																										  \
-		type = SF0;																							  \
-	}																										  \
-	else if (!strcmp(context, "sa1"))																		  \
-	{																										  \
-		type = SF1;																							  \
-	}																										  \
-	else																									  \
-	{																										  \
-		printf("\n	FILE ERROR: fault file reading failed. ");									  \
-		printf("%c%s%c unexpected type of fault.\n\n",'"', context, '"');						  \
-		return (FNODE*)NULL;																			      \
-	}																										  \
-}																											  \
-while (false);
-
-/** set the pointer to netlist  */
-#define	fnodeptr_netptr___setNetPtr(netptr, buffer)	do														  \
-{																											  \
-	netptr = (NLIST*)NULL;																					  \
-	for (int i = 0; i < n_net; i++)																			  \
-	{																										  \
-		if (!strcmp(nl[i].name, buffer))																	  \
-		{																									  \
-			netptr = &nl[i];																				  \
-		}																									  \
-	}																										  \
-	if(netptr==(NLIST*)NULL)																				  \
-	{																										  \
-		printf("\n	FILE ERROR: fault file reading failed. ");									  \
-		printf("%c%s%c is thought.\n\n",	'"', buffer, '"');										  \
-		return (FNODE*)NULL;																			      \
-	}																										  \
-}																											  \
-while (false);
+#define	REDEUNDANT		  27				  /**< fault redeundant */																						  \
 
 /** xor-tap reader -on */
 #define READER_XOR_TAP_ON		if (opt.file.input.xortap != FILE_NOSET)
@@ -123,35 +66,6 @@ while (false);
 //-------------------------------------------------------------------------------------------------------------
 //	structre
 //-------------------------------------------------------------------------------------------------------------
-
-/** fault node structre */
-//typedef struct FaultNode
-//{
-//	char* string;					 /**< string */
-//	char* name;						 /**< name */
-//	int					  type;			      /**< fault type */
-//	int					  relax;			  /**< relaxation varaibales */
-//	int					  detect;			  /**< detected??? */
-//	NLIST* netptr;					 /**< pointer to netlist */
-//	struct FaultNode* nextptr;				  /**< pointer to next node */
-//	char* nece;						/**< info necessary */
-//	BIT_INT_XP* necenet;			/**< bit int necessary */
-//	BIT_INT* edge;				    /**< compatible edge */
-//	int n_edge;					    /**< num edge */
-//	int id;							/**< id */
-//}
-//FNODE;
-
-/** fault list structres */
-//typedef struct FaultList
-//{
-//	int					  numrema;			  /**< number of remaining faults */
-//	int					  numinit;			  /**< number of initial faults */
-//	int					  numdete;			  /**< number of detected faults */
-//	int					  numred;			  /**< number of redundant faults */
-//	struct FaultNode* list[MAXSIZE_HASH]; /**< fault list */
-//}
-//FLIST;
 
 /** phase-shifter net structres */
 typedef struct PhaseShifterNetList
@@ -197,7 +111,6 @@ NECESSARY;
 /** read data structres */
 typedef struct ReadData
 {
-	//struct FaultList	  fault;			  /**< fault list data */
 	struct PhaseShitfter  psnet;			  /**< phase-shifter net  */
 	struct LinearFeedbackShiftRegister lfsrnet;/** lfsr net */
 	struct Necessary	necenet;			  /**< necessary net */
@@ -230,7 +143,7 @@ typedef struct CliqueNode
 	int					  depth;			  /**< depth */
 	int					  select;			  
 	int					  num_r;			  /**< relaxation varaibales :ŠÉ˜a•Ï””H*/
-	BIT_INT* edge;			  //•Ó‚ªŒq‚ª‚Á‚Ä‚¢‚é‚©‚ðŽ¦‚·(edge==1‚È‚çŒq‚ª‚Á‚Ä‚¢‚é)
+	BIT_INT* edge;			                  //•Ó‚ªŒq‚ª‚Á‚Ä‚¢‚é‚©‚ðŽ¦‚·(edge==1‚È‚çŒq‚ª‚Á‚Ä‚¢‚é)
 	struct CliqueNode* nextptr;				  /**< pointer to next node */
 }
 CNODE;
@@ -298,7 +211,6 @@ bool ReadNecessary(
 /** search for necessary node */
 bool searchNnode(
 	char* buffer,			  /**< buffer (key) */
-	//FNODE* tmp,				  /**< pointer to hash-fault list */
 	int no					  /**< No. */
 );
 

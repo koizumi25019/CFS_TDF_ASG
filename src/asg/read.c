@@ -456,7 +456,6 @@ bool ReadNecessary(
 {
 	READER_NECESSARY_ON
 	{
-		printf("ReadNecessary開始\n");
 	/* variable declaration */
 	FILE* fileptr = (FILE*)NULL;
 	char* buffer = (char*)NULL;
@@ -477,7 +476,6 @@ bool ReadNecessary(
 
 	readdata.necenet.necelist = (NECE_NLIST*)allocMemory(/*readdata.fault.numinit*/all_num, sizeof(NECE_NLIST));
 
-	/** open the "fault file" in read-mode */
 	//必須割り当て情報ファイルオープン
 	fileOpen(&fileptr, opt.file.input.necessary, "r");
 
@@ -558,7 +556,7 @@ bool searchNnode(
 )
 {
 	UNDET_FAULT_LIST* current = ufl;
-	while (/*tmp*/current != NULL)
+	while (current != NULL)
 	{
 		//buffer:G16\tsa1\n
 		if (!strcmp(current->string, buffer))
@@ -806,7 +804,7 @@ bool CompatibleFaultSet(
 	head->num_r = count;//隣接する頂点の数
 
 	//depth:深さ　深さ優先探索の深さ　深くないやつ程多くの辺を持つ故障
-	//depth-1の数がRealTarget数を一致
+	//depth-1の数が両立可能故障集合数と一致
 	//ここからクリーク抽出
 	//head->num_r==countでcountが0になったらループ抜ける。0になると繋がる辺がなくなったということ
 	while ((depth < ufl_num) && (head->num_r != 0))//head->num_r：隣接する頂点数
@@ -954,36 +952,6 @@ bool CompatibleFaultSet(
 }
 
 //*************************************************************************************************************
-//	@name		：　DirectInputTarget
-//	@function	：	set the direct target
-//	@return		：	(bool) okay, error
-//*************************************************************************************************************
-//bool DirectInputTarget(
-//	TARGET* target			  /**< target-fault list */
-//)
-//{
-//	//koizumiコメントアウト
-//	//if (opt.mode.target == SINGLE) target->num = 1;
-//	//else if (opt.mode.target == MULTIPLE) 	target->num = remain->num;
-//
-//	target->num = ufl_num;
-//
-//	target->list = (UNDET_FAULT_LIST**)allocMemory(target->num, sizeof(*));
-//
-//	for (int i = 0; i < target->num; i++)
-//	{
-//		target->list[i] = ufl/*remain->list[i]*/;
-//	}
-//	//ここの緩和変数の扱いがよくわからん
-//	target->list[0]->relax = false;//relax=falseは絶対検出
-//	printf("targetlist[0]:%s", target->list[0]->string);
-//#ifdef __DEBUG_SET_TARGET__
-//	_CALL_DEBUG_SET_TARGET_(target);
-//#endif // __DEBUG_SET_TARGET__
-//	return TARGET_OKAY;
-//}
-
-//*************************************************************************************************************
 //	@name		：　SortEdgeDescend
 //	@function	：	sort edge Descend
 //	@return		：	null
@@ -1001,10 +969,6 @@ void SortEdgeDescend(
 	{
 		sorted->sort[i].id = i;
 		sorted->sort[i].n_edge = current->n_edge;//繋がっている辺の数　CreateCompatibleEdgeで辺がつながっている数をカウントしている
-		//koizumi追加 これなに？？
-		//for (int j = 0; j < ufl->edge->int_num; j++) {
-		//	sorted->sort[i].edge->flag[j] = ufl->edge->flag[j];
-		//}
 		current = current->next;
 	}
 	qsort(sorted->sort, ufl_num, sizeof(EDGE), FuncSortDescend);
@@ -1083,14 +1047,14 @@ int CountBits(
 )
 {
 	//動作例
-	//	たとえば、n = 13 (1101 in binary) の場合:
+	//たとえば、n = 13 (1101 in binary) の場合:
 	//初期状態: n = 1101。
 	//ステップ 1 : 各 2 ビットでカウント → n = 101。
 	//ステップ 2 : 各 4 ビットでカウント → n = 11。
 	//ステップ 3 : 各 8 ビットでカウント → n = 3。
 	//結果 : 「1」の個数は 3。
 	n = (n & 0x55555555) + (n >> 1 & 0x55555555);//0x55555555 == 0101010.....（偶数ビットが 1）。
-	n = (n & 0x33333333) + (n >> 2 & 0x33333333);//0x33333333 == 00110011...（4ビットごとに下位2ビットが 1）。
+	n = (n & 0x33333333) + (n >> 2 & 0x33333333);//0x33333333 == 00110011... （4ビットごとに下位2ビットが 1）。
 	n = (n & 0x0f0f0f0f) + (n >> 4 & 0x0f0f0f0f);
 	n = (n & 0x00ff00ff) + (n >> 8 & 0x00ff00ff);
 	n = (n & 0x0000ffff) + (n >> 16 & 0x0000ffff);
