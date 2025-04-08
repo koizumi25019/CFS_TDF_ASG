@@ -725,8 +725,8 @@ bool CreateCompatibleEdge(
 }
 
 //*************************************************************************************************************
-//	@name		：　RealTarget
-//	@function	：	set the real target-fault list
+//	@name		：　CompatibleFaultSet
+//	@function	：	set the Compatible Fault list
 //	@return		：	(bool) okay, error
 //*************************************************************************************************************
 bool CompatibleFaultSet(
@@ -755,7 +755,7 @@ bool CompatibleFaultSet(
 	for (int i = 0; i < ufl_num; i++) select_id[i] = -1;
 
 
-	/* number of taget faults < 300 */
+	/* number of taget faults < 100 */
 	/* fault selection from compatible fault sets */
 	//両立可能故障における目標故障選択
 
@@ -784,10 +784,9 @@ bool CompatibleFaultSet(
 	//両立可能故障集合から最大クリークを抽出
 
 	//両立可能故障グラフの頂点の構造体を作成、初期化
-	//未検出故障数分クリーク作成 改変前は全故障分作っていた
-	head = CreateCliqueNode(depth++, -1, ufl_num/*readdata.fault.numinit*/);//線形リスト　depth==0
+	//全故障数分クリーク作成
+	head = CreateCliqueNode(depth++, -1, all_num);//線形リスト　depth==0
 
-	/* initialized to fault detection information */
 	//detflagはすべて1で初期化されているので、
 	//それと同じアルゴリズムを用いるedge_flagにもオール1を代入している
 	for (int k = 0; k <head->edge->int_num; k++)//cnodeptr->edge->int_num = ufl_num / 32 + 1;
@@ -795,7 +794,6 @@ bool CompatibleFaultSet(
 		head->edge->flag[k] = detflag->flag[k];//detflag[]で32故障分。これをk分繰り返すと全故障参照できる
 	}
 
-	/* Counting the number of adjacent vertices */
 	//隣接する頂点の数を数える
 	for (int k = 0; k < head->edge->int_num; k++)
 	{
@@ -811,7 +809,7 @@ bool CompatibleFaultSet(
 	{
 		j = 0;
 		select_flag = 0;
-		while (j < ufl_num) {
+		while (j < all_num) {
 			if (select_flag == 1)break;
 			select = sorted->sort[j].id;//ex;sorted->sort[0].id 一番つながっている辺の数が多い節の故障id．これはufl(未検出故障集合)に対してloop回数1回目に定義
 			//辺が繋がっているか(edge==1)かを取得して,それが何ビット目かをselectに取得
@@ -844,7 +842,7 @@ bool CompatibleFaultSet(
 				}
 
 				/* create next depth node */
-				if ((cnodeptr = CreateCliqueNode(depth, select, ufl_num/*readdata.fault.numinit*/)) != NULL)//未検出故障数分クリークを作成 depthは1からスタート
+				if ((cnodeptr = CreateCliqueNode(depth, select, all_num)) != NULL)//全故障数分クリークを作成 depthは1からスタート
 				{
 					cnodeptr->nextptr = head;//一つ後ろのクリークノードのポインタ
 					head = cnodeptr;
