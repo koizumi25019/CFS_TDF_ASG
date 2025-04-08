@@ -141,6 +141,9 @@ int fault_judge(void) {
 							dfl_num++;
 							det_fault_num_clasp++;
 
+							//koizumi追加
+							bitintSetNbit_Zero(detflag, u_head->node_id);//node_idは故障に一意に割り当てられているもの
+
 							//検出故障を未検出故障リストから削除
 							ufl_free(u_head, pre_node, -1);
 							/*pre_node = u_head->next->next;

@@ -741,7 +741,6 @@ bool CompatibleFaultSet(
 	int depth = 0;				/* depth */
 	int select;				/* select no. */
 	int j = 0;
-	int now_id = 0;		/*  initial remain number */
 	int flag = 0, select_flag = 0, end_flag = 0, d_flag = 0;
 	int count = 0;
 
@@ -754,9 +753,6 @@ bool CompatibleFaultSet(
 
 	for (int i = 0; i < ufl_num; i++) select_id[i] = -1;
 
-
-	/* number of taget faults < 100 */
-	/* fault selection from compatible fault sets */
 	//両立可能故障における目標故障選択
 
 	//未検出故障数が100以下の場合の処理
