@@ -26,7 +26,6 @@ int transition_delay_fault_set(void) {
 
 	int id = 0;
 	char line[100];//ファイルの1行分を取得
-	//char n_line[100];//ファイルの一行分を順序変更用
 	char *n_line=NULL;//ファイルの一行分を順序変更用
 	n_line = (char*)allocMemory(50000, sizeof(char));
 	char fault_type[10];

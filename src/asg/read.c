@@ -1104,7 +1104,7 @@ int FuncSortDescend(
 //	@return		ÅF	null
 //*************************************************************************************************************
 //void OutGraphLogfile(
-//	TARGET* remain			  /**< target-fault list */
+//	void
 //)
 //{
 //	/* variable declaration */
@@ -1133,16 +1133,16 @@ int FuncSortDescend(
 //	fprintf(fileptr, "//-------------------------------------------------------\n");
 //	fprintf(fileptr, "//          Compatible Fault Graph infomation\n");
 //	fprintf(fileptr, "//-------------------------------------------------------\n");
-//	fprintf(fileptr, "//  Number of vertex                : %d\n", readdata.fault.numinit);
+//	fprintf(fileptr, "//  Number of vertex                : %d\n", all_num);
 //	fprintf(fileptr, "//  Number of edges                 : %d\n", sum / 2);
 //	fprintf(fileptr, "//  Number of minimum degree        : %d\n", min);
 //	fprintf(fileptr, "//  Number of maximum degree        : %d\n", max);
-//	fprintf(fileptr, "//  Number of average degree        : %d\n", sum / remain->num);
-//	fprintf(fileptr, "//  Percentage of branch density    : %.2f%%\n", ((float)sum / (float)(remain->num * (remain->num - 1)) * 100));
+//	fprintf(fileptr, "//  Number of average degree        : %d\n", sum / ufl_num);
+//	fprintf(fileptr, "//  Percentage of branch density    : %.2f%%\n", ((float)sum / (float)(ufl_num * (ufl_num - 1)) * 100));
 //	fprintf(fileptr, "//-------------------------------------------------------\n\n");
 //
 //	/** output number of adjacent vertices in graph */
-//	for (int i = 0; i < remain->num; i++)
+//	for (int i = 0; i < ufl_num; i++)
 //	{
 //		if (remain->list[i]->type == SF1)
 //		{
