@@ -820,7 +820,7 @@ bool CompatibleFaultSet(
 				select_flag = 1;
 				bitintSetNbit_Zero(head->edge, select);//故障を選択したのでその故障番号を0に設定
 
-				printf("選択した故障を0に設定(select:故障ID)：%d\n", select);
+				printf("\n選択した故障を0に設定(select:故障ID)：%d\n", select);
 				/* debug bitint */
 				unsigned int decimalNumber;
 				unsigned int binaryNumber[32]; // 32ビットの2進数を仮定
@@ -836,7 +836,7 @@ bool CompatibleFaultSet(
 						decimalNumber /= 2;
 						k++;
 					}
-					printf("\ndepth:[%d]\thead  ->  edge[%d]     \t:  ", depth, m);
+					printf("depth:[%d]\thead  ->  edge[%d]     \t:  ", depth, m);
 					for (l = k - 1;l >= 0;l--)
 					{
 						printf("%d", binaryNumber[l]);
@@ -852,7 +852,7 @@ bool CompatibleFaultSet(
 					depth++;
 
 					//edge->int_num:32bit_flag確保数
-					UNDET_FAULT_LIST* current = ufl;
+					UNDET_FAULT_LIST* current = afl;
 					for (int i = 0; i < select; i++) {
 						current = current->next;
 					}
@@ -873,6 +873,29 @@ bool CompatibleFaultSet(
 						count += CountBits(head->edge->flag[k]);//1の数をカウント
 					}
 					head->num_r = count;
+
+					/* debug bitint */
+					unsigned int decimalNumber_c;
+					unsigned int binaryNumber_c[32]; // 32ビットの2進数を仮定
+					int p = 0;
+					int q = 0;
+					for (int m = 0; m < current->edge->int_num; m++)
+					{
+						p = 0;
+						decimalNumber_c = current->edge->flag[m];
+						while (decimalNumber_c > 0)
+						{
+							binaryNumber_c[p] = decimalNumber_c % 2;
+							decimalNumber_c /= 2;
+							p++;
+						}
+						printf("\ndepth:[%d]\tcurrent  ->  edge[%d]    :  ", depth, m);
+						for (q = p - 1; q >= 0; q--)
+						{
+							printf("%d", binaryNumber_c[q]);
+						}
+					}
+
 				}
 				else return TARGET_ERROR;
 
@@ -901,6 +924,7 @@ bool CompatibleFaultSet(
 			j++;
 		}
 	}
+	printf("\n");
 	//ここまでクリーク抽出
 
 	//koizumi変更
