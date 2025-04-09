@@ -13,7 +13,7 @@
 //------------------------------------------------------------------------
 #include"../header/Define.h"
 
-//koizumi’Ç‰Á
+//’Ç‰Á
 #include "../asg/init.h"
 #include "../opt/opt.h"
 

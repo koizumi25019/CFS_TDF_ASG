@@ -14,7 +14,7 @@ typedef struct Undet_fault_list{
 	int tfl_suf_fc;                    //suf_fcは目標故障ごとに変わるので格納
 	int tfl_fc_ppo;					   //故障回路に含まれるPPO数算出
 	struct Undet_fault_list* next;	   //後続アドレス
-	//koizumi追加 fromASG_read.h_FNODE構造体
+	//追加 fromASG_read.h_FNODE構造体
 	char* string;                   /**< string */
 	char* nece;						//必須割り当て情報ファイルを1行ずつ格納
 	BIT_INT_XP* necenet;			/**< bit int necessary */

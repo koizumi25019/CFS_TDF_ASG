@@ -10,7 +10,7 @@
 //自作インクルード
 //------------------------------------------------------------------------
 #include"../header/Define.h"
-//koizumi追加
+//追加
 #include "../asg/opb/opb.h"
 
 //=========================================================================
@@ -43,7 +43,7 @@ void mttg_pbo_generate_min(FILE* fp) {
 	}
 	else if (strcmp(fi[LOW_POWER].name, "ON") == 0) {
 		fprintf(fp, "* #variable= %d ", size_pbo.val);
-		fprintf(fp, "#constraint= %d ", size_pbo.h_constraint + opb.total.cons);//koizumi追加 + opb.total.cons
+		fprintf(fp, "#constraint= %d ", size_pbo.h_constraint + opb.total.cons);//追加 + opb.total.cons
 		fprintf(fp, "#product= %d sizeproduct= %d\n", 2 * size_pbo.s_constraint, 4 * size_pbo.s_constraint);
 		fprintf(fp, "*\n");
 		fprintf(fp, "*  this is a dummy instance\n");

@@ -11,18 +11,18 @@
 //------------------------------------------------------------------------
 #include"../../header/Define.h"
 #include"../../asg/read.h"
-//===================================================
+//===========================================================================================================
 // 関数名: fault_select_transition
 // 機能: 遷移故障の未検出故障集合から両立可能故障集合を生成するか、ランダムに未検出故障集合から故障を選択
 //       unsat_flag が ON の場合、単一故障を目標故障として設定
 // 戻り値：int 正常終了:SUCCESS(=0) , 異常終了:ERROR(=-1)
 // 引数：int unsat_flag - UNSATフラグ (ON または OFF)
-//===================================================
+//===========================================================================================================
 
 int fault_select(int unsat_flag,int loop) {
     int i, j;
     int index = 0;
-    int select_faults_num;                   //実際に選択する故障の上限数/
+    int select_faults_num;                    //実際に選択する故障の上限数/
     int fault_limit = fi[TARGET_LIMIT].value; // 故障選択数
     UNDET_FAULT_LIST* current;
     UNDET_FAULT_LIST* tfl_node;
@@ -68,7 +68,7 @@ int fault_select(int unsat_flag,int loop) {
         return ERROR;
     }
 
-    //koizumi追加 ソート用構造体確保
+    //追加 ソート用構造体確保
     sorted = (SORTED*)malloc(sizeof(SORTED));
     if (sorted == NULL) {
         printf("【ERROR】: Memory allocation failed.\n");

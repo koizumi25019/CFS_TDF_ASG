@@ -55,7 +55,7 @@ typedef struct _Netlist_Format_ {
 	unsigned int suf_2t;			//2–Ú‚Ì“Y‚¦š
 	unsigned int suf_fc;			//ŒÌá‰ñ˜H‚Ì“Y‚¦š
 
-	//koizumi’Ç‰Á(from ASG)
+	//’Ç‰Á(from ASG)
 	unsigned int	varsgc;			    /**< variables for good-circuit  */
 	unsigned int	varsfc;				/**< variables for faulty-circuit  */
 	char* consgc;						/**< constraints for good-circuit  */

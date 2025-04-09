@@ -9,7 +9,7 @@
 #include "read.h"
 #include "../lib/lib.h"
 #include "../header/Netlist.h"
-//koizumi追加
+//追加
 #include"../header/Fault.h"
 #include"../header/Define.h"
 #include"target.h"
@@ -25,7 +25,7 @@ bool ReadFile(
 	void
 )
 {
-	//koizumi追加
+	//追加
     /** create the detection infomation list */
 	detflag = (BIT_INT*)allocMemory(1, sizeof(BIT_INT));
 	detflag->int_num = all_num / MAXSIZE_BITINT + 1;
@@ -416,7 +416,7 @@ void COMPinti(
 {
 	/* variable initializion */
 
-	UNDET_FAULT_LIST* head = ufl;//koizumi追加//先頭を保存
+	UNDET_FAULT_LIST* head = ufl;//追加//先頭を保存
 
 	for (int i = 0; i < ufl_num; i++)
 	{
@@ -439,7 +439,7 @@ void COMPinti(
 		ufl->n_edge = ufl_num;//?最初はn_edgeは未検出故障数？
 		ufl = ufl->next;//後続アドレスへのポインタ
 	}
-	//koizumi追加
+	//追加
 	//リストの先頭に戻す
 	ufl = head;
 	return;
@@ -468,7 +468,6 @@ bool ReadNecessary(
 	int hash = 0;
 	int type = 0;
 	int i = 0;
-	int debag_count = 1;
 
 	/* partitioning allocation */
 	buffer = (char*)allocMemory(MAXSIZE_BUFFER, sizeof(char));
@@ -507,7 +506,6 @@ bool ReadNecessary(
 			//未検出故障リスト(線形)から一致する文字列を探索
 			if (searchNnode(string/*readdata.fault.list[hash]*/ , cnt) != NOT_FOUND)
 			{
-				debag_count++;
 				//必須割り当て情報取得(ex:G16=0 G15=1......など)
 				token2 = strtok_s(NULL, "\n\0", &context);
 				readdata.necenet.necelist[cnt].nece = (char*)allocMemory(MAXSIZE_BUFFER, sizeof(char));
@@ -520,8 +518,8 @@ bool ReadNecessary(
 	free(buffer);
 	free(string);
 	printf("\n");
-	printf("一致した文字列の数:%d\n", debag_count-1);
-	if (cnt != /*readdata.fault.numinit*/ufl_num)
+	printf("一致した文字列の数:%d\n", cnt);
+	if (cnt != ufl_num)
 	{
 		printf("\n	SYSTEM ERROR: Reading necessary file error. ");
 		printf("	Not enough necessary information. ");
@@ -542,7 +540,6 @@ bool ReadNecessary(
 	}
 
 	return READ_OKAY;
-	printf("ReadNecessary終了\n");
 }
 
 //*************************************************************************************************************
@@ -580,7 +577,7 @@ bool searchNnode(
 
 
 
-//koizumi追加 ASGのtarget.cに記載されていた関数を持ってきた
+//追加 ASGのtarget.cに記載されていた関数を持ってきた
 
 //*************************************************************************************************************
 //	@name		：　CreateNecessaryNet
@@ -599,7 +596,7 @@ bool CreateNecessaryNet(
 
 	buffer = (char*)allocMemory(MAXSIZE_BUFFER, sizeof(char));
 
-	//koizumi追加
+	//追加
 	//リストの先頭を保持するhead
 	UNDET_FAULT_LIST* head = ufl;
 	for (int i = 0; i < ufl_num; i++)
@@ -635,7 +632,7 @@ bool CreateNecessaryNet(
 		ufl = ufl->next;
 		printf("\r	Reading necessary infomation progress  >> %.2f%%", ((float)(i + 1) / (float)ufl_num) * 100);
 	}
-	//koizumi追加
+	//追加
 	//リストを先頭に戻す
 	ufl = head;
 #ifdef __DEBUG_SET_TARGET_NECESSARY__
@@ -670,7 +667,7 @@ bool CreateCompatibleEdge(
 	All_Bit_X_XP(comp);
 	printf("\n");
 
-	//koizumi追加
+	//追加
 	UNDET_FAULT_LIST* ufl_i;
 	ufl_i = ufl;
 	UNDET_FAULT_LIST* ufl_j;
@@ -705,10 +702,10 @@ bool CreateCompatibleEdge(
 					}
 				}
 			}
-			//koizumi追加
+			//追加
 			ufl_j = ufl_j->next;
 		}
-		//koizumi追加
+		//追加
 		ufl_i = ufl_i->next;
 		ufl_j = ufl;//ufl_jのポインタが更新されたままになってしまうのでポインタをuflでリセット
 
@@ -858,7 +855,7 @@ bool CompatibleFaultSet(
 						//300 / 32 ＝ 約 9.3 …
 						//よって 10 個前後の 32 bit 変数に分割して「ビット AND」をしないといけません。
 						head->edge->flag[k]= (head->nextptr->edge->flag[k])//後ろのcnodeのflag
-							& (current->edge->flag[k]);//koizumi変更
+							& (current->edge->flag[k]);//変更
 						//後ろのedge_flagと今のedge_flagの積をとると、次の深さのedge
 					}
 					count = 0;
@@ -921,10 +918,10 @@ bool CompatibleFaultSet(
 	printf("\n");
 	//ここまでクリーク抽出
 
-	//koizumi変更
+	//変更
 	//目標故障集合作成
 	tfl_num = depth - 1;
-	UNDET_FAULT_LIST* current = ufl;
+	UNDET_FAULT_LIST* current = afl;
 	tfl = NULL;
 	UNDET_FAULT_LIST* tfl_head = NULL;
 	for (int i = 0; i < tfl_num; i++)
@@ -944,7 +941,7 @@ bool CompatibleFaultSet(
 			tfl->next = current;
 			tfl = tfl->next;
 		}
-		current = ufl;
+		current = afl;
 	}
 	//tflの末尾にNULLを設定
 	tfl->next = NULL;

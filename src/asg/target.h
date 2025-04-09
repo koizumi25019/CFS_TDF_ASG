@@ -51,7 +51,7 @@ typedef struct Sorted {
 typedef struct Edge {
 	unsigned int id;						/**< id *///頂点に一意に割り当てられるid？？
 	unsigned int n_edge;					/*繋がっている辺の数*/
-	//koizumi追加
+	//追加
 	BIT_INT* edge;				    /**< compatible edge */
 }EDGE;//頂点
 //-------------------------------------------------------------------------------------------------------------

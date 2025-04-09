@@ -23,7 +23,7 @@ PBO mttg_calc_pbo_size(void) {
 	pbo.val = 0;
 	pbo.h_constraint = 0;
 	pbo.s_constraint = 0;
-	suffix = n_net*2+101;//koizumi’Ç‰Á
+	suffix = n_net*2+101;//’Ç‰Á
 
 
 

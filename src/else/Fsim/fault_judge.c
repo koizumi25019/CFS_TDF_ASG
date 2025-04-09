@@ -101,7 +101,7 @@ int fault_judge(void) {
 						dfl_num++;//検出故障数更新
 						det_fault_num_clasp++;//1テストパターンでの検出故障数
 
-						//koizumi追加
+						//追加
 						bitintSetNbit_Zero(detflag, u_head->node_id);//node_idは故障に一意に割り当てられているもの
 
 						//検出故障を未検出故障リストから削除
@@ -141,7 +141,7 @@ int fault_judge(void) {
 							dfl_num++;
 							det_fault_num_clasp++;
 
-							//koizumi追加
+							//追加
 							bitintSetNbit_Zero(detflag, u_head->node_id);//node_idは故障に一意に割り当てられているもの
 
 							//検出故障を未検出故障リストから削除
