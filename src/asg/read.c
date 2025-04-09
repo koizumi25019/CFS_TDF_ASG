@@ -920,12 +920,16 @@ bool CompatibleFaultSet(
 
 	//変更
 	//目標故障集合作成
+	// tfl_num を depth - 1 に設定
 	tfl_num = depth - 1;
 	UNDET_FAULT_LIST* current = afl;
 	tfl = NULL;
 	UNDET_FAULT_LIST* tfl_head = NULL;
+	UNDET_FAULT_LIST* new_node = NULL;
+
 	for (int i = 0; i < tfl_num; i++)
 	{
+		// select_id[i+1] の回数だけ current を先に進める
 		for (int j = 0; j < select_id[i + 1]; j++) {
 			if (current == NULL) {
 				printf("両立可能故障_目標故障設定ミス\n");
@@ -933,25 +937,46 @@ bool CompatibleFaultSet(
 			}
 			current = current->next;
 		}
+
+		// 新たな tfl 用ノードを確保して情報をコピー（deep copy）
+		new_node = (UNDET_FAULT_LIST*)malloc(sizeof(UNDET_FAULT_LIST));
+		if (new_node == NULL) {
+			printf("【ERROR】: Memory allocation failed.\n");
+			exit(1);
+		}
+		// 各フィールドのコピー
+		new_node->type = current->type;
+		strcpy(new_node->name, current->name);
+		new_node->netlist = current->netlist;      // ポインタ自体はコピーされるが、構造体全体の複製が不要ならこのままでOK
+		new_node->node_id = current->node_id;
+		// 例として、故障選択済みフラグを設定
+		if (new_node->netlist != NULL) {
+			new_node->netlist->tf_flag = FLAG_UP;
+		}
+		new_node->next = NULL;  // 新規確保時は next は NULL にしておく
+
+		// tfl リストへの連結
 		if (tfl == NULL) {
-			tfl = current;
-			tfl_head = current;
+			tfl = new_node;
+			tfl_head = new_node;
 		}
 		else {
-			tfl->next = current;
-			tfl = tfl->next;
+			tfl->next = new_node;
+			tfl = new_node;
 		}
+
+		// current を AFL の先頭にリセットして、次のループで再度 select_id に従って走査する
 		current = afl;
 	}
-	//tflの末尾にNULLを設定
-	tfl->next = NULL;
-	//tflを先頭に戻す
+
+	// tfl_head が新たな tfl リストの先頭ノードとなる
 	tfl = tfl_head;
 	if (tfl == NULL) {
 		printf("両立可能故障集合設定エラー\n");
+		exit(1);
 	}
 
-	/* free structure */
+	/* 以降、不要になった構造体の解放（以前確保したメモリのクリーンアップなど） */
 	while (head)
 	{
 		p = head;
@@ -959,6 +984,7 @@ bool CompatibleFaultSet(
 		free(p);
 	}
 	free(sorted->sort);
+
 #ifdef __DEBUG_SET_TARGET__
 	_CALL_DEBUG_SET_TARGET_(target);
 #endif // __DEBUG_SET_TARGET__
