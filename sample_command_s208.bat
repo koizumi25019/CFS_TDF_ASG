@@ -1,2 +1,2 @@
-TDF_ASG.exe -net ./input/circuit/s208.v -fault ./input/rprf/s208_rpr_10.txt -seed seed.txt -xor_tap ./input/xor_tap/tap_4.txt -scan_chain ./input/scan_chain/s208_sc_4.txt -power ON -target_limit 100 -time 120 -rand ON -folder ./s208_output/
+TDF_ASG.exe -net ./input/circuit/s208.v -fault ./input/rprf/s208_rpr_10_1.txt -seed seed.txt -xor_tap ./input/xor_tap/tap_4.txt -scan_chain ./input/scan_chain/s208_sc_4.txt -nece ./input/necessary/s208_C_nece.txt -power ON -target_limit 1 -time 1000 -rand ON -folder ./s208_output/
 pause
