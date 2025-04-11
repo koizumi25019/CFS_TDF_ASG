@@ -67,16 +67,6 @@ int fault_select(int unsat_flag,SORTED* sorted,int loop) {
         return ERROR;
     }
 
-    //追加 ソート用構造体確保
-    //if (loop == 0) {
-    //    sorted = (SORTED*)malloc(sizeof(SORTED));
-    //    if (sorted == NULL) {
-    //        printf("【ERROR】: Memory allocation failed.\n");
-    //        return ERROR;
-    //    }
-    //}
-
-
     //必須割り当てファイル情報ファイルがある場合の処理
     READER_NECESSARY_ON
     {
