@@ -663,7 +663,7 @@ bool CreateCompatibleEdge(
 	comp->x_buf = (unsigned int*)allocMemory(comp->int_num, sizeof(unsigned int));
 	comp->p_buf = (unsigned int*)allocMemory(comp->int_num, sizeof(unsigned int));
 	All_Bit_X_XP(comp);
-	printf("\n");
+	//printf("\n");
 
 	//追加
 	UNDET_FAULT_LIST* ufl_i;
@@ -841,9 +841,16 @@ bool CompatibleFaultSet(
 					depth++;
 
 					//edge->int_num:32bit_flag確保数
-					UNDET_FAULT_LIST* current = afl;
-					for (int i = 0; i < select; i++) {
-						current = current->next;
+					UNDET_FAULT_LIST* current = ufl;
+					while (current != NULL) {
+						if (current->node_id == select) {
+							break;
+						}
+					    current = current->next;
+					}
+					if (current == NULL) {
+						printf("目的の故障がみつかりませんでした\n");
+						exit(1);
 					}
 					for (int k = 0; k < cnodeptr->edge->int_num; k++)
 					{
@@ -912,27 +919,28 @@ bool CompatibleFaultSet(
 			j++;
 		}
 	}
-	printf("\n");
+	//printf("\n");
 	//ここまでクリーク抽出
 
 	//変更
 	//目標故障集合作成
 	// tfl_num を depth - 1 に設定
 	tfl_num = depth - 1;
-	UNDET_FAULT_LIST* current = afl;
 	tfl = NULL;
 	UNDET_FAULT_LIST* tfl_head = NULL;
 	UNDET_FAULT_LIST* new_node = NULL;
 
 	for (int i = 0; i < tfl_num; i++)
 	{
-		// select_id[i+1] の回数だけ current を先に進める
-		for (int j = 0; j < select_id[i + 1]; j++) {
-			if (current == NULL) {
-				printf("両立可能故障_目標故障設定ミス\n");
-				exit(1);
-			}
+		UNDET_FAULT_LIST* current = ufl;
+		while (current != NULL) {
+			if (current->node_id == select_id[i + 1])
+				break;
 			current = current->next;
+		}
+		if (current == NULL) {
+			printf("両立可能故障集合_目標故障設定ミス\n");
+			exit(1);
 		}
 
 		// 新たな tfl 用ノードを確保して情報をコピー（deep copy）
@@ -961,9 +969,6 @@ bool CompatibleFaultSet(
 			tfl->next = new_node;
 			tfl = new_node;
 		}
-
-		// current を AFL の先頭にリセットして、次のループで再度 select_id に従って走査する
-		current = afl;
 	}
 
 	// tfl_head が新たな tfl リストの先頭ノードとなる
@@ -973,7 +978,7 @@ bool CompatibleFaultSet(
 		exit(1);
 	}
 
-	/* 以降、不要になった構造体の解放（以前確保したメモリのクリーンアップなど） */
+	/* 以降、不要になった構造体の解放 */
 	while (head)
 	{
 		p = head;

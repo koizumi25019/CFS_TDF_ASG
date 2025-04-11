@@ -105,7 +105,7 @@ int transition_delay_fault_set(void) {
 
 	// ufl ‚ÉƒŠƒXƒg‚ğŠi”[
 	ufl = head;
-	afl = head; 
+	afl = head;
 	node_num = id;
 
 	printf("yINFOz: Transition fault set created successfully.\n");

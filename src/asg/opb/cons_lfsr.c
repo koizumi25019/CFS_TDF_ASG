@@ -373,7 +373,7 @@ int PSgetInputBit(
 		{
 			(*in)[index++] = i + 1;
 			//printf("in[%d]=%d\n", index - 1, i + 1);
-			printf("\n");
+			//printf("\n");
 		}
 	}
 
