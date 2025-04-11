@@ -517,7 +517,6 @@ bool ReadNecessary(
 	}
 	free(buffer);
 	free(string);
-	printf("\n");
 	printf("一致した文字列の数:%d\n", cnt);
 	if (cnt != ufl_num)
 	{
@@ -561,7 +560,6 @@ bool searchNnode(
 			//searchNnodeのcurrent->string(未検出故障のstring)とbuffer(G16_sa1)
 			readdata.necenet.necelist[no].string = (char*)allocMemory(MAXSIZE_BUFFER, sizeof(char));
 			sprintf_s(readdata.necenet.necelist[no].string, 200, "%s", current->string);
-			printf("%s\n", readdata.necenet.necelist[no].string);
 			readdata.necenet.necelist[no].id = no;
 			readdata.necenet.necelist[no].type = current->type;
 			readdata.necenet.necelist[no].name = (char*)allocMemory(200, sizeof(char));
@@ -813,26 +811,26 @@ bool CompatibleFaultSet(
 
 				printf("\n選択した故障を0に設定(select:故障ID)：%d\n", select);
 				/* debug bitint */
-				unsigned int decimalNumber;
-				unsigned int binaryNumber[32]; // 32ビットの2進数を仮定
-				int k = 0;
-				int l = 0;
-				for (int m = 0;m < head->edge->int_num;m++)
-				{
-					k = 0;
-					decimalNumber = head->edge->flag[m];
-					while (decimalNumber > 0)
-					{
-						binaryNumber[k] = decimalNumber % 2;
-						decimalNumber /= 2;
-						k++;
-					}
-					printf("depth:[%d]\thead  ->  edge[%d]     \t:  ", depth, m);
-					for (l = k - 1;l >= 0;l--)
-					{
-						printf("%d", binaryNumber[l]);
-					}
-				}
+				//unsigned int decimalNumber;
+				//unsigned int binaryNumber[32]; // 32ビットの2進数を仮定
+				//int k = 0;
+				//int l = 0;
+				//for (int m = 0;m < head->edge->int_num;m++)
+				//{
+				//	k = 0;
+				//	decimalNumber = head->edge->flag[m];
+				//	while (decimalNumber > 0)
+				//	{
+				//		binaryNumber[k] = decimalNumber % 2;
+				//		decimalNumber /= 2;
+				//		k++;
+				//	}
+				//	printf("depth:[%d]\thead  ->  edge[%d]     \t:  ", depth, m);
+				//	for (l = k - 1;l >= 0;l--)
+				//	{
+				//		printf("%d", binaryNumber[l]);
+				//	}
+				//}
 
 				/* create next depth node */
 				if ((cnodeptr = CreateCliqueNode(depth, select, all_num)) != NULL)//全故障数分クリークを作成 depthは1からスタート
@@ -854,8 +852,7 @@ bool CompatibleFaultSet(
 						//たとえば、故障(ノード)数が 300 個くらいあるとすると、300 ビットをひとつの変数には収められません。
 						//300 / 32 ＝ 約 9.3 …
 						//よって 10 個前後の 32 bit 変数に分割して「ビット AND」をしないといけません。
-						head->edge->flag[k]= (head->nextptr->edge->flag[k])//後ろのcnodeのflag
-							& (current->edge->flag[k]);//変更
+						head->edge->flag[k]= (head->nextptr->edge->flag[k])	& (current->edge->flag[k]);//変更 //後ろのcnodeのflag
 						//後ろのedge_flagと今のedge_flagの積をとると、次の深さのedge
 					}
 					count = 0;
@@ -866,51 +863,51 @@ bool CompatibleFaultSet(
 					head->num_r = count;
 
 					/* debug bitint */
-					unsigned int decimalNumber_c;
-					unsigned int binaryNumber_c[32]; // 32ビットの2進数を仮定
-					int p = 0;
-					int q = 0;
-					for (int m = 0; m < current->edge->int_num; m++)
-					{
-						p = 0;
-						decimalNumber_c = current->edge->flag[m];
-						while (decimalNumber_c > 0)
-						{
-							binaryNumber_c[p] = decimalNumber_c % 2;
-							decimalNumber_c /= 2;
-							p++;
-						}
-						printf("\ndepth:[%d]\tcurrent  ->  edge[%d]    :  ", depth, m);
-						for (q = p - 1; q >= 0; q--)
-						{
-							printf("%d", binaryNumber_c[q]);
-						}
-					}
+					//unsigned int decimalNumber_c;
+					//unsigned int binaryNumber_c[32]; // 32ビットの2進数を仮定
+					//int p = 0;
+					//int q = 0;
+					//for (int m = 0; m < current->edge->int_num; m++)
+					//{
+					//	p = 0;
+					//	decimalNumber_c = current->edge->flag[m];
+					//	while (decimalNumber_c > 0)
+					//	{
+					//		binaryNumber_c[p] = decimalNumber_c % 2;
+					//		decimalNumber_c /= 2;
+					//		p++;
+					//	}
+					//	printf("\ndepth:[%d]\tcurrent  ->  edge[%d]    :  ", depth, m);
+					//	for (q = p - 1; q >= 0; q--)
+					//	{
+					//		printf("%d", binaryNumber_c[q]);
+					//	}
+					//}
 
 				}
 				else return TARGET_ERROR;
 
 				/* debug bitint */
-				unsigned int decimalNumber_;
-				unsigned int binaryNumber_[32]; // 32ビットの2進数を仮定
-				int p = 0;
-				int q = 0;
-				for (int m = 0;m < head->edge->int_num;m++)
-				{
-					p = 0;
-					decimalNumber_ = head->edge->flag[m];
-					while (decimalNumber_ > 0)
-					{
-						binaryNumber_[p] = decimalNumber_ % 2;
-						decimalNumber_ /= 2;
-						p++;
-					}
-					printf("\ndepth:[%d]\thead  ->  edge[%d]     \t:  ", depth, m);
-					for (q = p - 1;q >= 0;q--)
-					{
-						printf("%d", binaryNumber_[q]);
-					}
-				}
+				//unsigned int decimalNumber_;
+				//unsigned int binaryNumber_[32]; // 32ビットの2進数を仮定
+				//int p = 0;
+				//int q = 0;
+				//for (int m = 0;m < head->edge->int_num;m++)
+				//{
+				//	p = 0;
+				//	decimalNumber_ = head->edge->flag[m];
+				//	while (decimalNumber_ > 0)
+				//	{
+				//		binaryNumber_[p] = decimalNumber_ % 2;
+				//		decimalNumber_ /= 2;
+				//		p++;
+				//	}
+				//	printf("\ndepth:[%d]\thead  ->  edge[%d]     \t:  ", depth, m);
+				//	for (q = p - 1;q >= 0;q--)
+				//	{
+				//		printf("%d", binaryNumber_[q]);
+				//	}
+				//}
 			}
 			j++;
 		}
@@ -983,8 +980,6 @@ bool CompatibleFaultSet(
 		head = head->nextptr;
 		free(p);
 	}
-	free(sorted->sort);
-
 #ifdef __DEBUG_SET_TARGET__
 	_CALL_DEBUG_SET_TARGET_(target);
 #endif // __DEBUG_SET_TARGET__

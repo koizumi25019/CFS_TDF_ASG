@@ -19,7 +19,7 @@
 // 引数：int unsat_flag - UNSATフラグ (ON または OFF)
 //===========================================================================================================
 
-int fault_select(int unsat_flag,int loop) {
+int fault_select(int unsat_flag,SORTED* sorted,int loop) {
     int i, j;
     int index = 0;
     int select_faults_num;                    //実際に選択する故障の上限数/
@@ -28,7 +28,6 @@ int fault_select(int unsat_flag,int loop) {
     UNDET_FAULT_LIST* tfl_node;
     UNDET_FAULT_LIST* head = NULL;
     UNDET_FAULT_LIST** rand_node;
-    SORTED** sorted;//ソートテーブル
 
     // 単一に切り替えてテスト生成
     if (unsat_flag == ON) {
@@ -69,11 +68,13 @@ int fault_select(int unsat_flag,int loop) {
     }
 
     //追加 ソート用構造体確保
-    sorted = (SORTED*)malloc(sizeof(SORTED));
-    if (sorted == NULL) {
-        printf("【ERROR】: Memory allocation failed.\n");
-        return ERROR;
-    }
+    //if (loop == 0) {
+    //    sorted = (SORTED*)malloc(sizeof(SORTED));
+    //    if (sorted == NULL) {
+    //        printf("【ERROR】: Memory allocation failed.\n");
+    //        return ERROR;
+    //    }
+    //}
 
 
     //必須割り当てファイル情報ファイルがある場合の処理

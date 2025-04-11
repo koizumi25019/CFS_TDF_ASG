@@ -29,6 +29,7 @@ int mttg_main(void) {
 	UNDET_FAULT_LIST* head/*, * next*/;
 	int det_fault_clasp_num;
 	int loop = 0;
+	SORTED sorted;
 	//シードファイルオープン
 	sprintf(txt_cmd, "%sseed.txt", folder_out);
 	if ((fout_seed = (fopen(txt_cmd, "w"))) == NULL) {
@@ -82,7 +83,7 @@ int mttg_main(void) {
 		}
 
 		//目標故障選択
-		if (fault_select(unsat_flag,loop) != SUCCESS) {
+		if (fault_select(unsat_flag,&sorted,loop++) != SUCCESS) {
 			printf("【ERROR】:Fault Select(mttg_main.c)\n");
 			return ERROR;
 		}
