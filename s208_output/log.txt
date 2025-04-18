@@ -11,7 +11,7 @@
 // Number of Undetected Faults :0
 // Number of Seeds             :1
 // Rate of Detected Faults     :100.00%
-// Elapsed time                :0.74sec
+// Elapsed time                :0.46sec
 // Time to abort solver        :1000sec
 // Target faults limit         :1
 // Rand Optiont                :ON

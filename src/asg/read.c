@@ -468,6 +468,7 @@ bool ReadNecessary(
 	int hash = 0;
 	int type = 0;
 	int i = 0;
+	int nece_line_cnt = 0;
 
 	/* partitioning allocation */
 	buffer = (char*)allocMemory(MAXSIZE_BUFFER, sizeof(char));
@@ -483,6 +484,7 @@ bool ReadNecessary(
 	{
 		if (COMP_NEWLINE(buffer))
 		{
+			nece_line_cnt++;
 			token = strtok_s(buffer, ", \n\0", &context);//token:信号線名
 			sprintf_s(string, MAXSIZE_BUFFER, "%s",token);//string:信号線名
 			token2 = strtok_s(NULL, ", \n\0", &context);//token2:故障タイプ(ex:SF1,SF0)
@@ -518,6 +520,7 @@ bool ReadNecessary(
 	free(buffer);
 	free(string);
 	printf("一致した文字列の数:%d\n", cnt);
+	printf("必須割当情報の数：%d", nece_line_cnt);
 	if (cnt != ufl_num)
 	{
 		printf("\n	SYSTEM ERROR: Reading necessary file error. ");
@@ -751,26 +754,26 @@ bool CompatibleFaultSet(
 	//両立可能故障における目標故障選択
 
 	//未検出故障数が100以下の場合の処理
-	//if (ufl_num < 100)
-	//{
-	//	if (num_clique_flag == false)
-	//	{
-	//		num_clique = loop + 1;
-	//		num_clique_flag = true;
-	//	}
-	//	tfl = ufl;
-	//	tfl_num = ufl_num;
-	//	return TARGET_OKAY;
-	//}
-	//else
-	//{
+	if (ufl_num < 100)
+	{
+		if (num_clique_flag == false)
+		{
+			num_clique = loop + 1;
+			num_clique_flag = true;
+		}
+		tfl = ufl;
+		tfl_num = ufl_num;
+		return TARGET_OKAY;
+	}
+	else
+	{
 		//シード生成の最初は故障が繋がる辺の数を基準に降順ソードする
 		//繋がった辺の数が多いやつからグラフを作成していくため
 		//辺の数が多いやつから選択することで効率的にグラフを作成
 		if (loop == 0) {
 			SortEdgeDescend(sorted);
 		}
-	//}
+	}
 
 	//両立可能故障集合から最大クリークを抽出
 
@@ -924,11 +927,20 @@ bool CompatibleFaultSet(
 
 	//変更
 	//目標故障集合作成
-	// tfl_num を depth - 1 に設定
-	tfl_num = depth - 1;
-	tfl = NULL;
 	UNDET_FAULT_LIST* tfl_head = NULL;
 	UNDET_FAULT_LIST* new_node = NULL;
+
+	if (depth <= 1) {
+		// 未検出故障が１つだけなら、そのまま tfl_head に引き渡す
+		tfl_head = ufl;
+		ufl->next = NULL;  // 念のため list terminator
+		tfl = tfl_head;
+		return TARGET_OKAY;
+	}
+
+	// tfl_num を depth - 1 に設定
+	tfl_num = depth-1;
+	tfl = NULL;
 
 	for (int i = 0; i < tfl_num; i++)
 	{
