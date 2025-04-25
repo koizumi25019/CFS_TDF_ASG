@@ -756,12 +756,48 @@ bool CompatibleFaultSet(
 	//未検出故障数が100以下の場合の処理
 	if (ufl_num < 100)
 	{
-		if (num_clique_flag == false)
-		{
-			num_clique = loop + 1;
-			num_clique_flag = true;
+		//if (num_clique_flag == false)
+		//{
+		//	num_clique = loop + 1;
+		//	num_clique_flag = true;
+		//}
+		
+		 // --- deep copy ufl → tfl 開始 ---
+		tfl = NULL;
+		UNDET_FAULT_LIST* tfl_tail = NULL;
+		UNDET_FAULT_LIST* curr = ufl;
+		while (curr != NULL) {
+			// 新規ノード確保
+			UNDET_FAULT_LIST* node = (UNDET_FAULT_LIST*)malloc(sizeof(UNDET_FAULT_LIST));
+			if (node == NULL) {
+				printf("【ERROR】: Memory allocation failed.\n");
+				exit(1);
+			}
+			// 情報コピー
+			node->type = curr->type;
+			strcpy(node->name, curr->name);
+			node->netlist = curr->netlist;
+			node->node_id = curr->node_id;
+			// 目標故障フラグ設定
+			if (node->netlist != NULL) {
+				node->netlist->tf_flag = FLAG_UP;
+			}
+			node->next = NULL;
+
+			// tfl リストへの連結
+			if (tfl == NULL) {
+				tfl = node;
+				tfl_tail = node;
+			}
+			else {
+				tfl_tail->next = node;
+				tfl_tail = node;
+			}
+
+			curr = curr->next;
 		}
-		tfl = ufl;
+		// --- deep copy ufl → tfl 終了 ---
+
 		tfl_num = ufl_num;
 		return TARGET_OKAY;
 	}
@@ -812,7 +848,8 @@ bool CompatibleFaultSet(
 				select_flag = 1;
 				bitintSetNbit_Zero(head->edge, select);//故障を選択したのでその故障番号を0に設定
 
-				printf("\n選択した故障を0に設定(select:故障ID)：%d\n", select);
+				//printf("\n選択した故障を0に設定(select:故障ID)：%d\n", select);
+
 				/* debug bitint */
 				//unsigned int decimalNumber;
 				//unsigned int binaryNumber[32]; // 32ビットの2進数を仮定

@@ -79,6 +79,8 @@ int mttg_main(void) {
 		sprintf(txt_cmd, "%smttg_pbo.txt", folder_out);
 		if ((fout_mttg_pbo = fopen(txt_cmd, "w")) == NULL) {
 			printf("【ERROR】:File open mttg_pbo.txt(mttg_main.c)\n");
+			printf("Trying to open: '%s'\n", txt_cmd);
+			perror(txt_cmd);
 			exit(1);
 		}
 
@@ -173,6 +175,7 @@ int mttg_main(void) {
 
 		//シード集合へ出力
 		fprintf(fout_seed, "%s\n", clasp.sol[SOL_SEED]);
+		fclose(fout_seed);
 
 		//========================================================================
 		//	故障シミュレーション
@@ -198,7 +201,6 @@ int mttg_main(void) {
 	}
 
 	num_seed = loop;
-	fclose(fout_seed);
 
 	return SUCCESS;
 }

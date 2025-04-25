@@ -1,0 +1,2 @@
+TDF_ASG.exe -net ./input/circuit/s15850.v -fault ./input/rprf/s15850_rpr_1.txt -seed seed.txt -xor_tap ./input/xor_tap/tap_64.txt -scan_chain ./input/scan_chain/s15850_sc_64.txt -power ON -target_limit 300 -time 1000 -rand ON -nece ./input/necessary/s15850_C_nece.txt -folder ./s15850_output/
+pause

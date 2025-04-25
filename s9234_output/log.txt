@@ -1,0 +1,20 @@
+//---------------------------------------------------
+//	    Transition Fault ASG   Information
+//---------------------------------------------------
+// Target Circuit              :./input/circuit/s9234.v
+// Fault Type                  :NODE
+// Test Generation             :MTTG
+// Number of Total Faults      :3283
+// Number of Untestable Faults :0
+// Number of High Power Faults :0
+// Number of Detected Faults   :3283
+// Number of Undetected Faults :0
+// Number of Seeds             :778
+// Rate of Detected Faults     :100.00%
+// Elapsed time                :3661.87sec
+// Time to abort solver        :1000sec
+// Target faults limit         :100
+// Rand Optiont                :ON
+// Low Power Mode              :ON
+// WSA                         :20[Åì]
+//---------------------------------------------------

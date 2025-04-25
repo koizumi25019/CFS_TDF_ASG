@@ -128,7 +128,6 @@ int CountBits(
 
 /* output graph log file */
 //void OutGraphLogfile(
-	/*TARGET* remain*/			  /**< target-fault list */
 //);
 
 /** reading the graph */
