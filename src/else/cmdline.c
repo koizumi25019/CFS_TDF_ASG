@@ -90,6 +90,20 @@ int cmdline(int argc, char *argv[])
 			fi[FAULT].flag = ON;
 		}
 
+		/* CLASP --mode 1 指定 */
+		else if (!strcmp(argv[i], "-mode_1")) {
+			i++;
+			fi[MODE_1].name = argv[i];
+			fi[MODE_1].flag = ON;
+		}
+
+		/* CLASP PARALLELモード 指定 */
+		else if (!strcmp(argv[i], "-parallel")) {
+			i++;
+			fi[PARALLEL].value = atoi(argv[i]);
+			fi[PARALLEL].flag = ON;
+		}
+
         //-s,-x,-cに関する処理はOPTにあります
 		else if (!strcmp(argv[i], "-seed")) {
 			i++;
