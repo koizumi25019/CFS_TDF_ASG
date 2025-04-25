@@ -130,7 +130,7 @@ int cmdline(int argc, char *argv[])
 		fi[TIME].value = 10;
 	}
 	if (fi[WSATH].flag == OFF) {
-		fi[WSATH].value = 20;
+		fi[WSATH].value = 30;
 	}
 
 	return SUCCESS;
