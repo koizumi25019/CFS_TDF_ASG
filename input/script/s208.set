@@ -1,0 +1,42 @@
+# set File
+
+# set netlist(.v)
+-net ./input/circuit/s208.v
+
+# set fault list(.txt)
+-fault ./input/rprf/s208_rpr_10_1.txt
+
+# set xor-tap list(.txt)
+-xor_tap ./input/xor_tap/tap_4.txt
+
+# set scan-chain(.txt)
+-scan_chain ./input/scan_chain/s208_sc_4.txt
+
+# set necessary(.txt)
+-nece ./input/necessary/s208_C_nece.txt
+
+# set folder out(.txt)
+-folder ./s208_output/
+
+# set seed set(.txt)
+-seed s208_seed.txt
+
+# set target limit (value)
+-target_limit 1
+
+# set abort time (value)
+-time 60
+
+# set power mode (ON，OFF)
+-power ON
+
+# set random mode (ON，OFF)
+-rand ON
+
+# set parallel mode (value)
+-parallel 8
+
+# set clasp mode 1 (ON，OFF)
+-mode_1 OFF
+
+

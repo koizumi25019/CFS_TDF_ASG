@@ -28,14 +28,7 @@ int main(int argc, char *argv[]) {
 	char cmd[500];
 	char txt_cmd[50];
 
-	//コマンドライン解析
-	if (cmdline(argc, argv) != SUCCESS) {
-		printf("【ERROR】:Commandline(main.c)\n");
-		exit(ERROR);
-	}
-	printf("【SUCCESS】:Commandline\n");
-
-    //ASG set the option
+    //オプション設定
 	if (OPT(argc, argv) != true) return false;
 
 	//ネットリスト起動
@@ -50,7 +43,6 @@ int main(int argc, char *argv[]) {
 	printf("【SUCCESS】:init exturn\n");
 
 	//初期化ASG部分
-	/** initialize the globl-variable */
 	if (InitGlobalVars() != true) return false;
 
 	//消費電力考慮の場合

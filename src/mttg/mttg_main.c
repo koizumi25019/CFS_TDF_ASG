@@ -141,10 +141,10 @@ int mttg_main(void) {
 		//========================================================================
 		//	clasp ⇒ テストベクトル生成
 		//========================================================================
-		if (strcmp(fi[PARALLEL].flag, "ON") == 0) {
+		if (fi[PARALLEL].flag==ON) {
 			//解が1つ見つかった時点でその解を採用するモード
-			if (strcmp(fi[MODE_1].name, "ON") == 0) {
-				if (strcmp(fi[TARGET_LIMIT].flag, "ON" == 0)) {
+			if (fi[MODE_1].flag==ON) {
+				if (fi[TIME].flag==ON) {
 					printf("mode 1(-mode_1)と打ち切り時間指定(-time)を同時に指定しないでください\n");
 					exit(1);
 				}
@@ -153,20 +153,27 @@ int mttg_main(void) {
 				system(cmd);
 			}
 			//打ち切り時間指定
-			else if (strcmp(fi[TIME].flag, "ON") == 0) {
-				printf("CLASPモード指定：-parallel=ON -time %d\n",fi[TIME].name);
+			else if (fi[TIME].flag==ON) {
+				printf("CLASPモード指定：-parallel=ON -time %d\n",fi[TIME].value);
 				sprintf(cmd, "clasp.exe %smttg_pbo.txt --time-limit %d --parallel-mode %d > %sclasp_log_mttg.txt", folder_out, fi[TIME].value, fi[PARALLEL].value,folder_out);
 				system(cmd);
 			}
 			//paralellモードのみ指定
 			else {
 				printf("CLASPモード指定：-parallel=ON\n");
-				sprintf(cmd, "clasp.exe %smttg_pbo.txt  --parallel-mode %d > %sclasp_log_mttg.txt", folder_out, fi[TIME].value, fi[PARALLEL].value, folder_out);
+				sprintf(cmd, "clasp.exe %smttg_pbo.txt  --parallel-mode %d > %sclasp_log_mttg.txt", folder_out,fi[PARALLEL].value, folder_out);
 				system(cmd);
 			}
 		}
-		//mode 1も打ち切り時間も指定されていない場合 default time==10
+		//mode1のみ指定
+		else if (fi[MODE_1].flag == ON) {
+			printf("CLASPモード指定：-mode 1=ON -time %d\n", fi[TIME].value);
+			sprintf(cmd, "clasp.exe %smttg_pbo.txt --time-limit %d --mode 1 > %sclasp_log_mttg.txt", folder_out, fi[TIME].value, folder_out);
+			system(cmd);
+		}
+		//parallelモード指定なし
 		else {
+			printf("claspモード指定なし　打ち切り時間：%d\n", fi[TIME].value);
 			sprintf(cmd, "clasp.exe %smttg_pbo.txt --time-limit %d > %sclasp_log_mttg.txt", folder_out, fi[TIME].value, folder_out);
 			system(cmd);
 		}
