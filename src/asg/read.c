@@ -436,7 +436,7 @@ void COMPinti(
 		{
 			bitintSetNbit_One(ufl->edge, j);//指定位置(j番目を1にセット)これは自分の位置を1にしておくためだと思う
 		}
-		ufl->n_edge = ufl_num;//?最初はn_edgeは未検出故障数？
+		ufl->n_edge = ufl_num;
 		ufl = ufl->next;//後続アドレスへのポインタ
 	}
 	//追加
