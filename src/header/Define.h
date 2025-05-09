@@ -39,6 +39,8 @@
 #define		TARGET_LIMIT	6
 #define		FAULT	        7
 #define     FOLDER          8
+#define     MODE_1          9
+#define     PARALLEL       10
 
 //------------------------------------------------------------------------
 //all0 all1

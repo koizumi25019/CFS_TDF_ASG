@@ -1,13 +1,3 @@
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*																											 */
-/*	program		:	urashima																				 */
-/*	file		:	./src/opt/opt.c																	         */
-/*	deginer		:	R.miura																			  		 */
-/*	date		:	2022.10.01																  				 */
-/*																											 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-
 //-------------------------------------------------------------------------------------------------------------
 //	include
 //-------------------------------------------------------------------------------------------------------------
@@ -18,6 +8,8 @@
 #include "opt.h"
 #include "../asg/read.h"
 #include "../lib/lib.h"
+//追加
+#include "../header/Define.h"
 //#include "debug.h"
 
 
@@ -138,6 +130,85 @@ bool OPTset(
 		if (strcmp(argv[i], "-help") == 0)
 			return OPT_ERROR;
 
+		//追加
+		//------------------------------------------------------------------------
+		// 入力ファイル
+		//------------------------------------------------------------------------
+
+		/* 回路ファイル名の登録 */
+		else if (!strcmp(argv[i], "-net")) {
+			i++;
+			fi[CIRCUIT].name = argv[i];
+			fi[CIRCUIT].flag = ON;
+		}
+
+		//------------------------------------------------------------------------
+		// オプション
+		//------------------------------------------------------------------------
+
+		/* 低消費電力モード取得 */
+		else if (!strcmp(argv[i], "-power")) {
+			i++;
+			fi[LOW_POWER].name = argv[i];
+			fi[LOW_POWER].flag = ON;
+		}
+
+		/* フォルダーの指定 */
+		else if (!strcmp(argv[i], "-folder")) {
+			i++;
+			fi[FOLDER].name = argv[i];
+			fi[FOLDER].flag = ON;
+		}
+
+		/* ランダム多重故障選択(default:OFF)取得 */
+		else if (!strcmp(argv[i], "-rand")) {
+			i++;
+			fi[RAND].name = argv[i];
+			fi[RAND].flag = ON;
+		}
+
+		/* Solver打ち切り時間(default:10)取得 */
+		else if (!strcmp(argv[i], "-time")) {
+			i++;
+			fi[TIME].value = atoi(argv[i]);
+			fi[TIME].flag = ON;
+		}
+
+		/* WSA閾値＝消費電力閾値(default:20)取得 */
+		else if (!strcmp(argv[i], "-wsath")) {
+			i++;
+			fi[WSATH].value = atoi(argv[i]);
+			fi[WSATH].flag = ON;
+		}
+
+		/* 目標故障の上限取得(0の場合は制限なし) */
+		else if (!strcmp(argv[i], "-target_limit")) {
+			i++;
+			fi[TARGET_LIMIT].value = atoi(argv[i]);
+			fi[TARGET_LIMIT].flag = ON;
+		}
+
+		/*故障ファイル取得*/
+		else if (!strcmp(argv[i], "-fault")) {
+			i++;
+			fi[FAULT].name = argv[i];
+			fi[FAULT].flag = ON;
+		}
+
+		/* CLASP --mode 1 指定 */
+		else if (!strcmp(argv[i], "-mode_1")) {
+			i++;
+			fi[MODE_1].name = argv[i];
+			fi[MODE_1].flag = ON;
+		}
+
+		/* CLASP PARALLELモード 指定 */
+		else if (!strcmp(argv[i], "-parallel")) {
+			i++;
+			fi[PARALLEL].value = atoi(argv[i]);
+			fi[PARALLEL].flag = ON;
+		}
+
 		/** scan-chain */
 		else if (strcmp(argv[i], "-scan_chain") == 0)
 			opt.file.input.scanchain = _strdup(argv[++i]);
@@ -175,7 +246,7 @@ bool OPTset(
 			opt.file.output.untestable = _strdup(argv[++i]);
 
 		/** read the option */
-		else if (strcmp(argv[i], "-z") == 0)
+		else if (strcmp(argv[i], "-set") == 0)
 			return OPTread(argv[++i]);
 
 		/** fault drop */
@@ -194,6 +265,25 @@ bool OPTset(
 				return OPT_ERROR;
 			}
 		}
+	}
+
+	//------------------------------------------------------------------------
+	// 必要コマンドの入力確認
+	//------------------------------------------------------------------------
+	if (fi[CIRCUIT].flag == OFF) { printf("回路ファイル名を入力してください\n");		return ERROR; }
+	if (fi[LOW_POWER].flag == OFF) { printf("低消費電力指向か否かを入力してください\n");		return ERROR; }
+	if (fi[FOLDER].flag == OFF) { printf("出力フォルダー名を入力してください\n");		return ERROR; }
+	//------------------------------------------------------------------------
+	// defaultの設定
+	//------------------------------------------------------------------------
+	if (fi[RAND].flag == OFF) {
+		fi[RAND].name = "OFF";
+	}
+	if (fi[TIME].flag == OFF) {
+		fi[TIME].value = 10;
+	}
+	if (fi[WSATH].flag == OFF) {
+		fi[WSATH].value = 30;
 	}
 
 	return OPT_OKAY;
@@ -361,8 +451,8 @@ bool OPTread(
 					}
 				}
 			}
-			/** untestable fault */
-			else if (strcmp(token1, "-e") == 0)
+			/** 必須割り当て情報ファイル */
+			else if (strcmp(token1, "-nece") == 0)
 			{
 				token2 = strtok_s(NULL, "\n\0", &context);
 
@@ -375,7 +465,165 @@ bool OPTread(
 					}
 				}
 			}
+			//ネットリスト読み込み
+			else if (!strcmp(token1, "-net"))
+			{
+				token2 = strtok_s(NULL, "\n\0", &context);
 
+				for (int i = 0; i < strlen(token2); i++)
+				{
+					if (token2[i] != ' ' && token2[i] != '\t')
+					{
+						fi[CIRCUIT].name = _strdup(strtok_s(&token2[i], " \n\0", &context));
+						fi[CIRCUIT].flag = ON;
+						break;
+					}
+
+				}
+			}
+			//低消費電力モード指定
+			else if (!strcmp(token1, "-power"))
+			{
+				token2 = strtok_s(NULL, "\n\0", &context);
+
+				for (int i = 0; i < strlen(token2); i++)
+				{
+					if (token2[i] != ' ' && token2[i] != '\t')
+					{
+						fi[LOW_POWER].name = _strdup(strtok_s(&token2[i], " \n\0", &context));
+						fi[LOW_POWER].flag = ON;
+						break;
+					}
+
+				}
+			}
+			//フォルダー指定
+			else if (!strcmp(token1, "-folder"))
+			{
+				token2 = strtok_s(NULL, "\n\0", &context);
+
+				for (int i = 0; i < strlen(token2); i++)
+				{
+					if (token2[i] != ' ' && token2[i] != '\t')
+					{
+						fi[FOLDER].name = _strdup(strtok_s(&token2[i], " \n\0", &context));
+						fi[FOLDER].flag = ON;
+						break;
+					}
+
+				}
+			}
+			//ランダム選択モード指定
+			else if (!strcmp(token1, "-rand"))
+			{
+				token2 = strtok_s(NULL, "\n\0", &context);
+
+				for (int i = 0; i < strlen(token2); i++)
+				{
+					if (token2[i] != ' ' && token2[i] != '\t')
+					{
+						fi[RAND].name = _strdup(strtok_s(&token2[i], " \n\0", &context));
+						fi[RAND].flag = ON;
+						break;
+					}
+
+				}
+			}
+			//Solver打ち切り時間(default:10)取得 
+			else if (!strcmp(token1, "-time"))
+			{
+				token2 = strtok_s(NULL, "\n\0", &context);
+
+				for (int i = 0; i < strlen(token2); i++)
+				{
+					if (token2[i] != ' ' && token2[i] != '\t')
+					{
+						fi[TIME].value = atoi(strtok_s(&token2[i], " \n\0", &context));
+						fi[TIME].flag = ON;
+						break;
+					}
+
+				}
+			}
+			//WSA閾値＝消費電力閾値(default:30)取得
+			else if (!strcmp(token1, "-wsath"))
+			{
+				token2 = strtok_s(NULL, "\n\0", &context);
+
+				for (int i = 0; i < strlen(token2); i++)
+				{
+					if (token2[i] != ' ' && token2[i] != '\t')
+					{
+						fi[WSATH].value = atoi(strtok_s(&token2[i], " \n\0", &context));
+						fi[WSATH].flag = ON;
+						break;
+					}
+
+				}
+			}
+			//目標故障の上限取得(0の場合は制限なし)得
+			else if (!strcmp(token1, "-target_limit"))
+			{
+				token2 = strtok_s(NULL, "\n\0", &context);
+
+				for (int i = 0; i < strlen(token2); i++)
+				{
+					if (token2[i] != ' ' && token2[i] != '\t')
+					{
+						fi[TARGET_LIMIT].value = atoi(strtok_s(&token2[i], " \n\0", &context));
+						fi[TARGET_LIMIT].flag = ON;
+						break;
+					}
+
+				}
+			}
+			//故障ファイル取得
+			else if (!strcmp(token1, "-fault"))
+			{
+				token2 = strtok_s(NULL, "\n\0", &context);
+
+				for (int i = 0; i < strlen(token2); i++)
+				{
+					if (token2[i] != ' ' && token2[i] != '\t')
+					{
+						fi[FAULT].name = _strdup(strtok_s(&token2[i], " \n\0", &context));
+						fi[FAULT].flag = ON;
+						break;
+					}
+
+				}
+			}
+			//故障ファイル取得
+			else if (!strcmp(token1, "-mode_1"))
+			{
+				token2 = strtok_s(NULL, "\n\0", &context);
+
+				for (int i = 0; i < strlen(token2); i++)
+				{
+					if (token2[i] != ' ' && token2[i] != '\t')
+					{
+						fi[MODE_1].name = _strdup(strtok_s(&token2[i], " \n\0", &context));
+						fi[MODE_1].flag = ON;
+						break;
+					}
+
+				}
+			}
+			//CLASP PARALLELモード 指定
+			else if (!strcmp(token1, "-parallel"))
+			{
+				token2 = strtok_s(NULL, "\n\0", &context);
+
+				for (int i = 0; i < strlen(token2); i++)
+				{
+					if (token2[i] != ' ' && token2[i] != '\t')
+					{
+						fi[PARALLEL].value = atoi(strtok_s(&token2[i], " \n\0", &context));
+						fi[PARALLEL].flag = ON;
+						break;
+					}
+				}
+			}
 			else
 			{
 				printf("\n	COMMAND ERROR: option setup is failed. ");
@@ -383,6 +631,19 @@ bool OPTread(
 				return OPT_ERROR;
 			}
 		}
+	}
+
+	//------------------------------------------------------------------------
+    // defaultの設定
+    //------------------------------------------------------------------------
+	if (fi[RAND].flag == OFF) {
+		fi[RAND].name = "OFF";
+	}
+	if (fi[TIME].flag == OFF) {
+		fi[TIME].value = 10;
+	}
+	if (fi[WSATH].flag == OFF) {
+		fi[WSATH].value = 30;
 	}
 
 	free(buffer);
