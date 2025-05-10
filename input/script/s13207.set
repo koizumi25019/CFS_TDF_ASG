@@ -1,0 +1,36 @@
+# set File
+
+# set netlist(.v)
+-net ./input/circuit/s13207.v
+
+# set fault list(.txt)
+-fault ./input/rprf/s13207_rpr_1.txt
+
+# set xor-tap list(.txt)
+-xor_tap ./input/xor_tap/tap_64.txt
+
+# set scan-chain(.txt)
+-scan_chain ./input/scan_chain/s13207_sc_64.txt
+
+# set necessary(.txt)
+-nece ./input/necessary/s13207_nece.txt
+
+# set folder out(.txt)
+-folder ./s13207_output/
+
+# set seed set(.txt)
+-seed s13207_seed.txt
+
+# set target limit (value)
+-target_limit 300
+
+# set abort time (value)
+-time 60
+
+# set power mode (ON，OFF)
+-power ON
+
+# set parallel mode (value)
+-parallel 24
+
+

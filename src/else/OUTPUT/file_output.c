@@ -169,7 +169,7 @@ int file_output(clock_t time,int mode) {
 		fprintf(fout_log, "//	    Transition Fault ASG   Information\n");
 		fprintf(fout_log, "//---------------------------------------------------\n");
 		fprintf(fout_log, "// Target Circuit              :%s\n", fi[CIRCUIT].name);
-		fprintf(fout_log, "// Fault Type                  :NODE\n");
+		fprintf(fout_log, "// Fault Type                  :TDF\n");
 		if (fi[TARGET_LIMIT].value == 1) {
 			fprintf(fout_log, "// Test Generation             :STTG\n");
 		}
@@ -185,6 +185,7 @@ int file_output(clock_t time,int mode) {
 		fprintf(fout_log, "// Rate of Detected Faults     :%.2lf%%\n", (((double)dfl_num) / ((double)all_num))*100.0);
 		fprintf(fout_log, "// Elapsed time                :%.2lfsec\n", (double)clock() / CLOCKS_PER_SEC);
 		fprintf(fout_log, "// Time to abort solver        :%dsec\n", fi[TIME].value);
+		fprintf(fout_log, "// Time to graph               :%dsec\n", time_graph);
 		fprintf(fout_log, "// Target faults limit         :%d\n", fi[TARGET_LIMIT].value);
 		fprintf(fout_log, "// Rand Optiont                :%s\n", fi[RAND].name);
 		fprintf(fout_log, "// Low Power Mode              :%s\n", fi[LOW_POWER].name);

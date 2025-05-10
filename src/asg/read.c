@@ -710,7 +710,7 @@ bool CreateCompatibleEdge(
 		ufl_i = ufl_i->next;
 		ufl_j = ufl;//ufl_jのポインタが更新されたままになってしまうのでポインタをuflでリセット
 
-		printf("\r	            Generating graph progress  >> %.2f%%", ((float)(i + 1) / (float)ufl_num) * 100);
+		printf("\rGenerating graph progress  >> %.2f%%", ((float)(i + 1) / (float)ufl_num) * 100);
 	}
 #ifdef __DEBUG_SET_TARGET_COMP__
 	_CALL_DEBUG_SET_TARGET_COMP_(remain);
@@ -1001,9 +1001,9 @@ bool CompatibleFaultSet(
 		// 各フィールドのコピー
 		new_node->type = current->type;
 		strcpy(new_node->name, current->name);
-		new_node->netlist = current->netlist;      // ポインタ自体はコピーされるが、構造体全体の複製が不要ならこのままでOK
+		new_node->netlist = current->netlist;
 		new_node->node_id = current->node_id;
-		// 例として、故障選択済みフラグを設定
+		//故障選択済みフラグを設定
 		if (new_node->netlist != NULL) {
 			new_node->netlist->tf_flag = FLAG_UP;
 		}

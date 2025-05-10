@@ -33,13 +33,6 @@
 //-------------------------------------------------------------------------------------------------------------
 //	structre
 //-------------------------------------------------------------------------------------------------------------
-///** target fault structure */
-//typedef struct TargetFault
-//{
-//	int					  num;			      /**< number of target faults */
-//	struct UNDET_FAULT_LIST** list;				  /**< list */
-//}
-//TARGET;
 
 /* sort structure*/
 typedef struct Sorted {

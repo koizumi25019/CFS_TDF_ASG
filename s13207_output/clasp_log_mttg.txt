@@ -1,0 +1,52 @@
+c clasp version 3.3.8
+c Reading from ./s13207_output/mttg_pbo.txt
+c Solving...
+c Progression : [138;inf]
+c Progression : [139;inf]
+c Progression : [140;inf]
+c Progression : [141;inf]
+c Progression : [142;inf]
+c Progression : [143;inf]
+c Progression : [144;inf]
+c Progression : [145;inf]
+c Progression : [146;inf]
+c Progression : [147;inf]
+c Progression : [148;inf]
+c Progression : [149;inf]
+c Progression : [150;inf]
+c Progression : [151;inf]
+c Progression : [152;inf]
+c Progression : [153;inf]
+c Progression : [154;inf]
+c Progression : [155;inf]
+c Progression : [156;inf]
+c Progression : [157;inf]
+c Progression : [158;inf]
+c Progression : [159;inf]
+c Progression : [160;inf]
+c Progression : [161;inf]
+c Progression : [162;inf]
+c Progression : [163;inf]
+c Progression : [164;inf]
+c Progression : [165;inf]
+c Progression : [166;inf]
+c Progression : [167;inf]
+c Progression : [168;inf]
+c Progression : [169;inf]
+c Progression : [170;inf]
+c Progression : [171;inf]
+c Progression : [172;inf]
+c Progression : [173;inf]
+c Progression : [174;inf]
+c Progression : [175;inf]
+c Progression : [176;inf]
+c Progression : [177;inf]
+c Progression : [178;inf]
+c Progression : [179;inf]
+o 219
+c Progression : [180;219] (Error: 0.216667)
+o 218
+o 217
+o 216
+o 215
+c Progression : [181;215] (Error: 0.187845)

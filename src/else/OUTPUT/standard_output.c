@@ -23,7 +23,7 @@ void standard_output(void) {
 	printf("//	   Transition Delay Fault ASG  Information\n");
 	printf("//---------------------------------------------------\n");
 	printf("// Target Circuit              :%s\n", fi[CIRCUIT].name);
-	printf("// Fault Type                  :NODE\n");
+	printf("// Fault Type                  :TDF\n");
 	if (fi[TARGET_LIMIT].value == 1) {
 		printf("// Test Generation             :STTG\n");
 	}
