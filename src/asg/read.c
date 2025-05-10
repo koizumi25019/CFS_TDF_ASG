@@ -520,7 +520,7 @@ bool ReadNecessary(
 	free(buffer);
 	free(string);
 	printf("ˆê’v‚µ‚½•¶š—ñ‚Ì”:%d\n", cnt);
-	printf("•K{Š„“–î•ñ‚Ì”F%d", nece_line_cnt);
+	printf("•K{Š„“–î•ñ‚Ì”F%d\n", nece_line_cnt);
 	if (cnt != ufl_num)
 	{
 		printf("\n	SYSTEM ERROR: Reading necessary file error. ");

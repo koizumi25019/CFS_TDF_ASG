@@ -545,7 +545,7 @@ bool OPTread(
 
 				}
 			}
-			//WSA閾値＝消費電力閾値(default:30)取得
+			//WSA閾値＝消費電力閾値(default:20)取得
 			else if (!strcmp(token1, "-wsath"))
 			{
 				token2 = strtok_s(NULL, "\n\0", &context);
@@ -643,7 +643,7 @@ bool OPTread(
 		fi[TIME].value = 10;
 	}
 	if (fi[WSATH].flag == OFF) {
-		fi[WSATH].value = 30;
+		fi[WSATH].value = 20;
 	}
 
 	free(buffer);

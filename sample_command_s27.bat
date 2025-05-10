@@ -1,2 +1,0 @@
-TDF_ASG.exe -net ./input/circuit/s27.v -fault ./input/rprf/s27_rpr_10_1.txt -seed s27_seed.txt -xor_tap ./input/xor_tap/tap_4.txt -scan_chain ./input/scan_chain/s27_sc_4.txt -nece ./input/necessary/s27_C_nece.txt -power ON -target_limit 1 -time 1000 -rand ON -folder ./s27_output/
-pause

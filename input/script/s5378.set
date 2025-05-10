@@ -13,7 +13,7 @@
 -scan_chain ./input/scan_chain/s5378_sc_32.txt
 
 # set necessary(.txt)
--nece ./input/necessary/s5378_C_nece.txt
+-nece ./input/necessary/s5378_nece.txt
 
 # set folder out(.txt)
 -folder ./s5378_output/
@@ -22,7 +22,7 @@
 -seed s5378_seed.txt
 
 # set target limit (value)
--target_limit 1
+-target_limit 300
 
 # set abort time (value)
 -time 60
@@ -30,13 +30,7 @@
 # set power mode (ON，OFF)
 -power ON
 
-# set random mode (ON，OFF)
--rand ON
-
 # set parallel mode (value)
--parallel 8
-
-# set clasp mode 1 (ON，OFF)
--mode_1 OFF
+-parallel 24
 
 

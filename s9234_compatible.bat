@@ -1,2 +1,0 @@
-TDF_ASG.exe -net ./input/circuit/s9234.v -fault ./input/rprf/s9234_rpr_1.txt -seed seed.txt -xor_tap ./input/xor_tap/tap_32.txt -scan_chain ./input/scan_chain/s9234_sc_32.txt -power ON -target_limit 100 -time 1000 -rand ON -nece ./input/necessary/s9234_C_nece.txt -folder ./s9234_output/
-pause

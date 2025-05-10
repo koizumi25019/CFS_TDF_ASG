@@ -144,7 +144,10 @@ int cmdline(int argc, char *argv[])
 		fi[TIME].value = 10;
 	}
 	if (fi[WSATH].flag == OFF) {
-		fi[WSATH].value = 30;
+		fi[WSATH].value = 20;
+	}
+	if (fi[MODE_1].flag == OFF) {
+		fi[MODE_1].name = "OFF";
 	}
 
 	return SUCCESS;
