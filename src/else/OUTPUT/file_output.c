@@ -165,12 +165,12 @@ int file_output(clock_t time,int mode) {
 			fprintf(fout_log, "// Seed Generation             :MTTG\n");
 		}
 		fprintf(fout_log, "// Number of Total Faults      :%d\n", (int)all_num);
-		fprintf(fout_log, "// Number of Unseed Faults :%d\n", (int)unseed_num);
+		fprintf(fout_log, "// Number of Unseed Faults     :%d\n", (int)unseed_num);
 		fprintf(fout_log, "// Number of High Power Faults :%d\n", (int)hpfl_num);
 		fprintf(fout_log, "// Number of Detected Faults   :%d\n", (int)dfl_num);
 		fprintf(fout_log, "// Number of Undetected Faults :%d\n", (int)ufl_num);
-		fprintf(fout_log, "// Number of Seeds             :%d\n", tp_num);
-		fprintf(fout_log, "// Rate of Detected Faults     :%.2lf%%\n", (((double)dfl_num) / ((double)all_num))*100.0);
+		fprintf(fout_log, "// Number of Seeds             :%d\n", seed_num);
+		fprintf(fout_log, "// Rate of Detected Faults     :%.2lf%%\n", (((double)dfl_num) / ((double)all_num)) * 100.0);
 		fprintf(fout_log, "// Elapsed time                :%.2lfsec\n", (double)clock() / CLOCKS_PER_SEC);
 		fprintf(fout_log, "// Time to abort solver        :%dsec\n", fi[TIME].value);
 		fprintf(fout_log, "// Time to graph               :%dsec\n", time_graph);
@@ -179,9 +179,9 @@ int file_output(clock_t time,int mode) {
 		if (fi[PARALLEL].flag == 1) {
 		fprintf(fout_log, "// Parallel Mode Option        :OFF\n");
 		}
-		if (fi[PARALLEL].flag==1) {
+		if (fi[PARALLEL].flag == 1) {
 		fprintf(fout_log, "// Parallel Mode Option        :ON\n");
-		fprintf(fout_log, "// CPU Thread                  :%s\n", fi[PARALLEL].name);
+		fprintf(fout_log, "// CPU Thread                  :%d\n", fi[PARALLEL].value);
 		}
 		fprintf(fout_log, "// Mode 1 Option               :%s\n", fi[MODE_1].name);
 		fprintf(fout_log, "// Low Power Mode              :%s\n", fi[LOW_POWER].name);

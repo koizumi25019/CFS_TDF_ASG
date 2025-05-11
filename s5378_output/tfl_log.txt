@@ -1,0 +1,4048 @@
+n266gat
+ STF
+n2152gat_n1801gat_A
+ STF
+n1057gat
+ STR
+n1670gat_n1571gat_A
+ STF
+n481gat_n476gat_B
+ STF
+n120gat
+ STF
+n787gat_n781gat_B
+ STF
+n912gat_n909gat_B
+ STF
+n812gat_n805gat_C
+ STR
+n2212gat
+ STF
+n1211gat_n1204gat_A
+ STR
+n126gat_n123gat_B
+ STF
+n1380gat_n1622gat_A
+ STR
+n1798gat_n1920gat_C
+ STR
+n1616gat_n1605gat_B
+ STR
+n2413gat
+ STF
+n350gat_n344gat_C
+ STF
+n1658gat_n1729gat_A
+ STF
+n2345gat_n2213gat_C
+ STF
+n1446gat_n1620gat_B
+ STR
+n783gat
+ STF
+n43gat_n2522gat_A
+ STF
+n231gat
+ STF
+n396gat_n1614gat_A
+ STF
+n174gat_n171gat_C
+ STR
+n2499gat
+ STF
+n1500gat
+ STF
+n484gat
+ STR
+n937gat
+ STR
+n943gat_n936gat_A
+ STR
+n1310gat_n1593gat_B
+ STR
+n124gat
+ STR
+n1380gat
+ STR
+n852gat_n555gat_A
+ STF
+n64gat_n58gat_C
+ STR
+n320gat
+ STR
+n128gat_n124gat_B
+ STF
+n852gat
+ STF
+n1568gat_n1729gat_C
+ STR
+n1236gat
+ STF
+n1284gat_n1287gat_A
+ STF
+n1665gat
+ STF
+n1659gat_n1647gat_B
+ STR
+n228gat_n225gat_C
+ STR
+n63gat_n57gat_B
+ STF
+n1635gat_n1796gat_B
+ STR
+n1658gat_n1657gat_C
+ STR
+n1788gat_II2934_C
+ STF
+n1022gat_n1015gat_C
+ STF
+n1446gat_n1619gat_B
+ STR
+n353gat_n346gat_A
+ STR
+n2442gat
+ STR
+n60gat_n56gat_A
+ STR
+n258gat
+ STR
+n1646gat
+ STR
+n1499gat_n1555gat_C
+ STR
+n1858gat_n1581gat_A
+ STR
+n2597gat
+ STR
+n2887gat
+ STR
+n960gat
+ STR
+n1614gat_n1556gat_A
+ STF
+n170gat
+ STF
+n956gat
+ STR
+n1658gat
+ STF
+n916gat_n910gat_A
+ STR
+n1635gat_n1573gat_C
+ STR
+n2611gat_n2605gat_A
+ STR
+n1659gat_n1649gat_B
+ STR
+n1616gat_n1556gat_C
+ STF
+n784gat_n781gat_A
+ STF
+n1446gat_n1622gat_B
+ STF
+n1793gat
+ STF
+n1225gat
+ STF
+n2575gat_n2569gat_C
+ STR
+n941gat_n935gat_B
+ STF
+n1273gat
+ STR
+n125gat_n121gat_A
+ STR
+n130gat_n124gat_A
+ STF
+n227gat_n222gat_B
+ STF
+n226gat_n222gat_A
+ STF
+n1604gat_II1734_A
+ STR
+n813gat_n807gat_A
+ STR
+n1923gat
+ STF
+n63gat
+ STF
+n721gat
+ STR
+n364gat
+ STF
+n2004gat
+ STF
+n1446gat
+ STR
+n2876gat
+ STF
+n175gat_n169gat_B
+ STF
+n954gat_n947gat_A
+ STR
+n1023gat_n1016gat_A
+ STR
+n1788gat_II2934_C
+ STR
+n1659gat_n1644gat_C
+ STR
+n1499gat_n1555gat_C
+ STF
+n1023gat
+ STF
+n1616gat_n1642gat_B
+ STR
+n1238gat_n1232gat_A
+ STF
+n127gat_n121gat_C
+ STR
+n398gat
+ STR
+n393gat
+ STR
+n177gat_n171gat_A
+ STF
+n1740gat
+ STR
+n2915gat
+ STR
+n482gat_n479gat_C
+ STR
+n282gat
+ STF
+n490gat
+ STF
+n1786gat_II2890_B
+ STR
+n915gat_n908gat_C
+ STR
+n48gat
+ STF
+n2991gat
+ STF
+n1019gat
+ STF
+n1551gat_n1516gat_A
+ STF
+n2216gat_n1861gat_B
+ STF
+n841gat
+ STF
+n865gat
+ STF
+n126gat
+ STR
+n1566gat
+ STF
+n860gat
+ STF
+n933gat
+ STF
+n1052gat
+ STF
+n789gat
+ STR
+n787gat
+ STR
+n657gat
+ STR
+n1796gat
+ STF
+n174gat_n171gat_C
+ STF
+n914gat
+ STR
+n1989gat_n1863gat_C
+ STF
+n555gat
+ STR
+n845gat
+ STR
+n1056gat
+ STR
+n270gat_n1606gat_B
+ STF
+n2660gat_n2662gat_A
+ STR
+n2392gat
+ STR
+n231gat_n224gat_A
+ STF
+n500gat_n494gat_C
+ STR
+n641gat
+ STF
+n761gat
+ STF
+n1054gat
+ STF
+n1959gat
+ STF
+n128gat_n124gat_B
+ STR
+n1584gat
+ STF
+n182gat_n110gat_A
+ STF
+n263gat_n259gat_A
+ STF
+n2354gat_II1723_A
+ STF
+n726gat
+ STR
+n1279gat
+ STR
+n693gat_n690gat_C
+ STF
+n573gat_n570gat_B
+ STF
+n1670gat_n1669gat_C
+ STR
+n1788gat_II2831_C
+ STR
+n1580gat
+ STR
+n559gat_n874gat_A
+ STR
+n906gat
+ STR
+n1784gat_II2736_B
+ STF
+n401gat
+ STR
+n1272gat
+ STF
+n160gat
+ STR
+n1702gat
+ STF
+n1236gat
+ STR
+n2346gat_n2215gat_A
+ STR
+n1701gat
+ STF
+n855gat
+ STR
+n124gat
+ STF
+n349gat_n346gat_B
+ STR
+n694gat_n690gat_B
+ STF
+n1565gat
+ STR
+n267gat_n260gat_C
+ STR
+n396gat_n1605gat_D
+ STR
+n1235gat
+ STF
+n1021gat_n1015gat_B
+ STR
+n785gat_n782gat_B
+ STR
+n49gat_n46gat_B
+ STF
+n1986gat_n1667gat_B
+ STR
+n1616gat
+ STR
+n1444gat_n1574gat_C
+ STF
+n974gat
+ STF
+n344gat
+ STR
+n1800gat
+ STR
+n222gat
+ STR
+n2419gat
+ STR
+n1990gat_n2073gat_B
+ STF
+n2078gat_n2073gat_A
+ STF
+n1884gat_II2889_C
+ STF
+n2620gat
+ STF
+n760gat
+ STF
+n3010gat_n2599gat_A
+ STF
+n2354gat
+ STF
+n1790gat_n1564gat_C
+ STR
+n626gat
+ STF
+n1566gat
+ STR
+n2015gat
+ STR
+n1917gat
+ STF
+n2411gat
+ STF
+n1696gat
+ STR
+n559gat
+ STR
+n2214gat_II1734_B
+ STF
+n1075gat
+ STF
+n1517gat
+ STF
+n63gat_n59gat_B
+ STF
+n51gat_n47gat_B
+ STF
+n1831gat
+ STF
+n352gat
+ STR
+n1786gat_II2720_B
+ STR
+n3017gat
+ STF
+n1671gat
+ STF
+n1673gat_n1794gat_A
+ STF
+n1654gat
+ STR
+n130gat_n123gat_A
+ STR
+n111gat_n971gat_A
+ STR
+n2448gat_n2238gat_A
+ STR
+n1490gat
+ STF
+n1553gat_n1639gat_C
+ STR
+n1735gat_n1565gat_A
+ STF
+n1277gat
+ STR
+n2621gat_n2534gat_C
+ STR
+n1859gat_n1915gat_A
+ STF
+n1698gat
+ STR
+n914gat_n908gat_B
+ STR
+n1827gat_n1821gat_A
+ STR
+n1658gat_n1729gat_A
+ STR
+n88gat
+ STF
+n223gat
+ STF
+n1278gat
+ STR
+n174gat
+ STR
+n951gat
+ STF
+n621gat
+ STF
+n1724gat
+ STF
+n316gat
+ STR
+n1858gat_n1796gat_A
+ STF
+n2148gat
+ STF
+n351gat_n345gat_B
+ STF
+n2555gat
+ STR
+n1658gat_n1655gat_C
+ STF
+n364gat
+ STR
+n57gat
+ STF
+n936gat
+ STR
+n176gat_n170gat_C
+ STR
+n372gat_n973gat_A
+ STR
+n89gat
+ STR
+n17gat_n84gat_B
+ STF
+n945gat
+ STF
+n1673gat_n1574gat_B
+ STR
+n348gat_n345gat_A
+ STR
+n259gat
+ STR
+n953gat_n946gat_C
+ STR
+n229gat
+ STR
+n1499gat_n1639gat_A
+ STF
+n1658gat_n1728gat_C
+ STF
+n913gat_n910gat_C
+ STF
+n499gat
+ STR
+n231gat_n224gat_A
+ STR
+n1790gat
+ STF
+n266gat
+ STR
+n1921gat
+ STF
+n1917gat
+ STR
+n278gat
+ STR
+n1515gat_n1732gat_A
+ STF
+n2986gat
+ STR
+n366gat
+ STR
+n1568gat
+ STF
+n661gat
+ STF
+n1991gat_n1521gat_B
+ STF
+n2460gat
+ STR
+n2553gat_n2549gat_B
+ STR
+n353gat_n347gat_A
+ STF
+n48gat_n44gat_A
+ STR
+n394gat
+ STR
+n933gat
+ STR
+n2597gat
+ STF
+n720gat
+ STF
+n130gat_n124gat_A
+ STR
+n126gat_n121gat_B
+ STR
+n2351gat_n1577gat_B
+ STR
+n2402gat_n2215gat_C
+ STR
+n852gat_n557gat_B
+ STF
+n2401gat_n2150gat_A
+ STF
+n946gat
+ STR
+n501gat
+ STF
+n1448gat_n1620gat_A
+ STR
+n1392gat_n1496gat_A
+ STF
+n1662gat_n1657gat_A
+ STR
+n1758gat
+ STR
+n561gat
+ STR
+n667gat
+ STR
+n1918gat_n1865gat_B
+ STR
+n786gat_n783gat_C
+ STR
+n1581gat
+ STR
+n2239gat_n1882gat_C
+ STF
+n1736gat_n1655gat_A
+ STR
+n1614gat_n1557gat_C
+ STR
+n1774gat
+ STR
+n1893gat_n1846gat_B
+ STF
+n1895gat_n1630gat_A
+ STF
+n1891gat_n1895gat_B
+ STR
+n852gat_n649gat_B
+ STF
+n851gat_n654gat_A
+ STF
+n852gat_n794gat_A
+ STF
+n852gat_n795gat_B
+ STF
+n969gat
+ STF
+n789gat_n782gat_A
+ STF
+n2582gat_n2583gat_A
+ STR
+n1797gat_n1729gat_B
+ STF
+n475gat
+ STF
+n1884gat_II2735_B
+ STF
+n1635gat_n1573gat_C
+ STF
+n485gat_n478gat_A
+ STR
+n2351gat_n1576gat_A
+ STF
+n2152gat_n1801gat_A
+ STR
+n1444gat_n1573gat_A
+ STF
+n1839gat_II3179_A
+ STR
+n1862gat
+ STR
+n263gat_n259gat_A
+ STR
+n349gat
+ STR
+n334gat_n247gat_A
+ STR
+n2004gat
+ STR
+n1447gat
+ STF
+n1234gat
+ STR
+n2152gat_n1801gat_A
+ STF
+n1057gat
+ STR
+n1670gat_n1571gat_A
+ STF
+n481gat_n476gat_B
+ STF
+n812gat_n805gat_C
+ STR
+n2212gat
+ STF
+n1211gat_n1204gat_A
+ STR
+n126gat_n123gat_B
+ STF
+n1380gat_n1622gat_A
+ STR
+n1798gat_n1920gat_C
+ STR
+n1616gat_n1605gat_B
+ STR
+n2413gat
+ STF
+n350gat_n344gat_C
+ STF
+n1658gat_n1729gat_A
+ STF
+n2345gat_n2213gat_C
+ STF
+n783gat
+ STF
+n43gat_n2522gat_A
+ STF
+n231gat
+ STF
+n396gat_n1614gat_A
+ STF
+n174gat_n171gat_C
+ STR
+n1500gat
+ STF
+n937gat
+ STR
+n943gat_n936gat_A
+ STR
+n1310gat_n1593gat_B
+ STR
+n2664gat_n2163gat_C
+ STR
+n124gat
+ STR
+n1380gat
+ STR
+n852gat_n555gat_A
+ STF
+n64gat_n58gat_C
+ STR
+n128gat_n124gat_B
+ STF
+n852gat
+ STF
+n1568gat_n1729gat_C
+ STR
+n1236gat
+ STF
+n1284gat_n1287gat_A
+ STF
+n1665gat
+ STF
+n1659gat_n1647gat_B
+ STR
+n228gat_n225gat_C
+ STR
+n1635gat_n1796gat_B
+ STR
+n1658gat_n1657gat_C
+ STR
+n1788gat_II2934_C
+ STF
+n1022gat_n1015gat_C
+ STF
+n1446gat_n1619gat_B
+ STR
+n353gat_n346gat_A
+ STR
+n2442gat
+ STR
+n60gat_n56gat_A
+ STR
+n1646gat
+ STR
+n1499gat_n1555gat_C
+ STR
+n1858gat_n1581gat_A
+ STR
+n2597gat
+ STR
+n2887gat
+ STR
+n960gat
+ STR
+n1614gat_n1556gat_A
+ STF
+n170gat
+ STF
+n956gat
+ STR
+n1658gat
+ STF
+n916gat_n910gat_A
+ STR
+n1635gat_n1573gat_C
+ STR
+n1659gat_n1649gat_B
+ STR
+n1616gat_n1556gat_C
+ STF
+n784gat_n781gat_A
+ STF
+n1446gat_n1622gat_B
+ STF
+n1793gat
+ STF
+n1225gat
+ STF
+n2575gat_n2569gat_C
+ STR
+n1273gat
+ STR
+n125gat_n121gat_A
+ STR
+n130gat_n124gat_A
+ STF
+n227gat_n222gat_B
+ STF
+n226gat_n222gat_A
+ STF
+n1604gat_II1734_A
+ STR
+n813gat_n807gat_A
+ STR
+n1923gat
+ STF
+n721gat
+ STR
+n364gat
+ STF
+n2004gat
+ STF
+n175gat_n169gat_B
+ STF
+n954gat_n947gat_A
+ STR
+n1023gat_n1016gat_A
+ STR
+n1788gat_II2934_C
+ STR
+n1659gat_n1644gat_C
+ STR
+n1499gat_n1555gat_C
+ STF
+n1023gat
+ STF
+n1616gat_n1642gat_B
+ STR
+n1238gat_n1232gat_A
+ STF
+n398gat
+ STR
+n393gat
+ STR
+n177gat_n171gat_A
+ STF
+n1740gat
+ STR
+n2915gat
+ STR
+n482gat_n479gat_C
+ STR
+n282gat
+ STF
+n490gat
+ STF
+n1786gat_II2890_B
+ STR
+n915gat_n908gat_C
+ STR
+n2991gat
+ STF
+n1551gat_n1516gat_A
+ STF
+n2216gat_n1861gat_B
+ STF
+n126gat
+ STR
+n1566gat
+ STF
+n860gat
+ STF
+n933gat
+ STF
+n1052gat
+ STF
+n789gat
+ STR
+n787gat
+ STR
+n657gat
+ STR
+n1796gat
+ STF
+n174gat_n171gat_C
+ STF
+n914gat
+ STR
+n1989gat_n1863gat_C
+ STF
+n555gat
+ STR
+n845gat
+ STR
+n270gat_n1606gat_B
+ STF
+n2392gat
+ STR
+n231gat_n224gat_A
+ STF
+n500gat_n494gat_C
+ STR
+n641gat
+ STF
+n761gat
+ STF
+n1054gat
+ STF
+n1959gat
+ STF
+n128gat_n124gat_B
+ STR
+n1584gat
+ STF
+n182gat_n110gat_A
+ STF
+n263gat_n259gat_A
+ STF
+n2354gat_II1723_A
+ STF
+n726gat
+ STR
+n1279gat
+ STR
+n693gat_n690gat_C
+ STF
+n573gat_n570gat_B
+ STF
+n1670gat_n1669gat_C
+ STR
+n1788gat_II2831_C
+ STR
+n1580gat
+ STR
+n559gat_n874gat_A
+ STR
+n1784gat_II2736_B
+ STF
+n1272gat
+ STF
+n1702gat
+ STF
+n2346gat_n2215gat_A
+ STR
+n1701gat
+ STF
+n855gat
+ STR
+n349gat_n346gat_B
+ STR
+n694gat_n690gat_B
+ STF
+n1565gat
+ STR
+n267gat_n260gat_C
+ STR
+n396gat_n1605gat_D
+ STR
+n1235gat
+ STF
+n1021gat_n1015gat_B
+ STR
+n785gat_n782gat_B
+ STR
+n49gat_n46gat_B
+ STF
+n1986gat_n1667gat_B
+ STR
+n1616gat
+ STR
+n1444gat_n1574gat_C
+ STF
+n974gat
+ STF
+n344gat
+ STR
+n1800gat
+ STR
+n222gat
+ STR
+n2419gat
+ STR
+n1884gat_II2889_C
+ STF
+n2620gat
+ STF
+n760gat
+ STF
+n3010gat_n2599gat_A
+ STF
+n2354gat
+ STF
+n1790gat_n1564gat_C
+ STR
+n626gat
+ STF
+n482gat_n476gat_C
+ STR
+n1566gat
+ STR
+n1917gat
+ STF
+n2411gat
+ STF
+n1696gat
+ STR
+n559gat
+ STR
+n2214gat_II1734_B
+ STF
+n1075gat
+ STF
+n1517gat
+ STF
+n63gat_n59gat_B
+ STF
+n51gat_n47gat_B
+ STF
+n1645gat_n1556gat_B
+ STR
+n1831gat
+ STF
+n352gat
+ STR
+n1786gat_II2720_B
+ STR
+n3017gat
+ STF
+n1671gat
+ STF
+n1673gat_n1794gat_A
+ STF
+n1654gat
+ STR
+n111gat_n971gat_A
+ STR
+n2448gat_n2238gat_A
+ STR
+n950gat_n945gat_B
+ STF
+n949gat_n945gat_A
+ STF
+n1490gat
+ STF
+n1553gat_n1639gat_C
+ STR
+n1735gat_n1565gat_A
+ STF
+n1277gat
+ STR
+n2621gat_n2534gat_C
+ STR
+n1859gat_n1915gat_A
+ STF
+n1698gat
+ STR
+n914gat_n908gat_B
+ STR
+n1827gat_n1821gat_A
+ STR
+n1658gat_n1729gat_A
+ STR
+n88gat
+ STF
+n223gat
+ STF
+n1278gat
+ STR
+n174gat
+ STR
+n951gat
+ STF
+n621gat
+ STF
+n956gat
+ STF
+n1500gat
+ STR
+n1724gat
+ STF
+n1068gat
+ STF
+n316gat
+ STR
+n1858gat_n1796gat_A
+ STF
+n60gat_n57gat_A
+ STR
+n2148gat
+ STF
+n918gat_n1616gat_A
+ STF
+n1922gat
+ STF
+n1797gat
+ STF
+n351gat_n345gat_B
+ STF
+n1658gat_n1655gat_C
+ STF
+n364gat
+ STR
+n57gat
+ STF
+n176gat_n170gat_C
+ STR
+n372gat_n973gat_A
+ STR
+n89gat
+ STR
+n17gat_n84gat_B
+ STF
+n945gat
+ STF
+n1673gat_n1574gat_B
+ STR
+n348gat_n345gat_A
+ STR
+n259gat
+ STR
+n229gat
+ STR
+n1499gat_n1639gat_A
+ STF
+n1658gat_n1728gat_C
+ STF
+n913gat_n910gat_C
+ STF
+n231gat_n224gat_A
+ STR
+n1790gat
+ STF
+n1668gat
+ STR
+n1719gat_n1564gat_B
+ STF
+n279gat
+ STF
+n266gat
+ STR
+n1921gat
+ STF
+n1917gat
+ STR
+n278gat
+ STR
+n1515gat_n1732gat_A
+ STF
+n2986gat
+ STR
+n228gat
+ STF
+n2603gat
+ STF
+n2427gat
+ STF
+n1568gat
+ STF
+n1991gat_n1521gat_B
+ STF
+n916gat
+ STR
+n2553gat_n2549gat_B
+ STR
+n353gat_n347gat_A
+ STF
+n48gat_n44gat_A
+ STR
+n53gat_n46gat_A
+ STF
+n394gat
+ STR
+n2597gat
+ STF
+n720gat
+ STF
+n130gat_n124gat_A
+ STR
+n126gat_n121gat_B
+ STR
+n2351gat_n1577gat_B
+ STR
+n1569gat
+ STF
+n1797gat_n1731gat_C
+ STR
+n1859gat_n1916gat_B
+ STR
+n1785gat_II2935_A
+ STF
+n2402gat_n2215gat_C
+ STR
+n852gat_n557gat_B
+ STF
+n2401gat_n2150gat_A
+ STF
+n501gat
+ STF
+n1448gat_n1620gat_A
+ STR
+n1392gat_n1496gat_A
+ STF
+n2551gat_n2548gat_B
+ STF
+n1662gat_n1657gat_A
+ STR
+n1758gat
+ STR
+n561gat
+ STR
+n667gat
+ STR
+n1918gat_n1865gat_B
+ STR
+n786gat_n783gat_C
+ STR
+n1581gat
+ STR
+n2239gat_n1882gat_C
+ STF
+n1736gat_n1655gat_A
+ STR
+n738gat_n732gat_A
+ STR
+n499gat_n494gat_B
+ STF
+n1614gat_n1557gat_C
+ STR
+n1774gat
+ STR
+n1893gat_n1846gat_B
+ STF
+n1895gat_n1630gat_A
+ STF
+n1891gat_n1895gat_B
+ STR
+n852gat_n649gat_B
+ STF
+n851gat_n654gat_A
+ STF
+n852gat_n794gat_A
+ STF
+n852gat_n795gat_B
+ STF
+n969gat
+ STF
+n1704gat
+ STF
+n789gat_n782gat_A
+ STF
+n1786gat_II3149_A
+ STR
+n2582gat_n2583gat_A
+ STR
+n1797gat_n1729gat_B
+ STF
+n1986gat_n1660gat_B
+ STF
+n1886gat_n1958gat_B
+ STR
+n951gat_n948gat_C
+ STR
+n2351gat_n1576gat_A
+ STF
+n2152gat_n1801gat_A
+ STR
+n1444gat_n1573gat_A
+ STF
+n1839gat_II3179_A
+ STR
+n334gat_n247gat_A
+ STR
+n1447gat
+ STF
+n1234gat
+ STR
+n1827gat_n1825gat_A
+ STR
+n1670gat_n1571gat_A
+ STF
+n481gat_n476gat_B
+ STF
+n812gat_n805gat_C
+ STR
+n2212gat
+ STF
+n1211gat_n1204gat_A
+ STR
+n126gat_n123gat_B
+ STF
+n1380gat_n1622gat_A
+ STR
+n1798gat_n1920gat_C
+ STR
+n1616gat_n1605gat_B
+ STR
+n2413gat
+ STF
+n350gat_n344gat_C
+ STF
+n783gat
+ STF
+n43gat_n2522gat_A
+ STF
+n231gat
+ STF
+n174gat_n171gat_C
+ STR
+n1500gat
+ STF
+n937gat
+ STR
+n943gat_n936gat_A
+ STR
+n1310gat_n1593gat_B
+ STR
+n2664gat_n2163gat_C
+ STR
+n124gat
+ STR
+n1380gat
+ STR
+n852gat_n555gat_A
+ STF
+n64gat_n58gat_C
+ STR
+n128gat_n124gat_B
+ STF
+n852gat
+ STF
+n1568gat_n1729gat_C
+ STR
+n1236gat
+ STF
+n1284gat_n1287gat_A
+ STF
+n1665gat
+ STF
+n1659gat_n1647gat_B
+ STR
+n228gat_n225gat_C
+ STR
+n1635gat_n1796gat_B
+ STR
+n1658gat_n1657gat_C
+ STR
+n1788gat_II2934_C
+ STF
+n1022gat_n1015gat_C
+ STF
+n1446gat_n1619gat_B
+ STR
+n353gat_n346gat_A
+ STR
+n2442gat
+ STR
+n60gat_n56gat_A
+ STR
+n1646gat
+ STR
+n1499gat_n1555gat_C
+ STR
+n1858gat_n1581gat_A
+ STR
+n2597gat
+ STR
+n2887gat
+ STR
+n960gat
+ STR
+n1614gat_n1556gat_A
+ STF
+n170gat
+ STF
+n956gat
+ STR
+n1635gat_n1573gat_C
+ STR
+n1659gat_n1649gat_B
+ STR
+n1616gat_n1556gat_C
+ STF
+n784gat_n781gat_A
+ STF
+n1446gat_n1622gat_B
+ STF
+n1793gat
+ STF
+n1225gat
+ STF
+n2575gat_n2569gat_C
+ STR
+n1273gat
+ STR
+n125gat_n121gat_A
+ STR
+n130gat_n124gat_A
+ STF
+n227gat_n222gat_B
+ STF
+n226gat_n222gat_A
+ STF
+n1604gat_II1734_A
+ STR
+n813gat_n807gat_A
+ STR
+n1923gat
+ STF
+n721gat
+ STR
+n364gat
+ STF
+n2004gat
+ STF
+n175gat_n169gat_B
+ STF
+n954gat_n947gat_A
+ STR
+n1023gat_n1016gat_A
+ STR
+n1788gat_II2934_C
+ STR
+n1659gat_n1644gat_C
+ STR
+n1499gat_n1555gat_C
+ STF
+n1023gat
+ STF
+n1616gat_n1642gat_B
+ STR
+n1238gat_n1232gat_A
+ STF
+n393gat
+ STR
+n177gat_n171gat_A
+ STF
+n1740gat
+ STR
+n2915gat
+ STR
+n482gat_n479gat_C
+ STR
+n490gat
+ STF
+n1786gat_II2890_B
+ STR
+n915gat_n908gat_C
+ STR
+n2991gat
+ STF
+n1551gat_n1516gat_A
+ STF
+n2216gat_n1861gat_B
+ STF
+n126gat
+ STR
+n1566gat
+ STF
+n860gat
+ STF
+n933gat
+ STF
+n1052gat
+ STF
+n789gat
+ STR
+n787gat
+ STR
+n657gat
+ STR
+n1796gat
+ STF
+n174gat_n171gat_C
+ STF
+n914gat
+ STR
+n1989gat_n1863gat_C
+ STF
+n555gat
+ STR
+n845gat
+ STR
+n270gat_n1606gat_B
+ STF
+n231gat_n224gat_A
+ STF
+n500gat_n494gat_C
+ STR
+n641gat
+ STF
+n761gat
+ STF
+n1054gat
+ STF
+n1959gat
+ STF
+n128gat_n124gat_B
+ STR
+n1584gat
+ STF
+n182gat_n110gat_A
+ STF
+n263gat_n259gat_A
+ STF
+n2354gat_II1723_A
+ STF
+n726gat
+ STR
+n1279gat
+ STR
+n693gat_n690gat_C
+ STF
+n573gat_n570gat_B
+ STF
+n1670gat_n1669gat_C
+ STR
+n1788gat_II2831_C
+ STR
+n1580gat
+ STR
+n1784gat_II2736_B
+ STF
+n1272gat
+ STF
+n1702gat
+ STF
+n1701gat
+ STF
+n855gat
+ STR
+n349gat_n346gat_B
+ STR
+n694gat_n690gat_B
+ STF
+n1565gat
+ STR
+n267gat_n260gat_C
+ STR
+n396gat_n1605gat_D
+ STR
+n1235gat
+ STF
+n1021gat_n1015gat_B
+ STR
+n785gat_n782gat_B
+ STR
+n49gat_n46gat_B
+ STF
+n1986gat_n1667gat_B
+ STR
+n1444gat_n1574gat_C
+ STF
+n974gat
+ STF
+n344gat
+ STR
+n1800gat
+ STR
+n222gat
+ STR
+n2419gat
+ STR
+n1884gat_II2889_C
+ STF
+n2620gat
+ STF
+n760gat
+ STF
+n2354gat
+ STF
+n1297gat
+ STF
+n626gat
+ STF
+n482gat_n476gat_C
+ STR
+n1566gat
+ STR
+n1917gat
+ STF
+n2411gat
+ STF
+n1696gat
+ STR
+n3006gat_n2249gat_B
+ STF
+n2466gat
+ STF
+n316gat
+ STF
+n2214gat_II1734_B
+ STF
+n1075gat
+ STF
+n1517gat
+ STF
+n63gat_n59gat_B
+ STF
+n1673gat_n1921gat_B
+ STR
+n51gat_n47gat_B
+ STF
+n1645gat_n1556gat_B
+ STR
+n1831gat
+ STF
+n1784gat_II3148_C
+ STR
+n352gat
+ STR
+n1786gat_II2720_B
+ STR
+n3017gat
+ STF
+n1671gat
+ STF
+n1673gat_n1794gat_A
+ STF
+n1654gat
+ STR
+n111gat_n971gat_A
+ STR
+n2448gat_n2238gat_A
+ STR
+n1490gat
+ STF
+n1553gat_n1639gat_C
+ STR
+n1735gat_n1565gat_A
+ STF
+n1277gat
+ STR
+n2621gat_n2534gat_C
+ STR
+n1859gat_n1915gat_A
+ STF
+n1698gat
+ STR
+n914gat_n908gat_B
+ STR
+n1827gat_n1821gat_A
+ STR
+n1658gat_n1729gat_A
+ STR
+n88gat
+ STF
+n223gat
+ STF
+n1278gat
+ STR
+n174gat
+ STR
+n951gat
+ STF
+n621gat
+ STF
+n1500gat
+ STR
+n1724gat
+ STF
+n1858gat_n1796gat_A
+ STF
+n60gat_n57gat_A
+ STR
+n2148gat
+ STF
+n918gat_n1616gat_A
+ STF
+n1922gat
+ STF
+n351gat_n345gat_B
+ STF
+n1658gat_n1655gat_C
+ STF
+n176gat_n170gat_C
+ STR
+n372gat_n973gat_A
+ STR
+n89gat
+ STR
+n17gat_n84gat_B
+ STF
+n945gat
+ STF
+n1673gat_n1574gat_B
+ STR
+n259gat
+ STR
+n1499gat_n1639gat_A
+ STF
+n1658gat_n1728gat_C
+ STF
+n1790gat
+ STF
+n1668gat
+ STR
+n1719gat_n1564gat_B
+ STF
+n266gat
+ STR
+n1921gat
+ STF
+n1917gat
+ STR
+n278gat
+ STR
+n1515gat_n1732gat_A
+ STF
+n2986gat
+ STR
+n228gat
+ STF
+n2603gat
+ STF
+n2427gat
+ STF
+n1991gat_n1521gat_B
+ STF
+n2553gat_n2549gat_B
+ STR
+n353gat_n347gat_A
+ STF
+n53gat_n46gat_A
+ STF
+n2597gat
+ STF
+n720gat
+ STF
+n130gat_n124gat_A
+ STR
+n126gat_n121gat_B
+ STR
+n2351gat_n1577gat_B
+ STR
+n1569gat
+ STF
+n1797gat_n1731gat_C
+ STR
+n1859gat_n1916gat_B
+ STR
+n1785gat_II2935_A
+ STF
+n2402gat_n2215gat_C
+ STR
+n852gat_n557gat_B
+ STF
+n2401gat_n2150gat_A
+ STF
+n2215gat_n2352gat_B
+ STF
+n2215gat_n2282gat_B
+ STF
+n1736gat_n1728gat_B
+ STF
+n501gat
+ STF
+n1448gat_n1620gat_A
+ STR
+n1392gat_n1496gat_A
+ STF
+n2551gat_n2548gat_B
+ STF
+n1662gat_n1657gat_A
+ STR
+n1758gat
+ STR
+n561gat
+ STR
+n1918gat_n1865gat_B
+ STR
+n786gat_n783gat_C
+ STR
+n1581gat
+ STR
+n2239gat_n1882gat_C
+ STF
+n1736gat_n1655gat_A
+ STR
+n738gat_n732gat_A
+ STR
+n499gat_n494gat_B
+ STF
+n1614gat_n1557gat_C
+ STR
+n1774gat
+ STR
+n1893gat_n1846gat_B
+ STF
+n1895gat_n1630gat_A
+ STF
+n1891gat_n1895gat_B
+ STR
+n852gat_n649gat_B
+ STF
+n851gat_n654gat_A
+ STF
+n852gat_n794gat_A
+ STF
+n852gat_n795gat_B
+ STF
+n969gat
+ STF
+n1704gat
+ STF
+n789gat_n782gat_A
+ STF
+n1786gat_II3149_A
+ STR
+n2582gat_n2583gat_A
+ STR
+n1986gat_n1660gat_B
+ STF
+n1886gat_n1958gat_B
+ STR
+n951gat_n948gat_C
+ STR
+n1719gat_n1574gat_A
+ STF
+n2351gat_n1576gat_A
+ STF
+n2152gat_n1801gat_A
+ STR
+n1444gat_n1573gat_A
+ STF
+n1839gat_II3179_A
+ STR
+n334gat_n247gat_A
+ STR
+n1234gat
+ STR
+n1827gat_n1825gat_A
+ STR
+n481gat_n476gat_B
+ STF
+n812gat_n805gat_C
+ STR
+n2212gat
+ STF
+n1211gat_n1204gat_A
+ STR
+n126gat_n123gat_B
+ STF
+n1380gat_n1622gat_A
+ STR
+n1798gat_n1920gat_C
+ STR
+n1616gat_n1605gat_B
+ STR
+n2413gat
+ STF
+n350gat_n344gat_C
+ STF
+n231gat
+ STF
+n174gat_n171gat_C
+ STR
+n1500gat
+ STF
+n943gat_n936gat_A
+ STR
+n1310gat_n1593gat_B
+ STR
+n2664gat_n2163gat_C
+ STR
+n124gat
+ STR
+n1380gat
+ STR
+n852gat_n555gat_A
+ STF
+n64gat_n58gat_C
+ STR
+n128gat_n124gat_B
+ STF
+n852gat
+ STF
+n1568gat_n1729gat_C
+ STR
+n1236gat
+ STF
+n1284gat_n1287gat_A
+ STF
+n1665gat
+ STF
+n1659gat_n1647gat_B
+ STR
+n228gat_n225gat_C
+ STR
+n1635gat_n1796gat_B
+ STR
+n1658gat_n1657gat_C
+ STR
+n1788gat_II2934_C
+ STF
+n1022gat_n1015gat_C
+ STF
+n1446gat_n1619gat_B
+ STR
+n2442gat
+ STR
+n60gat_n56gat_A
+ STR
+n1646gat
+ STR
+n1499gat_n1555gat_C
+ STR
+n1858gat_n1581gat_A
+ STR
+n2597gat
+ STR
+n2887gat
+ STR
+n960gat
+ STR
+n1614gat_n1556gat_A
+ STF
+n1635gat_n1573gat_C
+ STR
+n1659gat_n1649gat_B
+ STR
+n1616gat_n1556gat_C
+ STF
+n784gat_n781gat_A
+ STF
+n1446gat_n1622gat_B
+ STF
+n1793gat
+ STF
+n1225gat
+ STF
+n2575gat_n2569gat_C
+ STR
+n1273gat
+ STR
+n130gat_n124gat_A
+ STF
+n227gat_n222gat_B
+ STF
+n226gat_n222gat_A
+ STF
+n1604gat_II1734_A
+ STR
+n813gat_n807gat_A
+ STR
+n1923gat
+ STF
+n721gat
+ STR
+n364gat
+ STF
+n2004gat
+ STF
+n175gat_n169gat_B
+ STF
+n954gat_n947gat_A
+ STR
+n1023gat_n1016gat_A
+ STR
+n1788gat_II2934_C
+ STR
+n1659gat_n1644gat_C
+ STR
+n1499gat_n1555gat_C
+ STF
+n1023gat
+ STF
+n1616gat_n1642gat_B
+ STR
+n1238gat_n1232gat_A
+ STF
+n393gat
+ STR
+n177gat_n171gat_A
+ STF
+n1740gat
+ STR
+n2915gat
+ STR
+n482gat_n479gat_C
+ STR
+n490gat
+ STF
+n1786gat_II2890_B
+ STR
+n915gat_n908gat_C
+ STR
+n2991gat
+ STF
+n1551gat_n1516gat_A
+ STF
+n2216gat_n1861gat_B
+ STF
+n126gat
+ STR
+n1566gat
+ STF
+n860gat
+ STF
+n933gat
+ STF
+n1052gat
+ STF
+n787gat
+ STR
+n1796gat
+ STF
+n174gat_n171gat_C
+ STF
+n914gat
+ STR
+n1989gat_n1863gat_C
+ STF
+n555gat
+ STR
+n845gat
+ STR
+n270gat_n1606gat_B
+ STF
+n231gat_n224gat_A
+ STF
+n641gat
+ STF
+n761gat
+ STF
+n1054gat
+ STF
+n1959gat
+ STF
+n128gat_n124gat_B
+ STR
+n1584gat
+ STF
+n182gat_n110gat_A
+ STF
+n263gat_n259gat_A
+ STF
+n2354gat_II1723_A
+ STF
+n726gat
+ STR
+n1279gat
+ STR
+n693gat_n690gat_C
+ STF
+n573gat_n570gat_B
+ STF
+n1670gat_n1669gat_C
+ STR
+n1788gat_II2831_C
+ STR
+n1580gat
+ STR
+n1784gat_II2736_B
+ STF
+n1272gat
+ STF
+n1702gat
+ STF
+n1701gat
+ STF
+n855gat
+ STR
+n349gat_n346gat_B
+ STR
+n694gat_n690gat_B
+ STF
+n1565gat
+ STR
+n267gat_n260gat_C
+ STR
+n396gat_n1605gat_D
+ STR
+n1021gat_n1015gat_B
+ STR
+n785gat_n782gat_B
+ STR
+n49gat_n46gat_B
+ STF
+n1986gat_n1667gat_B
+ STR
+n1444gat_n1574gat_C
+ STF
+n974gat
+ STF
+n344gat
+ STR
+n1800gat
+ STR
+n222gat
+ STR
+n2419gat
+ STR
+n1884gat_II2889_C
+ STF
+n2620gat
+ STF
+n760gat
+ STF
+n2354gat
+ STF
+n626gat
+ STF
+n482gat_n476gat_C
+ STR
+n1566gat
+ STR
+n1917gat
+ STF
+n2411gat
+ STF
+n1696gat
+ STR
+n3006gat_n2249gat_B
+ STF
+n2214gat_II1734_B
+ STF
+n1075gat
+ STF
+n1517gat
+ STF
+n63gat_n59gat_B
+ STF
+n1673gat_n1921gat_B
+ STR
+n51gat_n47gat_B
+ STF
+n1645gat_n1556gat_B
+ STR
+n1831gat
+ STF
+n1784gat_II3148_C
+ STR
+n352gat
+ STR
+n1786gat_II2720_B
+ STR
+n1671gat
+ STF
+n1673gat_n1794gat_A
+ STF
+n1654gat
+ STR
+n111gat_n971gat_A
+ STR
+n2448gat_n2238gat_A
+ STR
+n1490gat
+ STF
+n1553gat_n1639gat_C
+ STR
+n1735gat_n1565gat_A
+ STF
+n1277gat
+ STR
+n2621gat_n2534gat_C
+ STR
+n1859gat_n1915gat_A
+ STF
+n1698gat
+ STR
+n914gat_n908gat_B
+ STR
+n1827gat_n1821gat_A
+ STR
+n1658gat_n1729gat_A
+ STR
+n88gat
+ STF
+n223gat
+ STF
+n1278gat
+ STR
+n174gat
+ STR
+n951gat
+ STF
+n621gat
+ STF
+n1500gat
+ STR
+n1724gat
+ STF
+n1858gat_n1796gat_A
+ STF
+n2148gat
+ STF
+n918gat_n1616gat_A
+ STF
+n1922gat
+ STF
+n351gat_n345gat_B
+ STF
+n1658gat_n1655gat_C
+ STF
+n1553gat_n1558gat_B
+ STR
+n1613gat
+ STR
+n176gat_n170gat_C
+ STR
+n2470gat_n2319gat_A
+ STF
+n372gat_n973gat_A
+ STR
+n122gat
+ STR
+n89gat
+ STR
+n17gat_n84gat_B
+ STF
+n1673gat_n1574gat_B
+ STR
+n259gat
+ STR
+n1499gat_n1639gat_A
+ STF
+n1561gat
+ STR
+n1658gat_n1728gat_C
+ STF
+n2185gat_n2130gat_B
+ STF
+n1784gat_II2934_A
+ STF
+n777gat
+ STR
+n1790gat
+ STF
+n1668gat
+ STR
+n1719gat_n1564gat_B
+ STF
+n266gat
+ STR
+n1921gat
+ STF
+n1917gat
+ STR
+n278gat
+ STR
+n1515gat_n1732gat_A
+ STF
+n228gat
+ STF
+n2603gat
+ STF
+n2427gat
+ STF
+n1991gat_n1521gat_B
+ STF
+n2553gat_n2549gat_B
+ STR
+n353gat_n347gat_A
+ STF
+n53gat_n46gat_A
+ STF
+n720gat
+ STF
+n130gat_n124gat_A
+ STR
+n126gat_n121gat_B
+ STR
+n2351gat_n1577gat_B
+ STR
+n1569gat
+ STF
+n1784gat_II3179_B
+ STR
+n1788gat_II2890_A
+ STR
+n1797gat_n1731gat_C
+ STR
+n1859gat_n1916gat_B
+ STR
+n1800gat
+ STF
+n1237gat_n1231gat_C
+ STR
+n1785gat_II2935_A
+ STF
+n2402gat_n2215gat_C
+ STR
+n852gat_n557gat_B
+ STF
+n2401gat_n2150gat_A
+ STF
+n2215gat_n2352gat_B
+ STF
+n2215gat_n2282gat_B
+ STF
+n1736gat_n1728gat_B
+ STF
+n501gat
+ STF
+n1448gat_n1620gat_A
+ STR
+n1392gat_n1496gat_A
+ STF
+n2551gat_n2548gat_B
+ STF
+n3018gat
+ STR
+n1662gat_n1657gat_A
+ STR
+n1311gat
+ STF
+n1758gat
+ STR
+n561gat
+ STR
+n2073gat
+ STF
+n2402gat_n2211gat_B
+ STF
+n1918gat_n1865gat_B
+ STR
+n786gat_n783gat_C
+ STR
+n1581gat
+ STR
+n2239gat_n1882gat_C
+ STF
+n1736gat_n1655gat_A
+ STR
+n1614gat_n1557gat_C
+ STR
+n1774gat
+ STR
+n1893gat_n1846gat_B
+ STF
+n1895gat_n1630gat_A
+ STF
+n1891gat_n1895gat_B
+ STR
+n852gat_n649gat_B
+ STF
+n851gat_n654gat_A
+ STF
+n852gat_n794gat_A
+ STF
+n852gat_n795gat_B
+ STF
+n969gat
+ STF
+n789gat_n782gat_A
+ STF
+n2079gat
+ STF
+n485gat_n478gat_A
+ STF
+n2582gat_n2583gat_A
+ STR
+n1986gat_n1660gat_B
+ STF
+n1886gat_n1958gat_B
+ STR
+n951gat_n948gat_C
+ STR
+n1986gat_n1663gat_A
+ STR
+n1719gat_n1574gat_A
+ STF
+n2351gat_n1576gat_A
+ STF
+n2152gat_n1801gat_A
+ STR
+n1444gat_n1573gat_A
+ STF
+n1839gat_II3179_A
+ STR
+n263gat_n259gat_A
+ STR
+n808gat_n805gat_A
+ STF
+n334gat_n247gat_A
+ STR
+n1234gat
+ STR
+n2886gat
+ STF
+n369gat
+ STF
+n1614gat_n1605gat_A
+ STR
+n807gat
+ STF
+n2289gat_II1733_C
+ STF
+n654gat
+ STR
+n649gat
+ STR
+n1827gat_n1825gat_A
+ STF
+n110gat_n797gat_A
+ STR
+n230gat
+ STR
+n1658gat_n1655gat_C
+ STR
+n851gat_n965gat_B
+ STF
+n348gat
+ STR
+n1233gat_n1230gat_A
+ STR
+n1884gat_II3148_B
+ STR
+n1793gat
+ STR
+n1055gat_n1051gat_A
+ STR
+n812gat_n805gat_C
+ STR
+n2212gat
+ STF
+n1211gat_n1204gat_A
+ STR
+n126gat_n123gat_B
+ STF
+n1380gat_n1622gat_A
+ STR
+n1798gat_n1920gat_C
+ STR
+n1616gat_n1605gat_B
+ STR
+n2413gat
+ STF
+n350gat_n344gat_C
+ STF
+n231gat
+ STF
+n174gat_n171gat_C
+ STR
+n1500gat
+ STF
+n943gat_n936gat_A
+ STR
+n1310gat_n1593gat_B
+ STR
+n2664gat_n2163gat_C
+ STR
+n124gat
+ STR
+n1380gat
+ STR
+n64gat_n58gat_C
+ STR
+n128gat_n124gat_B
+ STF
+n1568gat_n1729gat_C
+ STR
+n1236gat
+ STF
+n1284gat_n1287gat_A
+ STF
+n1665gat
+ STF
+n1659gat_n1647gat_B
+ STR
+n228gat_n225gat_C
+ STR
+n1635gat_n1796gat_B
+ STR
+n1658gat_n1657gat_C
+ STR
+n1788gat_II2934_C
+ STF
+n1022gat_n1015gat_C
+ STF
+n1446gat_n1619gat_B
+ STR
+n2442gat
+ STR
+n1646gat
+ STR
+n1499gat_n1555gat_C
+ STR
+n1858gat_n1581gat_A
+ STR
+n2597gat
+ STR
+n2887gat
+ STR
+n960gat
+ STR
+n1614gat_n1556gat_A
+ STF
+n1635gat_n1573gat_C
+ STR
+n1659gat_n1649gat_B
+ STR
+n1616gat_n1556gat_C
+ STF
+n784gat_n781gat_A
+ STF
+n1446gat_n1622gat_B
+ STF
+n1793gat
+ STF
+n1225gat
+ STF
+n2575gat_n2569gat_C
+ STR
+n1273gat
+ STR
+n130gat_n124gat_A
+ STF
+n227gat_n222gat_B
+ STF
+n226gat_n222gat_A
+ STF
+n1604gat_II1734_A
+ STR
+n813gat_n807gat_A
+ STR
+n1923gat
+ STF
+n721gat
+ STR
+n364gat
+ STF
+n2004gat
+ STF
+n175gat_n169gat_B
+ STF
+n954gat_n947gat_A
+ STR
+n1023gat_n1016gat_A
+ STR
+n1788gat_II2934_C
+ STR
+n1659gat_n1644gat_C
+ STR
+n1499gat_n1555gat_C
+ STF
+n1023gat
+ STF
+n1616gat_n1642gat_B
+ STR
+n1238gat_n1232gat_A
+ STF
+n393gat
+ STR
+n177gat_n171gat_A
+ STF
+n1740gat
+ STR
+n2915gat
+ STR
+n482gat_n479gat_C
+ STR
+n1786gat_II2890_B
+ STR
+n915gat_n908gat_C
+ STR
+n2991gat
+ STF
+n1551gat_n1516gat_A
+ STF
+n2216gat_n1861gat_B
+ STF
+n126gat
+ STR
+n1566gat
+ STF
+n860gat
+ STF
+n1052gat
+ STF
+n787gat
+ STR
+n1796gat
+ STF
+n174gat_n171gat_C
+ STF
+n914gat
+ STR
+n1989gat_n1863gat_C
+ STF
+n270gat_n1606gat_B
+ STF
+n231gat_n224gat_A
+ STF
+n1054gat
+ STF
+n1959gat
+ STF
+n128gat_n124gat_B
+ STR
+n1584gat
+ STF
+n182gat_n110gat_A
+ STF
+n263gat_n259gat_A
+ STF
+n2354gat_II1723_A
+ STF
+n726gat
+ STR
+n1279gat
+ STR
+n573gat_n570gat_B
+ STF
+n1670gat_n1669gat_C
+ STR
+n1788gat_II2831_C
+ STR
+n1580gat
+ STR
+n1784gat_II2736_B
+ STF
+n1272gat
+ STF
+n1702gat
+ STF
+n1701gat
+ STF
+n349gat_n346gat_B
+ STR
+n1565gat
+ STR
+n267gat_n260gat_C
+ STR
+n396gat_n1605gat_D
+ STR
+n1021gat_n1015gat_B
+ STR
+n49gat_n46gat_B
+ STF
+n1986gat_n1667gat_B
+ STR
+n1444gat_n1574gat_C
+ STF
+n974gat
+ STF
+n344gat
+ STR
+n1800gat
+ STR
+n222gat
+ STR
+n2419gat
+ STR
+n1884gat_II2889_C
+ STF
+n2620gat
+ STF
+n2354gat
+ STF
+n626gat
+ STF
+n482gat_n476gat_C
+ STR
+n1566gat
+ STR
+n1917gat
+ STF
+n2411gat
+ STF
+n1696gat
+ STR
+n3006gat_n2249gat_B
+ STF
+n2214gat_II1734_B
+ STF
+n1517gat
+ STF
+n63gat_n59gat_B
+ STF
+n1673gat_n1921gat_B
+ STR
+n51gat_n47gat_B
+ STF
+n1645gat_n1556gat_B
+ STR
+n1831gat
+ STF
+n1784gat_II3148_C
+ STR
+n352gat
+ STR
+n1786gat_II2720_B
+ STR
+n1671gat
+ STF
+n1673gat_n1794gat_A
+ STF
+n1654gat
+ STR
+n111gat_n971gat_A
+ STR
+n2448gat_n2238gat_A
+ STR
+n1490gat
+ STF
+n1553gat_n1639gat_C
+ STR
+n1735gat_n1565gat_A
+ STF
+n1277gat
+ STR
+n2621gat_n2534gat_C
+ STR
+n1859gat_n1915gat_A
+ STF
+n375gat
+ STR
+n1698gat
+ STR
+n914gat_n908gat_B
+ STR
+n1827gat_n1821gat_A
+ STR
+n1658gat_n1729gat_A
+ STR
+n88gat
+ STF
+n223gat
+ STF
+n1278gat
+ STR
+n174gat
+ STR
+n228gat_n222gat_C
+ STF
+n912gat_n909gat_B
+ STR
+n951gat
+ STF
+n621gat
+ STF
+n46gat
+ STR
+n1919gat
+ STR
+n1724gat
+ STF
+n265gat_n259gat_C
+ STR
+n1858gat_n1796gat_A
+ STF
+n918gat_n1616gat_A
+ STF
+n1922gat
+ STF
+n2474gat
+ STR
+n351gat_n345gat_B
+ STF
+n1658gat_n1655gat_C
+ STF
+n1553gat_n1558gat_B
+ STR
+n1206gat_n1203gat_A
+ STF
+n1613gat
+ STR
+n2470gat_n2319gat_A
+ STF
+n372gat_n973gat_A
+ STR
+n122gat
+ STR
+n89gat
+ STR
+n17gat_n84gat_B
+ STF
+n1989gat_n1865gat_A
+ STR
+n1673gat_n1574gat_B
+ STR
+n259gat
+ STR
+n1499gat_n1639gat_A
+ STF
+n1561gat
+ STR
+n1658gat_n1728gat_C
+ STF
+n1970gat
+ STF
+n1972gat
+ STR
+n2185gat_n2130gat_B
+ STF
+n1784gat_II2934_A
+ STF
+n1790gat
+ STF
+n1668gat
+ STR
+n1719gat_n1564gat_B
+ STF
+n1921gat
+ STF
+n1917gat
+ STR
+n278gat
+ STR
+n1515gat_n1732gat_A
+ STF
+n228gat
+ STF
+n2603gat
+ STF
+n2427gat
+ STF
+n1991gat_n1521gat_B
+ STF
+n2553gat_n2549gat_B
+ STR
+n353gat_n347gat_A
+ STF
+n53gat_n46gat_A
+ STF
+n720gat
+ STF
+n130gat_n124gat_A
+ STR
+n126gat_n121gat_B
+ STR
+n2351gat_n1577gat_B
+ STR
+n1569gat
+ STF
+n1784gat_II3179_B
+ STR
+n1788gat_II2890_A
+ STR
+n1797gat_n1731gat_C
+ STR
+n1859gat_n1916gat_B
+ STR
+n1800gat
+ STF
+n1237gat_n1231gat_C
+ STR
+n1785gat_II2935_A
+ STF
+n2402gat_n2215gat_C
+ STR
+n852gat_n557gat_B
+ STF
+n2401gat_n2150gat_A
+ STF
+n2215gat_n2352gat_B
+ STF
+n2215gat_n2282gat_B
+ STF
+n1736gat_n1728gat_B
+ STF
+n501gat
+ STF
+n1448gat_n1620gat_A
+ STR
+n1392gat_n1496gat_A
+ STF
+n1020gat_n1014gat_C
+ STF
+n2551gat_n2548gat_B
+ STF
+n3018gat
+ STR
+n1662gat_n1657gat_A
+ STR
+n1311gat
+ STF
+n1758gat
+ STR
+n561gat
+ STR
+n2073gat
+ STF
+n2402gat_n2211gat_B
+ STF
+n1918gat_n1865gat_B
+ STR
+n2450gat
+ STR
+n2239gat
+ STF
+n2239gat_n1882gat_C
+ STF
+n1736gat_n1655gat_A
+ STR
+n1774gat
+ STR
+n1893gat_n1846gat_B
+ STF
+n852gat_n649gat_B
+ STF
+n851gat_n654gat_A
+ STF
+n852gat_n794gat_A
+ STF
+n969gat
+ STF
+n724gat_n1377gat_A
+ STR
+n789gat
+ STF
+n789gat_n782gat_A
+ STF
+n2079gat
+ STF
+n1319gat_n1621gat_A
+ STF
+n485gat_n478gat_A
+ STF
+n170gat
+ STR
+n2582gat_n2583gat_A
+ STR
+n1986gat_n1660gat_B
+ STF
+n1886gat_n1958gat_B
+ STR
+n951gat_n948gat_C
+ STR
+n1986gat_n1663gat_A
+ STR
+n1719gat_n1574gat_A
+ STF
+n2351gat_n1576gat_A
+ STF
+n2152gat_n1801gat_A
+ STR
+n1444gat_n1573gat_A
+ STF
+n1839gat_II3179_A
+ STR
+n808gat_n805gat_A
+ STF
+n1924gat
+ STF
+n334gat_n247gat_A
+ STR
+n65gat_n58gat_A
+ STR
+n1274gat_n1271gat_A
+ STF
+n1236gat_n1232gat_B
+ STF
+n1234gat
+ STR
+n1827gat_n1825gat_A
+ STR
+n1614gat_n1605gat_A
+ STR
+n1797gat_n1571gat_C
+ STR
+n1989gat_n1801gat_B
+ STR
+n1797gat
+ STR
+n53gat_n46gat_A
+ STR
+n807gat
+ STF
+n2289gat_II1733_C
+ STF
+n654gat
+ STR
+n649gat
+ STR
+n110gat_n797gat_A
+ STR
+n230gat
+ STR
+n1658gat_n1655gat_C
+ STR
+n851gat_n965gat_B
+ STF
+n348gat
+ STR
+n1884gat_II3148_B
+ STR
+n1793gat
+ STR
+n1055gat_n1051gat_A
+ STR
+n2212gat
+ STF
+n1211gat_n1204gat_A
+ STR
+n126gat_n123gat_B
+ STF
+n1380gat_n1622gat_A
+ STR
+n1798gat_n1920gat_C
+ STR
+n1616gat_n1605gat_B
+ STR
+n2413gat
+ STF
+n231gat
+ STF
+n174gat_n171gat_C
+ STR
+n1500gat
+ STF
+n943gat_n936gat_A
+ STR
+n1310gat_n1593gat_B
+ STR
+n2664gat_n2163gat_C
+ STR
+n124gat
+ STR
+n1380gat
+ STR
+n64gat_n58gat_C
+ STR
+n128gat_n124gat_B
+ STF
+n1568gat_n1729gat_C
+ STR
+n1284gat_n1287gat_A
+ STF
+n1665gat
+ STF
+n1659gat_n1647gat_B
+ STR
+n228gat_n225gat_C
+ STR
+n1635gat_n1796gat_B
+ STR
+n1658gat_n1657gat_C
+ STR
+n1788gat_II2934_C
+ STF
+n1022gat_n1015gat_C
+ STF
+n1446gat_n1619gat_B
+ STR
+n2442gat
+ STR
+n1646gat
+ STR
+n1499gat_n1555gat_C
+ STR
+n1858gat_n1581gat_A
+ STR
+n2597gat
+ STR
+n2887gat
+ STR
+n960gat
+ STR
+n1614gat_n1556gat_A
+ STF
+n1635gat_n1573gat_C
+ STR
+n1659gat_n1649gat_B
+ STR
+n1616gat_n1556gat_C
+ STF
+n1446gat_n1622gat_B
+ STF
+n1793gat
+ STF
+n1225gat
+ STF
+n2575gat_n2569gat_C
+ STR
+n1273gat
+ STR
+n130gat_n124gat_A
+ STF
+n1604gat_II1734_A
+ STR
+n813gat_n807gat_A
+ STR
+n1923gat
+ STF
+n721gat
+ STR
+n2004gat
+ STF
+n954gat_n947gat_A
+ STR
+n1023gat_n1016gat_A
+ STR
+n1788gat_II2934_C
+ STR
+n1659gat_n1644gat_C
+ STR
+n1499gat_n1555gat_C
+ STF
+n1023gat
+ STF
+n1616gat_n1642gat_B
+ STR
+n1238gat_n1232gat_A
+ STF
+n393gat
+ STR
+n177gat_n171gat_A
+ STF
+n1740gat
+ STR
+n2915gat
+ STR
+n482gat_n479gat_C
+ STR
+n1786gat_II2890_B
+ STR
+n915gat_n908gat_C
+ STR
+n2991gat
+ STF
+n1551gat_n1516gat_A
+ STF
+n2216gat_n1861gat_B
+ STF
+n1566gat
+ STF
+n860gat
+ STF
+n1052gat
+ STF
+n787gat
+ STR
+n1796gat
+ STF
+n174gat_n171gat_C
+ STF
+n1989gat_n1863gat_C
+ STF
+n231gat_n224gat_A
+ STF
+n1054gat
+ STF
+n1959gat
+ STF
+n128gat_n124gat_B
+ STR
+n1584gat
+ STF
+n182gat_n110gat_A
+ STF
+n263gat_n259gat_A
+ STF
+n2354gat_II1723_A
+ STF
+n726gat
+ STR
+n1279gat
+ STR
+n573gat_n570gat_B
+ STF
+n1670gat_n1669gat_C
+ STR
+n1788gat_II2831_C
+ STR
+n1580gat
+ STR
+n1784gat_II2736_B
+ STF
+n1272gat
+ STF
+n1702gat
+ STF
+n1701gat
+ STF
+n349gat_n346gat_B
+ STR
+n1565gat
+ STR
+n267gat_n260gat_C
+ STR
+n396gat_n1605gat_D
+ STR
+n49gat_n46gat_B
+ STF
+n1986gat_n1667gat_B
+ STR
+n1444gat_n1574gat_C
+ STF
+n974gat
+ STF
+n1800gat
+ STR
+n2419gat
+ STR
+n1884gat_II2889_C
+ STF
+n2620gat
+ STF
+n737gat
+ STR
+n2354gat
+ STF
+n626gat
+ STF
+n482gat_n476gat_C
+ STR
+n1566gat
+ STR
+n1917gat
+ STF
+n2411gat
+ STF
+n1696gat
+ STR
+n3006gat_n2249gat_B
+ STF
+n2214gat_II1734_B
+ STF
+n1043gat
+ STR
+n1517gat
+ STF
+n63gat_n59gat_B
+ STF
+n1673gat_n1921gat_B
+ STR
+n51gat_n47gat_B
+ STF
+n1645gat_n1556gat_B
+ STR
+n1831gat
+ STF
+n1784gat_II3148_C
+ STR
+n352gat
+ STR
+n1786gat_II2720_B
+ STR
+n1671gat
+ STF
+n1673gat_n1794gat_A
+ STF
+n1654gat
+ STR
+n111gat_n971gat_A
+ STR
+n2448gat_n2238gat_A
+ STR
+n1490gat
+ STF
+n1553gat_n1639gat_C
+ STR
+n1735gat_n1565gat_A
+ STF
+n1277gat
+ STR
+n2621gat_n2534gat_C
+ STR
+n1859gat_n1915gat_A
+ STF
+n375gat
+ STR
+n1698gat
+ STR
+n1658gat_n1729gat_A
+ STR
+n88gat
+ STF
+n223gat
+ STF
+n1278gat
+ STR
+n174gat
+ STR
+n912gat_n909gat_B
+ STR
+n951gat
+ STF
+n621gat
+ STF
+n46gat
+ STR
+n1919gat
+ STR
+n1724gat
+ STF
+n265gat_n259gat_C
+ STR
+n1858gat_n1796gat_A
+ STF
+n918gat_n1616gat_A
+ STF
+n1922gat
+ STF
+n2474gat
+ STR
+n351gat_n345gat_B
+ STF
+n1658gat_n1655gat_C
+ STF
+n1553gat_n1558gat_B
+ STR
+n1206gat_n1203gat_A
+ STF
+n1613gat
+ STR
+n2470gat_n2319gat_A
+ STF
+n372gat_n973gat_A
+ STR
+n122gat
+ STR
+n89gat
+ STR
+n17gat_n84gat_B
+ STF
+n1989gat_n1865gat_A
+ STR
+n1673gat_n1574gat_B
+ STR
+n259gat
+ STR
+n1499gat_n1639gat_A
+ STF
+n1561gat
+ STR
+n1658gat_n1728gat_C
+ STF
+n1970gat
+ STF
+n1972gat
+ STR
+n2185gat_n2130gat_B
+ STF
+n1784gat_II2934_A
+ STF
+n1790gat
+ STF
+n1668gat
+ STR
+n1719gat_n1564gat_B
+ STF
+n1921gat
+ STF
+n1917gat
+ STR
+n278gat
+ STR
+n1515gat_n1732gat_A
+ STF
+n2603gat
+ STF
+n2427gat
+ STF
+n1991gat_n1521gat_B
+ STF
+n2553gat_n2549gat_B
+ STR
+n353gat_n347gat_A
+ STF
+n53gat_n46gat_A
+ STF
+n720gat
+ STF
+n2351gat_n1577gat_B
+ STR
+n1569gat
+ STF
+n1784gat_II3179_B
+ STR
+n1788gat_II2890_A
+ STR
+n1797gat_n1731gat_C
+ STR
+n1859gat_n1916gat_B
+ STR
+n1800gat
+ STF
+n1237gat_n1231gat_C
+ STR
+n1785gat_II2935_A
+ STF
+n2402gat_n2215gat_C
+ STR
+n1798gat_n1920gat_C
+ STF
+n852gat_n557gat_B
+ STF
+n2401gat_n2150gat_A
+ STF
+n1925gat
+ STF
+n1785gat_II2925_B
+ STR
+n2215gat_n2352gat_B
+ STF
+n2215gat_n2282gat_B
+ STF
+n1736gat_n1728gat_B
+ STF
+n553gat
+ STF
+n501gat
+ STF
+n1448gat_n1620gat_A
+ STR
+n1392gat_n1496gat_A
+ STF
+n1640gat
+ STR
+n1020gat_n1014gat_C
+ STF
+n351gat_n347gat_B
+ STR
+n2551gat_n2548gat_B
+ STF
+n3018gat
+ STR
+n1662gat_n1657gat_A
+ STR
+n1311gat
+ STF
+n1758gat
+ STR
+n561gat
+ STR
+n1713gat_n1675gat_A
+ STR
+n2073gat
+ STF
+n2402gat_n2211gat_B
+ STF
+n702gat_n1256gat_B
+ STF
+n1918gat_n1865gat_B
+ STR
+n2450gat
+ STR
+n2239gat
+ STF
+n2448gat
+ STF
+n3019gat
+ STR
+n2239gat_n1882gat_C
+ STF
+n1736gat_n1655gat_A
+ STR
+n1379gat_n1623gat_A
+ STF
+n2470gat_n1934gat_A
+ STF
+n1774gat
+ STR
+n1893gat_n1846gat_B
+ STF
+n852gat_n649gat_B
+ STF
+n851gat_n654gat_A
+ STF
+n852gat_n794gat_A
+ STF
+n969gat
+ STF
+n724gat_n1377gat_A
+ STR
+n657gat
+ STF
+n789gat_n782gat_A
+ STF
+n2079gat
+ STF
+n650gat
+ STR
+n177gat
+ STF
+n1319gat_n1621gat_A
+ STF
+n485gat_n478gat_A
+ STF
+n170gat
+ STR
+n1077gat
+ STF
+n110gat_n1077gat_A
+ STR
+n2582gat_n2583gat_A
+ STR
+n1986gat_n1660gat_B
+ STF
+n1886gat_n1958gat_B
+ STR
+n951gat_n948gat_C
+ STR
+n1788gat_II4145_A
+ STR
+n556gat
+ STR
+n1231gat
+ STF
+n1986gat_n1663gat_A
+ STR
+n949gat_n945gat_A
+ STR
+n1719gat_n1574gat_A
+ STF
+n786gat_n780gat_C
+ STF
+n1277gat_n1273gat_B
+ STR
+n2351gat_n1576gat_A
+ STF
+n2152gat_n1801gat_A
+ STR
+n1444gat_n1573gat_A
+ STF
+n1839gat_II3179_A
+ STR
+n808gat_n805gat_A
+ STF
+n1924gat
+ STF
+n65gat_n58gat_A
+ STR
+n1274gat_n1271gat_A
+ STF
+n1236gat_n1232gat_B
+ STF
+n1234gat
+ STR
+n1614gat_n1605gat_A
+ STR
+n1797gat_n1571gat_C
+ STR
+n1989gat_n1801gat_B
+ STR
+n1797gat
+ STR
+n53gat_n46gat_A
+ STR
+n807gat
+ STF
+n2289gat_II1733_C
+ STF
+n654gat
+ STR
+n649gat
+ STR
+n110gat_n797gat_A
+ STR
+n230gat
+ STR
+n1658gat_n1655gat_C
+ STR
+n851gat_n965gat_B
+ STF
+n348gat
+ STR
+n1884gat_II3148_B
+ STR
+n1793gat
+ STR
+n1055gat_n1051gat_A
+ STR
+n1211gat_n1204gat_A
+ STR
+n126gat_n123gat_B
+ STF
+n1380gat_n1622gat_A
+ STR
+n1798gat_n1920gat_C
+ STR
+n1616gat_n1605gat_B
+ STR
+n2413gat
+ STF
+n174gat_n171gat_C
+ STR
+n1500gat
+ STF
+n943gat_n936gat_A
+ STR
+n1310gat_n1593gat_B
+ STR
+n2664gat_n2163gat_C
+ STR
+n1380gat
+ STR
+n64gat_n58gat_C
+ STR
+n1568gat_n1729gat_C
+ STR
+n1284gat_n1287gat_A
+ STF
+n1659gat_n1647gat_B
+ STR
+n228gat_n225gat_C
+ STR
+n1635gat_n1796gat_B
+ STR
+n1658gat_n1657gat_C
+ STR
+n1788gat_II2934_C
+ STF
+n1022gat_n1015gat_C
+ STF
+n1446gat_n1619gat_B
+ STR
+n2442gat
+ STR
+n1646gat
+ STR
+n1499gat_n1555gat_C
+ STR
+n1858gat_n1581gat_A
+ STR
+n2597gat
+ STR
+n2887gat
+ STR
+n960gat
+ STR
+n1614gat_n1556gat_A
+ STF
+n1635gat_n1573gat_C
+ STR
+n1659gat_n1649gat_B
+ STR
+n1616gat_n1556gat_C
+ STF
+n1446gat_n1622gat_B
+ STF
+n1793gat
+ STF
+n1225gat
+ STF
+n2575gat_n2569gat_C
+ STR
+n1273gat
+ STR
+n1604gat_II1734_A
+ STR
+n813gat_n807gat_A
+ STR
+n1923gat
+ STF
+n721gat
+ STR
+n954gat_n947gat_A
+ STR
+n1023gat_n1016gat_A
+ STR
+n1788gat_II2934_C
+ STR
+n1659gat_n1644gat_C
+ STR
+n1499gat_n1555gat_C
+ STF
+n1023gat
+ STF
+n1616gat_n1642gat_B
+ STR
+n1238gat_n1232gat_A
+ STF
+n393gat
+ STR
+n177gat_n171gat_A
+ STF
+n1740gat
+ STR
+n2915gat
+ STR
+n482gat_n479gat_C
+ STR
+n1786gat_II2890_B
+ STR
+n915gat_n908gat_C
+ STR
+n2991gat
+ STF
+n1551gat_n1516gat_A
+ STF
+n2216gat_n1861gat_B
+ STF
+n1566gat
+ STF
+n860gat
+ STF
+n1052gat
+ STF
+n787gat
+ STR
+n1796gat
+ STF
+n174gat_n171gat_C
+ STF
+n1989gat_n1863gat_C
+ STF
+n1054gat
+ STF
+n1959gat
+ STF
+n128gat_n124gat_B
+ STR
+n1584gat
+ STF
+n182gat_n110gat_A
+ STF
+n2354gat_II1723_A
+ STF
+n726gat
+ STR
+n1279gat
+ STR
+n573gat_n570gat_B
+ STF
+n1670gat_n1669gat_C
+ STR
+n1788gat_II2831_C
+ STR
+n1580gat
+ STR
+n1784gat_II2736_B
+ STF
+n1272gat
+ STF
+n1702gat
+ STF
+n1701gat
+ STF
+n1565gat
+ STR
+n267gat_n260gat_C
+ STR
+n396gat_n1605gat_D
+ STR
+n49gat_n46gat_B
+ STF
+n1986gat_n1667gat_B
+ STR
+n1444gat_n1574gat_C
+ STF
+n974gat
+ STF
+n1800gat
+ STR
+n2419gat
+ STR
+n1884gat_II2889_C
+ STF
+n2620gat
+ STF
+n737gat
+ STR
+n2354gat
+ STF
+n626gat
+ STF
+n482gat_n476gat_C
+ STR
+n1566gat
+ STR
+n1917gat
+ STF
+n2411gat
+ STF
+n1696gat
+ STR
+n3006gat_n2249gat_B
+ STF
+n2214gat_II1734_B
+ STF
+n1043gat
+ STR
+n63gat_n59gat_B
+ STF
+n1673gat_n1921gat_B
+ STR
+n51gat_n47gat_B
+ STF
+n1645gat_n1556gat_B
+ STR
+n1831gat
+ STF
+n1784gat_II3148_C
+ STR
+n352gat
+ STR
+n1786gat_II2720_B
+ STR
+n1671gat
+ STF
+n1673gat_n1794gat_A
+ STF
+n1654gat
+ STR
+n111gat_n971gat_A
+ STR
+n2448gat_n2238gat_A
+ STR
+n1490gat
+ STF
+n1553gat_n1639gat_C
+ STR
+n1735gat_n1565gat_A
+ STF
+n1277gat
+ STR
+n2621gat_n2534gat_C
+ STR
+n1859gat_n1915gat_A
+ STF
+n375gat
+ STR
+n1698gat
+ STR
+n1658gat_n1729gat_A
+ STR
+n88gat
+ STF
+n223gat
+ STF
+n1278gat
+ STR
+n174gat
+ STR
+n951gat
+ STF
+n621gat
+ STF
+n46gat
+ STR
+n1919gat
+ STR
+n1724gat
+ STF
+n265gat_n259gat_C
+ STR
+n1858gat_n1796gat_A
+ STF
+n918gat_n1616gat_A
+ STF
+n1922gat
+ STF
+n2474gat
+ STR
+n351gat_n345gat_B
+ STF
+n1658gat_n1655gat_C
+ STF
+n1553gat_n1558gat_B
+ STR
+n1206gat_n1203gat_A
+ STF
+n1613gat
+ STR
+n372gat_n973gat_A
+ STR
+n122gat
+ STR
+n89gat
+ STR
+n17gat_n84gat_B
+ STF
+n1989gat_n1865gat_A
+ STR
+n1673gat_n1574gat_B
+ STR
+n1499gat_n1639gat_A
+ STF
+n1561gat
+ STR
+n1658gat_n1728gat_C
+ STF
+n1970gat
+ STF
+n1972gat
+ STR
+n2185gat_n2130gat_B
+ STF
+n1784gat_II2934_A
+ STF
+n1790gat
+ STF
+n1668gat
+ STR
+n1719gat_n1564gat_B
+ STF
+n1921gat
+ STF
+n1917gat
+ STR
+n278gat
+ STR
+n1515gat_n1732gat_A
+ STF
+n2603gat
+ STF
+n2427gat
+ STF
+n1991gat_n1521gat_B
+ STF
+n2553gat_n2549gat_B
+ STR
+n353gat_n347gat_A
+ STF
+n53gat_n46gat_A
+ STF
+n720gat
+ STF
+n2351gat_n1577gat_B
+ STR
+n1569gat
+ STF
+n1784gat_II3179_B
+ STR
+n1788gat_II2890_A
+ STR
+n1797gat_n1731gat_C
+ STR
+n1859gat_n1916gat_B
+ STR
+n1800gat
+ STF
+n1237gat_n1231gat_C
+ STR
+n1785gat_II2935_A
+ STF
+n2402gat_n2215gat_C
+ STR
+n1798gat_n1920gat_C
+ STF
+n852gat_n557gat_B
+ STF
+n2401gat_n2150gat_A
+ STF
+n1925gat
+ STF
+n1785gat_II2925_B
+ STR
+n1916gat
+ STF
+n2215gat_n2352gat_B
+ STF
+n2215gat_n2282gat_B
+ STF
+n1736gat_n1728gat_B
+ STF
+n553gat
+ STF
+n1448gat_n1620gat_A
+ STR
+n1392gat_n1496gat_A
+ STF
+n1553gat
+ STR
+n1640gat
+ STR
+n1020gat_n1014gat_C
+ STF
+n351gat_n347gat_B
+ STR
+n2551gat_n2548gat_B
+ STF
+n1662gat_n1657gat_A
+ STR
+n1311gat
+ STF
+n1758gat
+ STR
+n561gat
+ STR
+n1713gat_n1675gat_A
+ STR
+n559gat
+ STF
+n2073gat
+ STF
+n2402gat_n2211gat_B
+ STF
+n702gat_n1256gat_B
+ STF
+n1918gat_n1865gat_B
+ STR
+n2239gat_n1882gat_C
+ STF
+n1736gat_n1655gat_A
+ STR
+n1379gat_n1623gat_A
+ STF
+n1774gat
+ STR
+n1893gat_n1846gat_B
+ STF
+n852gat_n649gat_B
+ STF
+n851gat_n654gat_A
+ STF
+n852gat_n794gat_A
+ STF
+n969gat
+ STF
+n724gat_n1377gat_A
+ STR
+n657gat
+ STF
+n789gat_n782gat_A
+ STF
+n2079gat
+ STF
+n650gat
+ STR
+n177gat
+ STF
+n1319gat_n1621gat_A
+ STF
+n485gat_n478gat_A
+ STF
+n1713gat
+ STR
+n170gat
+ STR
+n1077gat
+ STF
+n110gat_n1077gat_A
+ STR
+n2582gat_n2583gat_A
+ STR
+n1986gat_n1660gat_B
+ STF
+n1886gat_n1958gat_B
+ STR
+n1788gat_II4145_A
+ STR
+n556gat
+ STR
+n1986gat_n1663gat_A
+ STR
+n949gat_n945gat_A
+ STR
+n1719gat_n1574gat_A
+ STF
+n786gat_n780gat_C
+ STF
+n1277gat_n1273gat_B
+ STR
+n2351gat_n1576gat_A
+ STF
+n2152gat_n1801gat_A
+ STR
+n1444gat_n1573gat_A
+ STF
+n1839gat_II3179_A
+ STR
+n808gat_n805gat_A
+ STF
+n1924gat
+ STF
+n1192gat
+ STR
+n1274gat_n1271gat_A
+ STF
+n1847gat
+ STF
+n946gat
+ STF
+n1236gat_n1232gat_B
+ STF
+n1234gat
+ STR
+n1614gat_n1605gat_A
+ STR
+n1559gat_n1642gat_A
+ STF
+n2181gat
+ STF
+n1240gat
+ STR
+n1601gat
+ STF
+n2212gat_n1660gat_C
+ STF
+n1576gat_n1564gat_D
+ STR
+n1994gat
+ STR
+n941gat_n937gat_B
+ STF
+n1553gat_n1639gat_C
+ STF
+n1068gat
+ STR

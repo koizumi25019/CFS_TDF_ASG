@@ -35,7 +35,7 @@ int init_exturn(void) {
 	dfl_num;				        //検出故障数
 	unseed_num = 0;		            //シード生成不能故障数
 	hpfl_num = 0;			        //高消費電力故障数
-	tp_num = 0;					    //テストベクトル数
+	seed_num = 0;					    //テストベクトル数
 
 	//キュー
 	Que.max = n_net * 1000;	        //最大値

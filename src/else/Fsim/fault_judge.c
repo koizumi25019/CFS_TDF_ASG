@@ -173,7 +173,7 @@ int fault_judge(void) {
 
 	// 故障検出したらテストパターン数をインクリメント
 	if (det_fault_num_clasp > 0) {
-		tp_num++;
+		seed_num++;
 	}
 
 	//標準出力
@@ -184,7 +184,7 @@ int fault_judge(void) {
 
 	sprintf(txt_cmd, "%smttg.txt", folder_out);
 	fout_mttg = fopen(txt_cmd, "a+");
-	fprintf(fout_mttg, "%d: tfl_num:%d\ttfl_det_fault:%d\tdet_fault:%d\n", tp_num, tfl_num, count, det_fault_num_clasp);
+	fprintf(fout_mttg, "%d: tfl_num:%d\ttfl_det_fault:%d\tdet_fault:%d\n", seed_num, tfl_num, count, det_fault_num_clasp);
 	fclose(fout_mttg);
 	
 	return det_fault_num_clasp;

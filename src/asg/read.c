@@ -950,11 +950,6 @@ bool CompatibleFaultSet(
 	tfl_num = depth-1;
 	tfl = NULL;
 
-	//—¼—§‰Â”\ŒÌáW‡‚ð-terget_limit‚ðãŒÀ‚É§ŒÀ
-	if (tfl_num > 300) {
-		tfl_num = fi[TARGET_LIMIT].value;
-	}
-
 	for (int i = 0; i < tfl_num; i++)
 	{
 		UNDET_FAULT_LIST* current = ufl;

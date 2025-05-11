@@ -220,7 +220,7 @@ int mttg_main(void) {
 			system(cmd);
 
 			//コンソールアプリケーションの初期化
-			system("cls");
+			//system("cls");
 
 			//検出故障特定&検出故障数を未検出故障から削除
 			if ((det_fault_clasp_num = fault_judge()) == ERROR) {
