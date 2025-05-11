@@ -474,7 +474,7 @@ bool ReadNecessary(
 	buffer = (char*)allocMemory(MAXSIZE_BUFFER, sizeof(char));
 	string = (char*)allocMemory(MAXSIZE_BUFFER, sizeof(char));
 
-	readdata.necenet.necelist = (NECE_NLIST*)allocMemory(/*readdata.fault.numinit*/all_num, sizeof(NECE_NLIST));
+	readdata.necenet.necelist = (NECE_NLIST*)allocMemory(all_num, sizeof(NECE_NLIST));
 
 	//必須割り当て情報ファイルオープン
 	fileOpen(&fileptr, opt.file.input.necessary, "r");
@@ -490,19 +490,17 @@ bool ReadNecessary(
 			token2 = strtok_s(NULL, ", \n\0", &context);//token2:故障タイプ(ex:SF1,SF0)
 			if (!strcmp(token2, "SF0"))
 			{
-				//type = SF0;おそらくいらない
 				sprintf_s(string, MAXSIZE_BUFFER, "%s\tsa0\n", string);
 				//string:G16\tsa0\n
 			}
 			else if (!strcmp(token2, "SF1"))
 			{
-				//type = SF1;おそらくいらない
 				sprintf_s(string, MAXSIZE_BUFFER, "%s\tsa1\n", string);
 				//string:G16\tsa1\n
 			}
 			/** calcurate the hash */
 			//線形リストから探索に改変したのでハッシュ値計算いらない
-			//hash = calcHash(string);
+			hash = calcHash(string);
 
 			/** create Necessary node */
 			//未検出故障リスト(線形)から一致する文字列を探索
@@ -519,8 +517,6 @@ bool ReadNecessary(
 	}
 	free(buffer);
 	free(string);
-	printf("一致した文字列の数:%d\n", cnt);
-	printf("必須割当情報の数：%d\n", nece_line_cnt);
 	if (cnt != ufl_num)
 	{
 		printf("\n	SYSTEM ERROR: Reading necessary file error. ");
@@ -652,64 +648,39 @@ bool CreateCompatibleEdge(
 	void
 )
 {
-	int comp_flag = 0;
-	int value = 0;
-	unsigned int buffer;
 	clock_t half_start, half_end;
-
-	/* initialize comp variable */
-	BIT_INT_XP* comp;
-
 	half_start = clock();
-	comp = (BIT_INT_XP*)allocMemory(1, sizeof(BIT_INT_XP));
-	comp->int_num = n_net / MAXSIZE_BITINT + 1;//信号線数/32+1
-	comp->x_buf = (unsigned int*)allocMemory(comp->int_num, sizeof(unsigned int));
-	comp->p_buf = (unsigned int*)allocMemory(comp->int_num, sizeof(unsigned int));
-	All_Bit_X_XP(comp);
-	//printf("\n");
+	int int_num = ufl->necenet->int_num;
 
-	//追加
-	UNDET_FAULT_LIST* ufl_i;
-	ufl_i = ufl;
-	UNDET_FAULT_LIST* ufl_j;
-	ufl_j = ufl;
+
+	// ノードを配列にコピー
+	UNDET_FAULT_LIST** nodes = malloc(sizeof(*nodes) * ufl_num);
+	UNDET_FAULT_LIST* p = ufl;
+	for (int i = 0; i < ufl_num; i++, p = p->next) nodes[i] = p;
+
 
 	/* create compatible infomation */
 	for (int i = 0; i < ufl_num; i++)
 	{
-		for (int j = 0; j < ufl_num; j++)
+		UNDET_FAULT_LIST* ufl_i = nodes[i];
+		for (int j = i+1; j < ufl_num; j++)
 		{
-			comp_flag = 0;
-			if (i != j)
+			UNDET_FAULT_LIST* ufl_j = nodes[j];
+			for (int k = 0; k < int_num; k++)
 			{
-				for (int k = 0; k < comp->int_num; k++)
+				unsigned x = ufl_i->necenet->x_buf[k] & ufl_j->necenet->x_buf[k];
+				unsigned p = ufl_i->necenet->p_buf[k] & ufl_j ->necenet->p_buf[k];
+				/* search crash */
+				if ((x | p) != 0xFFFFFFFF)//0がある場合論理値が衝突。つまり圧縮ができない、つまり両立不可能
 				{
-					if (comp_flag == 1)break;
-					/* all X */
-					All_Bit_X_XP(comp);
-					/* search comp */
-					comp->x_buf[k] &= ufl_i->necenet->x_buf[k];
-					comp->x_buf[k] &= ufl_j->necenet->x_buf[k];
-					comp->p_buf[k] &= ufl_i->necenet->p_buf[k];
-					comp->p_buf[k] &= ufl_j->necenet->p_buf[k];
-					/* search crash */
-					buffer = comp->x_buf[k];
-					buffer |= comp->p_buf[k];
-					if (buffer != 0xFFFFFFFF)//0がある場合論理値が衝突。つまり圧縮ができない、つまり両立不可能
-					{
-						bitintSetNbit_Zero(ufl_i->edge, j);
-						comp_flag = 1;
-						ufl_i->n_edge -= 1;
-					}
+					bitintSetNbit_Zero(ufl_i->edge, j);
+					ufl_i->n_edge--;
+					bitintSetNbit_Zero(ufl_j->edge, i);
+					ufl_j->n_edge--;
+					break;
 				}
 			}
-			//追加
-			ufl_j = ufl_j->next;
 		}
-		//追加
-		ufl_i = ufl_i->next;
-		ufl_j = ufl;//ufl_jのポインタが更新されたままになってしまうのでポインタをuflでリセット
-
 		printf("\rGenerating graph progress  >> %.2f%%", ((float)(i + 1) / (float)ufl_num) * 100);
 	}
 #ifdef __DEBUG_SET_TARGET_COMP__
@@ -718,6 +689,8 @@ bool CreateCompatibleEdge(
 	half_end = clock();
 	time_graph = half_end - half_start;
 	printf("\n	Making Graph CPU time：	%.3f[s]\n", (float)time_graph / CLOCKS_PER_SEC);
+	free(nodes);
+
 
 	return TARGET_OKAY;
 }
@@ -753,8 +726,8 @@ bool CompatibleFaultSet(
 
 	//両立可能故障における目標故障選択
 
-	//未検出故障数が100以下の場合の処理
-	if (ufl_num < 100)
+	//未検出故障数が300以下の場合の処理
+	if (ufl_num < 300)
 	{
 		//if (num_clique_flag == false)
 		//{
@@ -796,7 +769,6 @@ bool CompatibleFaultSet(
 
 			curr = curr->next;
 		}
-		// --- deep copy ufl → tfl 終了 ---
 
 		tfl_num = ufl_num;
 		return TARGET_OKAY;
@@ -959,7 +931,6 @@ bool CompatibleFaultSet(
 			j++;
 		}
 	}
-	//printf("\n");
 	//ここまでクリーク抽出
 
 	//変更
@@ -978,6 +949,11 @@ bool CompatibleFaultSet(
 	// tfl_num を depth - 1 に設定
 	tfl_num = depth-1;
 	tfl = NULL;
+
+	//両立可能故障集合を-terget_limitを上限に制限
+	if (tfl_num > 300) {
+		tfl_num = fi[TARGET_LIMIT].value;
+	}
 
 	for (int i = 0; i < tfl_num; i++)
 	{

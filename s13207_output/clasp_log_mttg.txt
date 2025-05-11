@@ -1,6 +1,29 @@
 c clasp version 3.3.8
 c Reading from ./s13207_output/mttg_pbo.txt
 c Solving...
+c Progression : [115;inf]
+c Progression : [116;inf]
+c Progression : [117;inf]
+c Progression : [118;inf]
+c Progression : [119;inf]
+c Progression : [120;inf]
+c Progression : [121;inf]
+c Progression : [122;inf]
+c Progression : [123;inf]
+c Progression : [124;inf]
+c Progression : [125;inf]
+c Progression : [126;inf]
+c Progression : [127;inf]
+c Progression : [128;inf]
+c Progression : [129;inf]
+c Progression : [130;inf]
+c Progression : [131;inf]
+c Progression : [132;inf]
+c Progression : [133;inf]
+c Progression : [134;inf]
+c Progression : [135;inf]
+c Progression : [136;inf]
+c Progression : [137;inf]
 c Progression : [138;inf]
 c Progression : [139;inf]
 c Progression : [140;inf]
@@ -43,10 +66,42 @@ c Progression : [176;inf]
 c Progression : [177;inf]
 c Progression : [178;inf]
 c Progression : [179;inf]
-o 219
-c Progression : [180;219] (Error: 0.216667)
-o 218
-o 217
-o 216
-o 215
-c Progression : [181;215] (Error: 0.187845)
+c Progression : [180;inf]
+c Progression : [181;inf]
+c Progression : [182;inf]
+c Progression : [183;inf]
+c Progression : [184;inf]
+c Progression : [185;inf]
+c Progression : [186;inf]
+c Progression : [187;inf]
+c Progression : [188;inf]
+c Progression : [189;inf]
+c Progression : [190;inf]
+c Progression : [191;inf]
+c Progression : [192;inf]
+c Progression : [193;inf]
+c Progression : [194;inf]
+c Progression : [195;inf]
+c Progression : [196;inf]
+c Progression : [197;inf]
+c Progression : [198;inf]
+c Progression : [199;inf]
+c Progression : [200;inf]
+c Progression : [201;inf]
+c Progression : [202;inf]
+c Progression : [203;inf]
+c Progression : [204;inf]
+c Progression : [205;inf]
+c Progression : [206;inf]
+o 299
+o 298
+o 297
+o 296
+o 295
+o 294
+o 293
+o 292
+o 290
+o 289
+o 288
+o 287

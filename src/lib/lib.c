@@ -73,23 +73,23 @@ void* allocMemory(
 //	@function	：	calculate the hash value
 //	@return		：	(int) hash value
 //*************************************************************************************************************
-//int calcHash(
-//	char* buffer			  /** buffer */
-//)
-//{
-//	int hashval = 0;
-//
-//	for (size_t i = 0; i < strlen(buffer) - 1; i++)
-//	{
-//		hashval += buffer[i];
-//	}
-//
-//#ifdef NDEBUG
-//	assert(0 <= hashval < MAXSIZE_HASH);
-//#endif
-//
-//	return hashval % MAXSIZE_HASH;
-//}
+int calcHash(
+	char* buffer			  /** buffer */
+)
+{
+	int hashval = 0;
+
+	for (size_t i = 0; i < strlen(buffer) - 1; i++)
+	{
+		hashval += buffer[i];
+	}
+
+#ifdef NDEBUG
+	assert(0 <= hashval < MAXSIZE_HASH);
+#endif
+
+	return hashval % MAXSIZE_HASH;
+}
 
 //*************************************************************************************************************
 //	@name		：　stackPUSH
