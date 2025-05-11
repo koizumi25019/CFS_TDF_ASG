@@ -32,10 +32,10 @@ int file_output(clock_t time,int mode) {
 			return ERROR;
 		}
 
-		//テスト不能故障ファイル
-		sprintf(txt_cmd, "%suntest_fault.txt", folder_out);
-		if ((fout_untest_fault = (fopen(txt_cmd, "w"))) == NULL) {
-			printf("【ERROR】:File open untest_fault.txt(file_output.c)\n");
+		//シード生成不能故障ファイル
+		sprintf(txt_cmd, "%sunseed_fault.txt", folder_out);
+		if ((fout_unseed_fault = (fopen(txt_cmd, "w"))) == NULL) {
+			printf("【ERROR】:File open unseed_fault.txt(file_output.c)\n");
 			return ERROR;
 		}
 
@@ -58,7 +58,7 @@ int file_output(clock_t time,int mode) {
 		fprintf(fout_literal,"-------------------------------------------\n");
 		fprintf(fout_literal,"All Fault NUM         :%d\n", all_num);
 		fprintf(fout_literal,"UNDET Fault NUM       :%d\n",ufl_num);
-		fprintf(fout_literal,"Untest Fault NUM      :%d\n",red_num);
+		fprintf(fout_literal,"Unseed Fault NUM      :%d\n",unseed_num);
 		fprintf(fout_literal,"High Power Fault NUM  :%d\n", hpfl_num);
 		fprintf(fout_literal,"-------------------------------------------\n\n");
 		for (int i = 0; i < n_net; i++) {
@@ -66,19 +66,16 @@ int file_output(clock_t time,int mode) {
 			fprintf(fout_literal,"  ID            :%d\n", nl[i].n);
 		}
 
-		node = red;
+		node = unseed;
 		while (node != NULL) {
 		j++;
-			//fprintf(fout_untest_fault, "---------------------------------\n");
-			//fprintf(fout_untest_fault, "Number:%d\n", j);
-			fprintf(fout_untest_fault, "%s\n", node->name);
+			fprintf(fout_unseed_fault, "%s\n", node->name);
 			if (node->type == STR) {
-				fprintf(fout_untest_fault, "STR\n");
+				fprintf(fout_unseed_fault, "STR\n");
 			}
 			else {
-				fprintf(fout_untest_fault, "STF\n");
+				fprintf(fout_unseed_fault, "STF\n");
 			}
-			//fprintf(fout_untest_fault, "---------------------------------\n\n");
 			node = node->next;
 		}
 
@@ -86,8 +83,6 @@ int file_output(clock_t time,int mode) {
 		node = hpfl;
 		while (node != NULL) {
 			j++;
-			//fprintf(fout_high_fault, "---------------------------------\n");
-			//fprintf(fout_high_fault, "Number:%d\n", j);
 			fprintf(fout_high_fault, "%s\n", node->name);
 			if (node->type == STR) {
 				fprintf(fout_high_fault, "STR\n");
@@ -95,7 +90,6 @@ int file_output(clock_t time,int mode) {
 			else {
 				fprintf(fout_high_fault, "STF\n");
 			}
-			//fprintf(fout_high_fault, "---------------------------------\n\n");
 			node = node->next;
 		}
 
@@ -103,8 +97,6 @@ int file_output(clock_t time,int mode) {
 		node = ufl;
 		while (node != NULL) {
 			j++;
-			//fprintf(fout_init_undet, "---------------------------------\n");
-			//fprintf(fout_init_undet, "Number:%d\n", j);
 			fprintf(fout_init_undet, "%s\n", node->name);
 			if (node->type == STR) {
 				fprintf(fout_init_undet, "STR\n");
@@ -112,12 +104,11 @@ int file_output(clock_t time,int mode) {
 			else {
 				fprintf(fout_init_undet, "STF\n");
 			}
-			//fprintf(fout_init_undet, "---------------------------------\n\n");
 			node = node->next;
 		}
 
 		fclose(fout_literal);
-		fclose(fout_untest_fault);
+		fclose(fout_unseed_fault);
 		fclose(fout_init_undet);
 
 		if ((strcmp(fi[LOW_POWER].name, "ON")) == 0) {
@@ -139,8 +130,6 @@ int file_output(clock_t time,int mode) {
 		node = afl;
 		while (node != NULL) {
 			j++;
-			//fprintf(fout_fault, "---------------------------------\n");
-			//fprintf(fout_fault, "Number:%d\n", j);
 			fprintf(fout_fault, "%s\n", node->name);
 			if (node->type == STR) {
 				fprintf(fout_fault, "STR\n");
@@ -148,7 +137,6 @@ int file_output(clock_t time,int mode) {
 			else {
 				fprintf(fout_fault, "STF\n");
 			}
-			//fprintf(fout_fault, "---------------------------------\n\n");
 			node = node->next;
 		}
 
@@ -171,13 +159,13 @@ int file_output(clock_t time,int mode) {
 		fprintf(fout_log, "// Target Circuit              :%s\n", fi[CIRCUIT].name);
 		fprintf(fout_log, "// Fault Type                  :TDF\n");
 		if (fi[TARGET_LIMIT].value == 1) {
-			fprintf(fout_log, "// Test Generation             :STTG\n");
+			fprintf(fout_log, "// Seed Generation             :STTG\n");
 		}
 		else {
-			fprintf(fout_log, "// Test Generation             :MTTG\n");
+			fprintf(fout_log, "// Seed Generation             :MTTG\n");
 		}
 		fprintf(fout_log, "// Number of Total Faults      :%d\n", (int)all_num);
-		fprintf(fout_log, "// Number of Untestable Faults :%d\n", (int)red_num);
+		fprintf(fout_log, "// Number of Unseed Faults :%d\n", (int)unseed_num);
 		fprintf(fout_log, "// Number of High Power Faults :%d\n", (int)hpfl_num);
 		fprintf(fout_log, "// Number of Detected Faults   :%d\n", (int)dfl_num);
 		fprintf(fout_log, "// Number of Undetected Faults :%d\n", (int)ufl_num);
@@ -187,7 +175,15 @@ int file_output(clock_t time,int mode) {
 		fprintf(fout_log, "// Time to abort solver        :%dsec\n", fi[TIME].value);
 		fprintf(fout_log, "// Time to graph               :%dsec\n", time_graph);
 		fprintf(fout_log, "// Target faults limit         :%d\n", fi[TARGET_LIMIT].value);
-		fprintf(fout_log, "// Rand Optiont                :%s\n", fi[RAND].name);
+		fprintf(fout_log, "// Rand Option                 :%s\n", fi[RAND].name);
+		if (fi[PARALLEL].flag == 1) {
+		fprintf(fout_log, "// Parallel Mode Option        :OFF\n");
+		}
+		if (fi[PARALLEL].flag==1) {
+		fprintf(fout_log, "// Parallel Mode Option        :ON\n");
+		fprintf(fout_log, "// CPU Thread                  :%s\n", fi[PARALLEL].name);
+		}
+		fprintf(fout_log, "// Mode 1 Option               :%s\n", fi[MODE_1].name);
 		fprintf(fout_log, "// Low Power Mode              :%s\n", fi[LOW_POWER].name);
 		fprintf(fout_log, "// WSA                         :%d[％]\n", fi[WSATH].value);
 		fprintf(fout_log, "//---------------------------------------------------\n");
@@ -205,8 +201,6 @@ int file_output(clock_t time,int mode) {
 		node = ufl;
 		while (node != NULL) {
 			j++;
-			//fprintf(fout_undet, "---------------------------------\n");
-			//fprintf(fout_undet, "Number:%d\n", j);
 			fprintf(fout_undet, "%s\n", node->name);
 			if (node->type == STR) {
 				fprintf(fout_undet, "STR\n");
@@ -214,7 +208,6 @@ int file_output(clock_t time,int mode) {
 			else {
 				fprintf(fout_undet, "STF\n");
 			}
-			//fprintf(fout_undet, "---------------------------------\n\n");
 			node = node->next;
 		}
 
@@ -231,8 +224,6 @@ int file_output(clock_t time,int mode) {
 		node = dfl;
 		while (node != NULL) {
 			j++;
-			//fprintf(fout_det, "---------------------------------\n");
-			//fprintf(fout_det, "Number:%d\n", j);
 			fprintf(fout_det, "%s\n", node->name);
 			if (node->type == STR) {
 				fprintf(fout_det, "STR\n");
@@ -240,7 +231,6 @@ int file_output(clock_t time,int mode) {
 			else {
 				fprintf(fout_det, "STF\n");
 			}
-			//fprintf(fout_det, "---------------------------------\n\n");
 			node = node->next;
 		}
 
@@ -266,8 +256,6 @@ int file_output(clock_t time,int mode) {
 			}
 			head = head->next;
 		}
-		fprintf(fout_tfl_log, "========================================================================\n\n\n");
-		
 		fclose(fout_tfl_log);
 	}
 

@@ -1,6 +1,19 @@
 c clasp version 3.3.8
 c Reading from ./s13207_output/mttg_pbo.txt
 c Solving...
+c Progression : [102;inf]
+c Progression : [103;inf]
+c Progression : [104;inf]
+c Progression : [105;inf]
+c Progression : [106;inf]
+c Progression : [107;inf]
+c Progression : [108;inf]
+c Progression : [109;inf]
+c Progression : [110;inf]
+c Progression : [111;inf]
+c Progression : [112;inf]
+c Progression : [113;inf]
+c Progression : [114;inf]
 c Progression : [115;inf]
 c Progression : [116;inf]
 c Progression : [117;inf]
@@ -27,81 +40,12 @@ c Progression : [137;inf]
 c Progression : [138;inf]
 c Progression : [139;inf]
 c Progression : [140;inf]
-c Progression : [141;inf]
-c Progression : [142;inf]
-c Progression : [143;inf]
-c Progression : [144;inf]
-c Progression : [145;inf]
-c Progression : [146;inf]
-c Progression : [147;inf]
-c Progression : [148;inf]
-c Progression : [149;inf]
-c Progression : [150;inf]
-c Progression : [151;inf]
-c Progression : [152;inf]
-c Progression : [153;inf]
-c Progression : [154;inf]
-c Progression : [155;inf]
-c Progression : [156;inf]
-c Progression : [157;inf]
-c Progression : [158;inf]
-c Progression : [159;inf]
-c Progression : [160;inf]
-c Progression : [161;inf]
-c Progression : [162;inf]
-c Progression : [163;inf]
-c Progression : [164;inf]
-c Progression : [165;inf]
-c Progression : [166;inf]
-c Progression : [167;inf]
-c Progression : [168;inf]
-c Progression : [169;inf]
-c Progression : [170;inf]
-c Progression : [171;inf]
-c Progression : [172;inf]
-c Progression : [173;inf]
-c Progression : [174;inf]
-c Progression : [175;inf]
-c Progression : [176;inf]
-c Progression : [177;inf]
-c Progression : [178;inf]
-c Progression : [179;inf]
-c Progression : [180;inf]
-c Progression : [181;inf]
-c Progression : [182;inf]
-c Progression : [183;inf]
-c Progression : [184;inf]
-c Progression : [185;inf]
-c Progression : [186;inf]
-c Progression : [187;inf]
-c Progression : [188;inf]
-c Progression : [189;inf]
-c Progression : [190;inf]
-c Progression : [191;inf]
-c Progression : [192;inf]
-c Progression : [193;inf]
-c Progression : [194;inf]
-c Progression : [195;inf]
-c Progression : [196;inf]
-c Progression : [197;inf]
-c Progression : [198;inf]
-c Progression : [199;inf]
-c Progression : [200;inf]
-c Progression : [201;inf]
-c Progression : [202;inf]
-c Progression : [203;inf]
-c Progression : [204;inf]
-c Progression : [205;inf]
-c Progression : [206;inf]
-o 299
-o 298
-o 297
-o 296
-o 295
-o 294
-o 293
-o 292
-o 290
-o 289
-o 288
-o 287
+o 171
+c Progression : [141;171] (Error: 0.212766)
+c Progression : [142;171] (Error: 0.204225)
+c Progression : [143;171] (Error: 0.195804)
+o 170
+o 169
+o 168
+o 167
+o 166

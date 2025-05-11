@@ -186,9 +186,6 @@
     <ClCompile Include="src\mttg\undet_fault_delete.c">
       <Filter>mttg</Filter>
     </ClCompile>
-    <ClCompile Include="src\mttg\unsat_dicision.c">
-      <Filter>mttg</Filter>
-    </ClCompile>
     <ClCompile Include="src\opt\opt.c">
       <Filter>opt</Filter>
     </ClCompile>

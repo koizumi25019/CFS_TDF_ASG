@@ -39,12 +39,15 @@ bool CLASP(
 
 	if (clasp.status == CLASP_UNSAT)
 	{
-		printf("CLASPエラー：UNSATです。解が存在しないか制約式が間違っています\n");
-		exit(1);
+		printf("CLASP：シード生成不能故障(UNSAT)です\n");
 	}
-
+	else if (clasp.status == CLASP_STATUS_UNKNOWN) {
+		printf("CLASPエラー：シード生成不能故障(UNKNOWN)です\n");
+	}
 	/** get the CLASP solution */
-	CLASPgetSol(fileptr);
+	else {
+		CLASPgetSol(fileptr);
+	}
 
 	/** close the "scip log file" in read-mode */
 	fclose(fileptr);

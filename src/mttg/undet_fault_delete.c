@@ -74,8 +74,8 @@ void ufl_free(UNDET_FAULT_LIST* node, UNDET_FAULT_LIST* pre_node,int mode) {
 
 	if (mode == 0) {//テスト不能
 		//p_nodeをredまたはhpflの先頭に追加している
-		p_node->next = red;
-		red = p_node;
+		p_node->next = unseed;
+		unseed = p_node;
 	}
 	else if (mode == 1) {//高消費電力
 		p_node->next = hpfl;
@@ -90,7 +90,7 @@ void ufl_free(UNDET_FAULT_LIST* node, UNDET_FAULT_LIST* pre_node,int mode) {
 		ufl_num--;
 
 		if (mode == 0) {
-			red_num++;
+			unseed_num++;
 		}
 		else if (mode == 1) {
 			hpfl_num++;
@@ -105,7 +105,7 @@ void ufl_free(UNDET_FAULT_LIST* node, UNDET_FAULT_LIST* pre_node,int mode) {
 		ufl_num--;
 
 		if (mode == 0) {
-			red_num++;
+			unseed_num++;
 		}
 		else if (mode == 1) {
 			hpfl_num++;

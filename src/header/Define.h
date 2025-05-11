@@ -73,8 +73,7 @@ FILE* fout_log;			   //ログファイル
 FILE* fout_undet;		   //最終未検出故障ファイル(空ファイル)
 FILE* fout_det;			   //最終検出故障ファイル(＝初期未検出故障集合ファイル)
 
-FILE* fout_untest_tp;		//テスト不能故障削除時のテストパターン集合ファイル
-FILE* fout_untest_fault;	//テスト不能故障集合ファイル
+FILE* fout_unseed_fault;	//テスト不能故障集合ファイル
 FILE* fout_high_fault;		//高消費電力故障集合ファイル
 FILE* fout_init_undet;		//初期未検出集合ファイル
 FILE* fout_untest_pbo;		//テスト不能故障削除用のSTTGのPBOファイル
@@ -91,7 +90,6 @@ FILE* fout_tfl_log;         //目標故障集合ログファイル
 //------------------------------------------------------------------------
 //入力ファイル
 //------------------------------------------------------------------------
-FILE* fin_untest_pbo_result;	//テスト不能故障削除用のSTTGのPBO結果ファイル
 FILE* fin_mini_pbo_result;	    //目標故障選択用のPBO結果ファイル
 
 //------------------------------------------------------------------------
@@ -108,8 +106,8 @@ int dfl_num;					//検出故障数
 UNDET_FAULT_LIST *dfl;			//検出故障リスト
 int ufl_num;					//未検出故障数
 UNDET_FAULT_LIST *ufl;			//未検出故障リスト
-int red_num;					//テスト不能故障数
-UNDET_FAULT_LIST *red;			//テスト不能故障リスト
+int unseed_num;					//シード生成不能故障数
+UNDET_FAULT_LIST* unseed;		//シード生成不能故障リスト
 int hpfl_num;					//高消費電力故障数
 UNDET_FAULT_LIST *hpfl;			//高消費電力故障リスト
 int node_num;                   //総故障信号線数 
@@ -177,8 +175,6 @@ int test_v_read(void);
 int fault_judge(void);
 //file_output.c
 int file_output(clock_t time, int mode);
-//make_test_set.c
-void make_test_set(FILE *fp_ts);
 //pin_make.c
 int pin_make(void);
 //Que.c
@@ -215,10 +211,6 @@ void pbo_generate_normal_c(FILE *fp);
 void pbo_generate_fault_c(FILE *fp, UNDET_FAULT_LIST* node);
 void pbo_generate_fdetect_c(FILE *fp, UNDET_FAULT_LIST* node);
 void pbo_generate_power(FILE *fp);
-//unsat_dicision.c
-int unsat_dicision(UNDET_FAULT_LIST* node, UNDET_FAULT_LIST* pre_node,int mode);
-//untest_delete_main.c
-int untest_delete_main(void);
 //fault_select.c
 int fault_select(int unsat_flag,SORTED* sorted,int loop);
 //mttg_calc_pbo_size.c

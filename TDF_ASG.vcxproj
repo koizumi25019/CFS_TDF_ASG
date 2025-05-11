@@ -66,7 +66,6 @@
     <ClCompile Include="src\mttg\mttg_pbo_generate.c" />
     <ClCompile Include="src\mttg\specific_fault_range.c" />
     <ClCompile Include="src\mttg\undet_fault_delete.c" />
-    <ClCompile Include="src\mttg\unsat_dicision.c" />
     <ClCompile Include="src\mttg\Untest_delete\untest_calc_pbo_size.c" />
     <ClCompile Include="src\mttg\Untest_delete\untest_pbo_generate.c" />
     <ClCompile Include="src\opt\opt.c" />

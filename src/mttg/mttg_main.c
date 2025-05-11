@@ -184,53 +184,60 @@ int mttg_main(void) {
 			return ERROR;
 		}
 
-		//故障シミュレーション用テストパターンファイルオープン
-		sprintf(txt_cmd, "%stp.txt", folder_out);
-		FILE* fout_tp = fopen(txt_cmd, "w");
-		if (fout_tp == NULL) {
-			printf("【ERROR】:File open tp.txt(mttg_main.c)\n");
-			return ERROR;
+		//シード生成不能故障でないの場合
+		if (clasp.status != CLASP_STATUS_UNKNOWN && clasp.status != CLASP_UNSAT) {
+
+			//故障シミュレーション用テストパターンファイルオープン
+			sprintf(txt_cmd, "%stp.txt", folder_out);
+			FILE* fout_tp = fopen(txt_cmd, "w");
+			if (fout_tp == NULL) {
+				printf("【ERROR】:File open tp.txt(mttg_main.c)\n");
+				return ERROR;
+			}
+			fprintf(fout_tp, "%s\n", clasp.sol[SOL_TP]);
+			fclose(fout_tp);
+
+			//低消費テストパターンか確認(消費電力指向時のみ)
+			if ((mttg_check_wsa() != SAT) && (strcmp(fi[LOW_POWER].name, "ON") == 0)) {
+				printf("【ERROR】:MTTG TEST NG PATTERN(mttg_main.c)\n");
+				return ERROR;
+			}
+
+			//論理シミュレーション
+			if (logic_sim() != SUCCESS) {
+				printf("【ERROR】:Logic Simulation(mttg_main.c)\n");
+				return ERROR;
+			}
+
+			//シード集合へ出力
+			fprintf(fout_seed, "%s\n", clasp.sol[SOL_SEED]);
+			fclose(fout_seed);
+
+			//========================================================================
+			//	故障シミュレーション
+			//========================================================================
+			sprintf(cmd, "XID2.exe -c %s -tx %stp.txt -pin %spin.txt -fm TDF -fsim YES -dic %sfsim_log.txt -det %sxid_det.txt -undet %sxid_undet.txt", fi[CIRCUIT].name, folder_out, folder_out, folder_out, folder_out, folder_out);
+			system(cmd);
+
+			//コンソールアプリケーションの初期化
+			system("cls");
+
+			//検出故障特定&検出故障数を未検出故障から削除
+			if ((det_fault_clasp_num = fault_judge()) == ERROR) {
+				printf("【ERROR】:Fault Judge(mttg_main.c)\n");
+				return ERROR;
+			}
+
+			//例外終了条件
+			if (det_fault_clasp_num == 0) {
+				unsat_flag = ON;
+			}
+			else unsat_flag = OFF;
 		}
-		fprintf(fout_tp, "%s\n", clasp.sol[SOL_TP]);
-		fclose(fout_tp);
-
-		//低消費テストパターンか確認(消費電力指向時のみ)
-		if ((mttg_check_wsa() != SAT) && (strcmp(fi[LOW_POWER].name, "ON") == 0)) {
-			printf("【ERROR】:MTTG TEST NG PATTERN(mttg_main.c)\n");
-			return ERROR;
+		else {
+			//シード生成不能故障を未検出故障リストから削除
+			ufl_free(ufl, NULL, 0);
 		}
-
-		//論理シミュレーション
-		if (logic_sim() != SUCCESS) {
-			printf("【ERROR】:Logic Simulation(mttg_main.c)\n");
-			return ERROR;
-		}
-
-		//シード集合へ出力
-		fprintf(fout_seed, "%s\n", clasp.sol[SOL_SEED]);
-		fclose(fout_seed);
-
-		//========================================================================
-		//	故障シミュレーション
-		//========================================================================
-		sprintf(cmd, "XID2.exe -c %s -tx %stp.txt -pin %spin.txt -fm TDF -fsim YES -dic %sfsim_log.txt -det %sxid_det.txt -undet %sxid_undet.txt", fi[CIRCUIT].name, folder_out, folder_out, folder_out, folder_out, folder_out);
-		system(cmd);
-
-		//コンソールアプリケーションの初期化
-		//system("cls");
-
-		//検出故障特定&検出故障数を未検出故障から削除
-		if ((det_fault_clasp_num = fault_judge()) == ERROR) {
-			printf("【ERROR】:Fault Judge(mttg_main.c)\n");
-			return ERROR;
-		}
-
-		//例外終了条件
-		if (det_fault_clasp_num == 0) {
-			unsat_flag = ON;
-		}
-		else unsat_flag = OFF;
-
 	}
 
 	num_seed = loop;

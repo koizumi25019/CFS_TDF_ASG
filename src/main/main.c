@@ -76,10 +76,10 @@ int main(int argc, char *argv[]) {
 	}
 
 	//プログラム終了メール送信
-	//system("chcp 65001");
-	//sprintf(txt_cmd,"YuyaMail.exe");
-	//system(txt_cmd);
-	//system("chcp 932");
+	system("chcp 65001");
+	sprintf(txt_cmd,"YuyaMail.exe");
+	system(txt_cmd);
+	system("chcp 932");
 
 	printf("\n\n----------【FINISH】TDF_ASG----------\n");
 	return SUCCESS;
