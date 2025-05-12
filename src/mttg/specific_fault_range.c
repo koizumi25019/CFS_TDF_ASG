@@ -55,8 +55,6 @@ int specific_fault_range(char* name) {
 		nlist = dequeue();		//デキュー
 		nlist->fault_pass = YES;//故障到達可能な信号線に設定
 		nlist->suf_fc = suffix;	//故障回路の添え字設定
-		//printf("故障回路番号：%d", nlist->suf_fc);
-		//printf("名前：%s\n", nlist->name);
 		suffix++;				//添え字インクリメント
 		if (nlist->ppo_flag != 1) {//回路の最後の信号線ではないか判断していると思う
 			for (i = 0; i < nlist->n_out; i++) {//複数の出力なら、それぞれエンキュー
