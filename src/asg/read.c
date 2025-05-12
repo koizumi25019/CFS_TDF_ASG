@@ -1146,173 +1146,58 @@ int FuncSortDescend(
 //	@function	：	output the log
 //	@return		：	null
 //*************************************************************************************************************
-//void OutGraphLogfile(
-//	void
-//)
-//{
-//	/* variable declaration */
-//	int min = 0;
-//	int max = 0;
-//	int sum = 0;
-//
-//	/* calulate */
-//	min = remain->list[0]->n_edge;
-//	for (int i = 0; i < remain->num; i++)
-//	{
-//		if (min > remain->list[i]->n_edge)
-//		{
-//			min = remain->list[i]->n_edge;
-//		}
-//		if (max < remain->list[i]->n_edge)
-//		{
-//			max = remain->list[i]->n_edge;
-//		}
-//		sum += remain->list[i]->n_edge;
-//	}
-//
-//	/** output graph log file */
-//	FILE* fileptr = (FILE*)NULL;
-//	fileOpen(&fileptr, opt.file.output.graphlog, "w");
-//	fprintf(fileptr, "//-------------------------------------------------------\n");
-//	fprintf(fileptr, "//          Compatible Fault Graph infomation\n");
-//	fprintf(fileptr, "//-------------------------------------------------------\n");
-//	fprintf(fileptr, "//  Number of vertex                : %d\n", all_num);
-//	fprintf(fileptr, "//  Number of edges                 : %d\n", sum / 2);
-//	fprintf(fileptr, "//  Number of minimum degree        : %d\n", min);
-//	fprintf(fileptr, "//  Number of maximum degree        : %d\n", max);
-//	fprintf(fileptr, "//  Number of average degree        : %d\n", sum / ufl_num);
-//	fprintf(fileptr, "//  Percentage of branch density    : %.2f%%\n", ((float)sum / (float)(ufl_num * (ufl_num - 1)) * 100));
-//	fprintf(fileptr, "//-------------------------------------------------------\n\n");
-//
-//	/** output number of adjacent vertices in graph */
-//	for (int i = 0; i < ufl_num; i++)
-//	{
-//		if (remain->list[i]->type == SF1)
-//		{
-//			fprintf(fileptr, "%30s\tsa1    %3d\n", remain->list[i]->name, remain->list[i]->n_edge);
-//		}
-//		else
-//		{
-//			fprintf(fileptr, "%30s\tsa0    %3d\n", remain->list[i]->name, remain->list[i]->n_edge);
-//		}
-//	}
-//
-//	fclose(fileptr);
-//	return;
-//}
+void OutGraphLogfile(
+	void
+)
+{
+	/* variable declaration */
+	int min = 0;
+	int max = 0;
+	int sum = 0;
 
-//*************************************************************************************************************
-//	@name		：  ReadGraph
-//	@function	：	Reading File Graph
-//	@return		：	(bool) okay, error
-//*************************************************************************************************************
-//bool ReadGraph(
-//	//TARGET* remain
-//)
-//{
-//
-//	/* variable declaration */
-//	FILE* fileptr = (FILE*)NULL;
-//	char* buffer = (char*)NULL;
-//	char* context = (char*)NULL;
-//	char* string = (char*)NULL;
-//	char* string2 = (char*)NULL;
-//	char* token = (char*)NULL;
-//	char* token2 = (char*)NULL;
-//	int type = 0;
-//	int type2 = 0;
-//	int cnt = 0;
-//	int num_length = 0;
-//	int i = 0, j = 0;
-//
-//	/* partitioning allocation */
-//	buffer = (char*)allocMemory(MAXSIZE_BUFFER, sizeof(char));
-//	string = (char*)allocMemory(MAXSIZE_BUFFER, sizeof(char));
-//	string2 = (char*)allocMemory(MAXSIZE_BUFFER, sizeof(char));
-//
-//	/** open the "fault file" in read-mode */
-//	fileOpen(&fileptr, opt.file.input.graph, "r");
-//
-//	for (i = 0; i < ufl_num; i++)
-//	{
-//		bitintSetAll_Zero(->edge);
-//		remain->list[i]->n_edge = 0;
-//	}
-//
-//	//ファイルの行数カウント
-//	while (COMP_EOF(fgets(buffer, MAXSIZE_BUFFER, fileptr)))
-//	{
-//		if (COMP_NEWLINE(buffer))
-//		{
-//			num_length++;
-//		}
-//	}rewind(fileptr);
-//
-//
-//	/** create the graph */
-//	while (COMP_EOF(fgets(buffer, MAXSIZE_BUFFER, fileptr)))
-//	{
-//		if (COMP_NEWLINE(buffer))
-//		{
-//			token = strtok_s(buffer, " ", &context);//tokenに故障信号線名取得
-//			sprintf_s(string, MAXSIZE_BUFFER, "%s", token);//stringに1つ目の故障信号線名を格納
-//			type = atoi(strtok_s(NULL, ",\n", &context));//8か16かを取得→つまり0縮退か1縮退かを取得している
-//			if (type == SF0)
-//			{
-//				sprintf_s(string, MAXSIZE_BUFFER, "%s\tsa0\n", string);
-//			}
-//			else if (type == SF1)
-//			{
-//				sprintf_s(string, MAXSIZE_BUFFER, "%s\tsa1\n", string);
-//			}
-//
-//			token2 = strtok_s(NULL, " ", &context);
-//			sprintf_s(string2, MAXSIZE_BUFFER, "%s", token2);//string2に2つ目の故障信号線名を取得
-//			type2 = atoi(strtok_s(NULL, ",\n", &context));
-//			if (type2 == SF0)
-//			{
-//				sprintf_s(string2, MAXSIZE_BUFFER, "%s\tsa0\n", string2);
-//			}
-//			else if (type2 == SF1)
-//			{
-//				sprintf_s(string2, MAXSIZE_BUFFER, "%s\tsa1\n", string2);
-//			}
-//
-//			//remain：未検出故障集合
-//			for (i = 0; i < remain->num; i++)
-//			{
-//				//取得した1つ目の故障信号線名と未検出故障リストの信号線名を比較
-//				if (!strcmp(string, remain->list[i]->string))
-//				{
-//					for (j = i; j < remain->num; j++)
-//					{
-//						//取得した2つ目の故障信号線名と未検出故障リストの信号線名を比較
-//						if (!strcmp(string2, remain->list[j]->string))
-//						{
-//							//(remain->list[i]->edge, j)はそれぞれの故障がグラフにおいて辺で結ばれていることを示すために1をセットしている
-//							//詳しくは両立可能故障集合_グラフ生成アルゴリズムというファイルを参照
-//							bitintSetNbit_One(remain->list[i]->edge, j);
-//							remain->list[i]->n_edge++;//その故障が繋がっている辺の数をインクリメント
-//							//さっきと逆のことを行う。一方の故障からもう一方の故障へ辺が繋がっていることを先ほど示したので、こちらの故障からも先ほどの故障へ辺が引かれていることを示すための処理
-//							bitintSetNbit_One(remain->list[j]->edge, i);
-//							remain->list[j]->n_edge++;
-//							break;
-//						}
-//					}
-//					if (j == remain->num)	return READ_ERROR;
-//					break;
-//				}
-//			}
-//			if (i == remain->num)	return READ_ERROR;
-//		}
-//		cnt++;
-//		//進行状況確認したければ
-//		printf("\r	Reading graph infomation progress  >> %.2f%%", ((float)(cnt) / (float)num_length) * 100);
-//	}
-//
-//	fclose(fileptr);
-//
-//
-//	return READ_OKAY;
-//
-//}
+	/* calulate */
+	min = ufl->n_edge;
+	for (int i = 0; i < ufl_num; i++)
+	{
+		if (min > ufl->n_edge)
+		{
+			min = ufl->n_edge;
+		}
+		if (max < ufl->n_edge)
+		{
+			max = ufl->n_edge;
+		}
+		sum += ufl->n_edge;
+		ufl = ufl->next;
+	}
+
+	/** output graph log file */
+	FILE* fileptr = (FILE*)NULL;
+	fileOpen(&fileptr, opt.file.output.graphlog, "w");
+	fprintf(fileptr, "//-------------------------------------------------------\n");
+	fprintf(fileptr, "//          Compatible Fault Graph infomation\n");
+	fprintf(fileptr, "//-------------------------------------------------------\n");
+	fprintf(fileptr, "//  Number of vertex                : %d\n", all_num);
+	fprintf(fileptr, "//  Number of edges                 : %d\n", sum / 2);
+	fprintf(fileptr, "//  Number of minimum degree        : %d\n", min);
+	fprintf(fileptr, "//  Number of maximum degree        : %d\n", max);
+	fprintf(fileptr, "//  Number of average degree        : %d\n", sum / ufl_num);
+	fprintf(fileptr, "//  Percentage of branch density    : %.2f%%\n", ((float)sum / (float)(ufl_num * (ufl_num - 1)) * 100));
+	fprintf(fileptr, "//-------------------------------------------------------\n\n");
+
+	/** output number of adjacent vertices in graph */
+	for (int i = 0; i < ufl_num; i++)
+	{
+		if (ufl->type == SF1)
+		{
+			fprintf(fileptr, "%30s\tsa1    %3d\n", ufl->name, ufl->n_edge);
+		}
+		else
+		{
+			fprintf(fileptr, "%30s\tsa0    %3d\n", ufl->name, ufl->n_edge);
+		}
+	}
+
+	fclose(fileptr);
+	return;
+}

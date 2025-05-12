@@ -47,7 +47,6 @@
     <ClCompile Include="src\else\Netlist\make_ppo_ppi.c" />
     <ClCompile Include="src\else\Netlist\Netlist.c" />
     <ClCompile Include="src\else\OUTPUT\file_output.c" />
-    <ClCompile Include="src\else\OUTPUT\make_test_set.c" />
     <ClCompile Include="src\else\OUTPUT\pin_make.c" />
     <ClCompile Include="src\else\OUTPUT\standard_output.c" />
     <ClCompile Include="src\else\Que.c" />

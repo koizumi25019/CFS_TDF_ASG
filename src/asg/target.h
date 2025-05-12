@@ -37,7 +37,7 @@
 /* sort structure*/
 typedef struct Sorted {
 	unsigned int num;						/**< number of sort strcuture */
-	struct Edge* sort;					/**< sort list */
+	struct Edge* sort;					    /**< sort list */
 }SORTED;//頂点リストをソートしたもの
 
 /* edge structure*/
@@ -45,7 +45,7 @@ typedef struct Edge {
 	unsigned int id;						/**< id *///頂点に一意に割り当てられるid？？
 	unsigned int n_edge;					/*繋がっている辺の数*/
 	//追加
-	BIT_INT* edge;				    /**< compatible edge */
+	BIT_INT* edge;				            /**< compatible edge */
 }EDGE;//頂点
 //-------------------------------------------------------------------------------------------------------------
 //	global variable
@@ -120,8 +120,8 @@ int CountBits(
 );
 
 /* output graph log file */
-//void OutGraphLogfile(
-//);
+void OutGraphLogfile(
+);
 
 /** reading the graph */
 //bool ReadGraph(

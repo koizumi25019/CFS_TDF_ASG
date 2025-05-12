@@ -29,7 +29,6 @@
 
 /** fault reader -on */
 #define READER_NECESSARY_ON		if (opt.file.input.necessary != FILE_NOSET)
-#define READER_NECESSARY_OFF	if (opt.file.input.necessary == FILE_NOSET)
 
 #define READER_GRAPH_ON			if (opt.file.input.graph != FILE_NOSET)
 #define READER_GRAPH_OFF		if (opt.file.input.graph == FILE_NOSET)

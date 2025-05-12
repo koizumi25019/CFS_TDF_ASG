@@ -42,7 +42,7 @@ bool CLASP(
 		printf("CLASP：シード生成不能故障(UNSAT)です\n");
 	}
 	else if (clasp.status == CLASP_STATUS_UNKNOWN) {
-		printf("CLASPエラー：シード生成不能故障(UNKNOWN)です\n");
+		printf("CLASP：シード生成不能故障(UNKNOWN)です\n");
 	}
 	/** get the CLASP solution */
 	else {

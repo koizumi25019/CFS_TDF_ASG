@@ -120,9 +120,6 @@
     <ClCompile Include="src\else\OUTPUT\file_output.c">
       <Filter>else\output</Filter>
     </ClCompile>
-    <ClCompile Include="src\else\OUTPUT\make_test_set.c">
-      <Filter>else\output</Filter>
-    </ClCompile>
     <ClCompile Include="src\else\OUTPUT\pin_make.c">
       <Filter>else\output</Filter>
     </ClCompile>
