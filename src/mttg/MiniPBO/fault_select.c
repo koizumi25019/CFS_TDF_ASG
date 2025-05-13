@@ -83,9 +83,7 @@ int fault_select(int unsat_flag,SORTED* sorted,int loop) {
         }
     }
      //必須割り当て情報ファイルがないときはランダム選択
-        READER_GRAPH_OFF{
-
-
+    else{
         // 未検出故障を配列に格納
         rand_node = (UNDET_FAULT_LIST**)malloc(sizeof(UNDET_FAULT_LIST*) * ufl_num);
         if (rand_node == NULL) {
@@ -157,7 +155,7 @@ int fault_select(int unsat_flag,SORTED* sorted,int loop) {
         // メモリの解放
         free(rand_node);
 
-     }
+    }
     printf("【INFO】: selected %d faults as target faults.\n", tfl_num);
     return SUCCESS;
 }

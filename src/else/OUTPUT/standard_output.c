@@ -39,10 +39,10 @@ void standard_output(void) {
 	printf("// Rate of Detected Faults     :%.2lf%%\n", (((double)dfl_num) / ((double)all_num)) * 100.0);
 	printf("// Elapsed time                :%.2lfsec\n", (double)clock() / CLOCKS_PER_SEC);
 	printf("// Time to abort solver        :%dsec\n", fi[TIME].value);
-	printf("// Time to graph               :%dsec\n", time_graph);
+	printf("// Time to graph               :%.2lfsec\n", (double)time_graph / CLOCKS_PER_SEC);
 	printf("// Target faults limit         :%d\n", fi[TARGET_LIMIT].value);
 	printf("// Rand Option                 :%s\n", fi[RAND].name);
-	if (fi[PARALLEL].flag == 1) {
+	if (fi[PARALLEL].flag == 0) {
 	printf("// Parallel Mode Option        :OFF\n");
 	}
 	if (fi[PARALLEL].flag == 1) {

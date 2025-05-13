@@ -236,7 +236,27 @@ int mttg_main(void) {
 		}
 		else {
 			//シード生成不能故障を未検出故障リストから削除
-			ufl_free(ufl, NULL, 0);
+			UNDET_FAULT_LIST* unseed_fault;
+			UNDET_FAULT_LIST* pre_node = NULL;
+			unseed_fault = ufl;
+			while (1) {
+				if (tfl->type == unseed_fault->type && strcmp(tfl->name, unseed_fault->name) == 0) {//信号線と故障タイプが一致するか確認
+					bitintSetNbit_Zero(detflag, unseed_fault->node_id);
+					ufl_free(unseed_fault, pre_node, 0);
+					break;
+				}
+				pre_node = unseed_fault;
+				unseed_fault = unseed_fault->next;
+			}
+			//目標故障解放
+			UNDET_FAULT_LIST* node;
+			UNDET_FAULT_LIST* d_head;
+			node = tfl;
+			while (node != NULL) {
+				d_head = node->next;
+				free(node);
+				node = d_head;
+			}
 		}
 	}
 

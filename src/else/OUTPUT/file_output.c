@@ -173,10 +173,10 @@ int file_output(clock_t time,int mode) {
 		fprintf(fout_log, "// Rate of Detected Faults     :%.2lf%%\n", (((double)dfl_num) / ((double)all_num)) * 100.0);
 		fprintf(fout_log, "// Elapsed time                :%.2lfsec\n", (double)clock() / CLOCKS_PER_SEC);
 		fprintf(fout_log, "// Time to abort solver        :%dsec\n", fi[TIME].value);
-		fprintf(fout_log, "// Time to graph               :%dsec\n", time_graph);
+		fprintf(fout_log, "// Time to graph               :%.2lfsec\n", (double)time_graph / CLOCKS_PER_SEC);
 		fprintf(fout_log, "// Target faults limit         :%d\n", fi[TARGET_LIMIT].value);
 		fprintf(fout_log, "// Rand Option                 :%s\n", fi[RAND].name);
-		if (fi[PARALLEL].flag == 1) {
+		if (fi[PARALLEL].flag == 0) {
 		fprintf(fout_log, "// Parallel Mode Option        :OFF\n");
 		}
 		if (fi[PARALLEL].flag == 1) {

@@ -938,14 +938,6 @@ bool CompatibleFaultSet(
 	UNDET_FAULT_LIST* tfl_head = NULL;
 	UNDET_FAULT_LIST* new_node = NULL;
 
-	if (depth <= 1) {
-		// ñ¢åüèoåÃè·Ç™ÇPÇ¬ÇæÇØÇ»ÇÁÅAÇªÇÃÇ‹Ç‹ tfl_head Ç…à¯Ç´ìnÇ∑
-		tfl_head = ufl;
-		ufl->next = NULL;  // îOÇÃÇΩÇﬂ list terminator
-		tfl = tfl_head;
-		return TARGET_OKAY;
-	}
-
 	// tfl_num Ç depth - 1 Ç…ê›íË
 	tfl_num = depth-1;
 	tfl = NULL;
@@ -1021,8 +1013,8 @@ void SortEdgeDescend(
 	SORTED* sorted 			  /**< sorted list */
 )
 {
-	UNDET_FAULT_LIST* current = ufl;
-	sorted->num = ufl_num;
+	UNDET_FAULT_LIST* current = afl;
+	sorted->num = all_num;
 	sorted->sort = (EDGE*)allocMemory(sorted->num, sizeof(EDGE));
 
 
@@ -1032,7 +1024,7 @@ void SortEdgeDescend(
 		sorted->sort[i].n_edge = current->n_edge;//åqÇ™Ç¡ÇƒÇ¢ÇÈï”ÇÃêîÅ@CreateCompatibleEdgeÇ≈ï”Ç™Ç¬Ç»Ç™Ç¡ÇƒÇ¢ÇÈêîÇÉJÉEÉìÉgÇµÇƒÇ¢ÇÈ
 		current = current->next;
 	}
-	qsort(sorted->sort, ufl_num, sizeof(EDGE), FuncSortDescend);
+	qsort(sorted->sort, all_num, sizeof(EDGE), FuncSortDescend);
 
 	for (int i = 0; i < sorted->num; i++)
 	{
