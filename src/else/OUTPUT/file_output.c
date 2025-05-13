@@ -176,7 +176,7 @@ int file_output(clock_t time,int mode) {
 		fprintf(fout_log, "// Time to graph               :%dsec\n", time_graph);
 		fprintf(fout_log, "// Target faults limit         :%d\n", fi[TARGET_LIMIT].value);
 		fprintf(fout_log, "// Rand Option                 :%s\n", fi[RAND].name);
-		if (fi[PARALLEL].flag == 1) {
+		if (fi[PARALLEL].flag == 0) {
 		fprintf(fout_log, "// Parallel Mode Option        :OFF\n");
 		}
 		if (fi[PARALLEL].flag == 1) {

@@ -236,6 +236,7 @@ int mttg_main(void) {
 		}
 		else {
 			//シード生成不能故障を未検出故障リストから削除
+			bitintSetNbit_Zero(detflag, ufl->node_id);
 			ufl_free(ufl, NULL, 0);
 		}
 	}

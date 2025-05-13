@@ -42,7 +42,7 @@ void standard_output(void) {
 	printf("// Time to graph               :%dsec\n", time_graph);
 	printf("// Target faults limit         :%d\n", fi[TARGET_LIMIT].value);
 	printf("// Rand Option                 :%s\n", fi[RAND].name);
-	if (fi[PARALLEL].flag == 1) {
+	if (fi[PARALLEL].flag == 0) {
 	printf("// Parallel Mode Option        :OFF\n");
 	}
 	if (fi[PARALLEL].flag == 1) {
