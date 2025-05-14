@@ -47,7 +47,7 @@ void standard_output(void) {
 	}
 	if (fi[PARALLEL].flag == 1) {
 	printf("// Parallel Mode Option        :ON\n");
-	printf("// CPU Thread                  :%s\n", fi[PARALLEL].name);
+	printf("// CPU Thread                  :%d\n", fi[PARALLEL].value);
 	}
 	if (fi[MODE_1].flag == 1) {
 	printf("// Mode 1 Option               :%s\n", fi[MODE_1].name);
