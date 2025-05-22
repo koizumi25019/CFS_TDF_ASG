@@ -211,7 +211,6 @@ int mttg_main(void) {
 
 			//シード集合へ出力
 			fprintf(fout_seed, "%s\n", clasp.sol[SOL_SEED]);
-			fclose(fout_seed);
 
 			//========================================================================
 			//	故障シミュレーション
@@ -261,6 +260,6 @@ int mttg_main(void) {
 	}
 
 	num_seed = loop;
-
+	fclose(fout_seed);
 	return SUCCESS;
 }
