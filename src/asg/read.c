@@ -500,7 +500,7 @@ bool ReadNecessary(
 			}
 			/** calcurate the hash */
 			//線形リストから探索に改変したのでハッシュ値計算いらない
-			hash = calcHash(string);
+			//hash = calcHash(string);
 
 			/** create Necessary node */
 			//未検出故障リスト(線形)から一致する文字列を探索
