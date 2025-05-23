@@ -227,7 +227,7 @@ void pbo_generate_fdetect_c_mttg(FILE *fp, UNDET_FAULT_LIST* node);
 void pbo_generate_fault_ex(FILE *fp, UNDET_FAULT_LIST* node, int mode);
 void pbo_generate_power_mttg(FILE *fp);
 //specific_fault_range.c
-int specific_fault_range(char* name);
+int specific_fault_range(char* name,int idx);
 //undet_fault_delete.c
 int undet_fault_delete(UNDET_FAULT_LIST* node);
 void ufl_free(UNDET_FAULT_LIST* node, UNDET_FAULT_LIST* pre_node,int mode);
