@@ -190,15 +190,14 @@ void pbo_generate_fault_c(FILE* fp, UNDET_FAULT_LIST* node, int f) {
 					//~ACT(X)
 					sprintf_s(cons_prop, 50000, "%s1 ~x%d",
 						cons_prop,
-						suffix);
+						sort_nl[i]->prop);
 
 					for (int m = 0; m < sort_nl[i]->n_out; m++)
 					{
 						//+ ACT(Y)
 						sprintf_s(cons_prop, 50000, "%s +1 x%d",
 							cons_prop,
-							suffix);
-						suffix++;
+							sort_nl[i]->prop);
 					}
 					sprintf_s(cons_prop, 50000, "%s >=1;\n",
 						cons_prop);
@@ -208,19 +207,18 @@ void pbo_generate_fault_c(FILE* fp, UNDET_FAULT_LIST* node, int f) {
 				//~ACT(X) + X' + X >=1
 				sprintf_s(cons_prop, 50000, "%s1 ~x%d +1 x%d +1 x%d >=1;\n",
 					cons_prop,
-					suffix,
+					sort_nl[i]->prop,
 					sort_nl[i]->suf_2t,
 					sort_nl[i]->suf_fc);
 
 				//~ACT(X) + ~X' + ~X >=1
 				sprintf_s(cons_prop, 50000, "%s1 ~x%d +1 ~x%d +1 ~x%d >=1;\n",
 					cons_prop,
-					suffix,
+					sort_nl[i]->prop,
 					sort_nl[i]->suf_2t,
 					sort_nl[i]->suf_fc);
 
 				//OPBcalcSize(&opb.total, 0, 1, 0, 0);
-				suffix++;
 			}
 		}
 	}

@@ -17,7 +17,7 @@
 //戻り値：int 正常終了:SUCCESS(=0) , 異常終了:ERROR(=-1)
 //引数：故障信号線名
 //===================================================
-int specific_fault_range(char* name) {
+int specific_fault_range(char* name,int idx) {
 	int i;
 	NLIST* nlist;
 
@@ -53,9 +53,14 @@ int specific_fault_range(char* name) {
 	//-----------------------------------------------
 	while (queue_emp() != 0) {
 		nlist = dequeue();		//デキュー
+
 		nlist->fault_pass = YES;//故障到達可能な信号線に設定
 		nlist->suf_fc = suffix;	//故障回路の添え字設定
-		suffix++;				//添え字インクリメント
+		suffix++;           	//添え字インクリメント
+		if (idx == 0) {
+			nlist->prop = suffix;
+			suffix++;
+		}
 		if (nlist->ppo_flag != 1) {//回路の最後の信号線ではないか判断していると思う
 			for (i = 0; i < nlist->n_out; i++) {//複数の出力なら、それぞれエンキュー
 				if (nlist->out[i]->fault_pass == NO) enqueue(nlist->out[i], 0);

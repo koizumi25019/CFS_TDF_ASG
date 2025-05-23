@@ -54,10 +54,10 @@ typedef struct _Netlist_Format_ {
 	unsigned int suf_1t;			//1時刻目のブール変数
 	unsigned int suf_2t;			//2時刻目のブール変数
 	unsigned int suf_fc;			//故障回路のブール変数
-	//変更
+	//追加
 	unsigned int prop;              //故障伝搬変数のブール変数
 
-	//追加(from ASG)
+	//追加
 	unsigned int	varsgc;			    /**< variables for good-circuit  */
 	unsigned int	varsfc;				/**< variables for faulty-circuit  */
 	char* consgc;						/**< constraints for good-circuit  */
