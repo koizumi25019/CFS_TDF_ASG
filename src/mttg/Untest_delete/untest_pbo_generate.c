@@ -123,9 +123,14 @@ void pbo_generate_normal_c(FILE *fp) {
 //  戻り値 : なし
 //  引  数 : ファイルポインタ,対象故障
 //=========================================================================
-void pbo_generate_fault_c(FILE *fp, UNDET_FAULT_LIST* node) {
+void pbo_generate_fault_c(FILE* fp, UNDET_FAULT_LIST* node, int f) {
 
 	int i, j;
+
+	char* cons_prop = NULL;	//故障伝搬変数のブール制約用
+	cons_prop = (char*)allocMemory(50000, sizeof(char));
+	cons_prop = allocMemory(50000, sizeof(char));
+
 
 	//fprintf(fp, "\n");
 	//-----------------------------------------------------------------------------
@@ -178,9 +183,49 @@ void pbo_generate_fault_c(FILE *fp, UNDET_FAULT_LIST* node) {
 				fprintf(fp, "1 ~x%d +1 x%d +1 x%d >=1;\n", sort_nl[i]->in[0]->suf_fc, sort_nl[i]->in[1]->suf_fc, sort_nl[i]->suf_fc);
 				break;
 			}
+			if (f == 0) {//fは何個目の目標故障かを示している　1次故障に対して故障伝搬変数を導入 //CONS_SIZEはとりあえず50000にしてる
+				//故障伝搬変数に関する制約作成
+				if (0 != sort_nl[i]->n_out) {
+
+					//~ACT(X)
+					sprintf_s(cons_prop, 50000, "%s1 ~x%d",
+						cons_prop,
+						suffix);
+
+					for (int m = 0; m < sort_nl[i]->n_out; m++)
+					{
+						//+ ACT(Y)
+						sprintf_s(cons_prop, 50000, "%s +1 x%d",
+							cons_prop,
+							suffix);
+						suffix++;
+					}
+					sprintf_s(cons_prop, 50000, "%s >=1;\n",
+						cons_prop);
+
+					//OPBcalcSize(&opb.total, 0, 1, 0, 0);
+				}
+				//~ACT(X) + X' + X >=1
+				sprintf_s(cons_prop, 50000, "%s1 ~x%d +1 x%d +1 x%d >=1;\n",
+					cons_prop,
+					suffix,
+					sort_nl[i]->suf_2t,
+					sort_nl[i]->suf_fc);
+
+				//~ACT(X) + ~X' + ~X >=1
+				sprintf_s(cons_prop, 50000, "%s1 ~x%d +1 ~x%d +1 ~x%d >=1;\n",
+					cons_prop,
+					suffix,
+					sort_nl[i]->suf_2t,
+					sort_nl[i]->suf_fc);
+
+				//OPBcalcSize(&opb.total, 0, 1, 0, 0);
+				suffix++;
+			}
 		}
 	}
-
+	fprintf(fp, "%s", cons_prop);
+	free(cons_prop);
 }
 
 

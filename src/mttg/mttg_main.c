@@ -109,7 +109,7 @@ int mttg_main(void) {
 			//故障範囲の特定
 			specific_fault_range(head->name);
 			//故障回路の記述
-			pbo_generate_fault_c(fout_mttg_pbo, head);
+			pbo_generate_fault_c(fout_mttg_pbo, head,i);//変更
 			//故障検出回路の記述
 			pbo_generate_fdetect_c_mttg(fout_mttg_pbo, head);
 			//次の故障
