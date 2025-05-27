@@ -171,7 +171,7 @@ int fault_judge(void) {
 		node = d_head;
 	}
 
-	// 故障検出したらテストパターン数をインクリメント
+	// 故障検出したシード数をインクリメント
 	if (det_fault_num_clasp > 0) {
 		seed_num++;
 	}

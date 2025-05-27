@@ -204,6 +204,12 @@
     <ClCompile Include="src\asg\opb\cons_gc.c">
       <Filter>asg\opb</Filter>
     </ClCompile>
+    <ClCompile Include="src\mttg\clasp_mode.c">
+      <Filter>mttg</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mttg\clasp_change_wsath.c">
+      <Filter>mttg</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\asg\opb\clasp\clasp.h">
