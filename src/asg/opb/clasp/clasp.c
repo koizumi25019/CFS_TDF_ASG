@@ -27,29 +27,62 @@ bool CLASP(
 	int resolving_flag = 0;
 	char txt_cmd[200];
 
-	//clasp logファイルオープン
-	sprintf(txt_cmd, "%sclasp_log_mttg.txt", folder_out);
-	if ((fileptr = (fopen(txt_cmd, "r"))) == NULL) {
-		printf("【ERROR】:File open clasp_log_mttg.txt(clasp.c)\n");
-		return ERROR;
+	while (1) {
+		//clasp logファイルオープン
+		sprintf(txt_cmd, "%sclasp_log_mttg.txt", folder_out);
+		if ((fileptr = (fopen(txt_cmd, "r"))) == NULL) {
+			printf("【ERROR】:File open clasp_log_mttg.txt(clasp.c)\n");
+			return ERROR;
+		}
+
+		//claspのstatusを取得
+		CLASPgetObjVal(fileptr);
+
+		if (clasp.status == CLASP_UNSAT)
+		{
+			printf("CLASP：シード生成不能故障(UNSAT)です\n");
+		}
+		else if (clasp.status == CLASP_STATUS_UNKNOWN) {
+			printf("CLASP：シード生成不能故障(UNKNOWN)です\n");
+			fclose(fileptr);
+			if (resolving_flag == 0)
+			{
+				//再シード生成
+				clasp_call(resolving_flag);
+				resolving_flag = 1;
+			}
+			else if (resolving_flag == 1) {
+				//再シード生成
+				clasp_call(resolving_flag);
+				resolving_flag = 2;
+			}
+			else if (resolving_flag == 2) {
+				//再シード生成
+				clasp_call(resolving_flag);
+				resolving_flag = 3;
+			}
+			else if (resolving_flag == 3) {
+				//再シード生成
+				clasp_call(resolving_flag);
+				resolving_flag = 4;
+			}
+			else if (resolving_flag == 4) {
+				//再シード生成
+				clasp_call(resolving_flag);
+				resolving_flag = 5;
+			}
+			else {
+				clasp_call(resolving_flag);
+			}
+		}
+		/** get the CLASP solution */
+		else {
+			CLASPgetSol(fileptr);
+			break;
+		}
 	}
 
-	/** get the objective value */
-	CLASPgetObjVal(fileptr);
-
-	if (clasp.status == CLASP_UNSAT)
-	{
-		printf("CLASP：シード生成不能故障(UNSAT)です\n");
-	}
-	else if (clasp.status == CLASP_STATUS_UNKNOWN) {
-		printf("CLASP：シード生成不能故障(UNKNOWN)です\n");
-	}
-	/** get the CLASP solution */
-	else {
-		CLASPgetSol(fileptr);
-	}
-
-	/** close the "scip log file" in read-mode */
+	/** close the "CLASP log file" in read-mode */
 	fclose(fileptr);
 
 	//assert(remove(CLASP_LOG_FILE) == 0);

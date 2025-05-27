@@ -56,6 +56,8 @@
     <ClCompile Include="src\main\check_open_pass.c" />
     <ClCompile Include="src\main\main.c" />
     <ClCompile Include="src\main\open_stack.c" />
+    <ClCompile Include="src\mttg\clasp_change_wsath.c" />
+    <ClCompile Include="src\mttg\clasp_mode.c" />
     <ClCompile Include="src\mttg\MiniPBO\fault_select.c" />
     <ClCompile Include="src\mttg\MiniPBO\mini_calc_pbo_size.c" />
     <ClCompile Include="src\mttg\MiniPBO\mini_pbo_generate.c" />

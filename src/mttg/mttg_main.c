@@ -30,6 +30,8 @@ int mttg_main(void) {
 	int det_fault_clasp_num;
 	int loop = 0;
 	SORTED sorted;
+	int resolving_count = 0;
+
 	//シードファイルオープン
 	sprintf(txt_cmd, "%sseed.txt", folder_out);
 	if ((fout_seed = (fopen(txt_cmd, "w"))) == NULL) {
@@ -66,7 +68,7 @@ int mttg_main(void) {
 	//標準出力
 	standard_output();
 
-	/** create the constraint for good-circuit */
+	//ASGの正常回路におけるブール変数番号設定
 	AssigneVarsGC();
 
 	//LFSR+PS制約式取得
@@ -95,7 +97,7 @@ int mttg_main(void) {
 
 		mttg_pbo_generate_min(fout_mttg_pbo);
 
-		//PS制約式記述
+		//Phase-Shifter制約式記述
 		makeProbFileConsPS_clasp(fout_mttg_pbo);
 
 		//正常回路の記述
@@ -141,42 +143,9 @@ int mttg_main(void) {
 		//========================================================================
 		//	clasp ⇒ テストベクトル生成
 		//========================================================================
-		if (fi[PARALLEL].flag==ON) {
-			//解が1つ見つかった時点でその解を採用するモード
-			if (fi[MODE_1].flag==ON) {
-				if (fi[TIME].flag==ON) {
-					printf("mode 1(-mode_1)と打ち切り時間指定(-time)を同時に指定しないでください\n");
-					exit(1);
-				}
-				printf("CLASPモード指定：-parallel=ON -mode_1=ON \n");
-				sprintf(cmd, "clasp.exe %smttg_pbo.txt > %sclasp_log_mttg.txt --parallel-mode %d --mode 1", folder_out, folder_out,fi[PARALLEL].value);
-				system(cmd);
-			}
-			//打ち切り時間指定
-			else if (fi[TIME].flag==ON) {
-				printf("CLASPモード指定：-parallel=ON -time %d\n",fi[TIME].value);
-				sprintf(cmd, "clasp.exe %smttg_pbo.txt --time-limit %d --parallel-mode %d > %sclasp_log_mttg.txt", folder_out, fi[TIME].value, fi[PARALLEL].value,folder_out);
-				system(cmd);
-			}
-			//paralellモードのみ指定
-			else {
-				printf("CLASPモード指定：-parallel=ON\n");
-				sprintf(cmd, "clasp.exe %smttg_pbo.txt  --parallel-mode %d > %sclasp_log_mttg.txt", folder_out,fi[PARALLEL].value, folder_out);
-				system(cmd);
-			}
-		}
-		//mode1のみ指定
-		else if (fi[MODE_1].flag == ON) {
-			printf("CLASPモード指定：-mode 1=ON -time %d\n", fi[TIME].value);
-			sprintf(cmd, "clasp.exe %smttg_pbo.txt --time-limit %d --mode 1 > %sclasp_log_mttg.txt", folder_out, fi[TIME].value, folder_out);
-			system(cmd);
-		}
-		//parallelモード指定なし
-		else {
-			printf("claspモード指定なし　打ち切り時間：%d\n", fi[TIME].value);
-			sprintf(cmd, "clasp.exe %smttg_pbo.txt --time-limit %d > %sclasp_log_mttg.txt", folder_out, fi[TIME].value, folder_out);
-			system(cmd);
-		}
+        
+		//claspモード指定
+		clasp_call(resolving_count);
 
 		//clasp情報取得
 		if (CLASP() != CLASP_OKAY) {
@@ -233,7 +202,12 @@ int mttg_main(void) {
 			}
 			else unsat_flag = OFF;
 		}
+		//打ち切り故障と判定
 		else {
+			//アンセーフシード故障分類に対応予定
+			//if (fi[UNSAFE_SEED].flag == 1) {
+			//	clasp_call(6);
+			//}
 			//シード生成不能故障を未検出故障リストから削除
 			UNDET_FAULT_LIST* unseed_fault;
 			UNDET_FAULT_LIST* pre_node = NULL;
