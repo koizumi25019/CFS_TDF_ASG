@@ -27,6 +27,9 @@ bool CLASP(
 	int resolving_flag = 0;
 	char txt_cmd[200];
 
+	clasp_call(resolving_flag);
+
+
 	while (1) {
 		//clasp logファイルオープン
 		sprintf(txt_cmd, "%sclasp_log_mttg.txt", folder_out);
@@ -65,11 +68,6 @@ bool CLASP(
 				//再シード生成
 				clasp_call(resolving_flag);
 				resolving_flag = 4;
-			}
-			else if (resolving_flag == 4) {
-				//再シード生成
-				clasp_call(resolving_flag);
-				resolving_flag = 5;
 			}
 			else {
 				clasp_call(resolving_flag);

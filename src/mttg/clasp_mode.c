@@ -21,32 +21,27 @@ void clasp_call(int resolving_flag) {
 		//打ち切り時間指定
 		else if (fi[TIME].flag == ON) {
 			if (resolving_flag == 0) {
-				printf("CLASPモード指定：-parallel=ON -time %d\n", 10);
+				printf("CLASPモード指定：-parallel=ON -time %d\n", 60);
 				sprintf(cmd, "clasp.exe %smttg_pbo.txt --time-limit %d --parallel-mode %d > %sclasp_log_mttg.txt", folder_out, 10, fi[PARALLEL].value, folder_out);
 				system(cmd);
 			}
 			else if (resolving_flag == 1) {
-				printf("CLASPモード指定：-parallel=ON -time %d\n", 60);
+				printf("CLASPモード指定：-parallel=ON -time %d\n", 1200);
 				sprintf(cmd, "clasp.exe %smttg_pbo.txt --time-limit %d --parallel-mode %d > %sclasp_log_mttg.txt", folder_out, 60, fi[PARALLEL].value, folder_out);
 				system(cmd);
 			}
 			else if (resolving_flag == 2) {
-				printf("CLASPモード指定：-parallel=ON -time %d\n", 120);
+				printf("CLASPモード指定：-parallel=ON -time %d\n", 300);
 				sprintf(cmd, "clasp.exe %smttg_pbo.txt --time-limit %d --parallel-mode %d > %sclasp_log_mttg.txt", folder_out, 120, fi[PARALLEL].value, folder_out);
 				system(cmd);
 			}
 			else if (resolving_flag == 3) {
-				printf("CLASPモード指定：-parallel=ON -time %d\n", 300);
+				printf("CLASPモード指定：-parallel=ON -time %d\n", 600);
 				sprintf(cmd, "clasp.exe %smttg_pbo.txt --time-limit %d --parallel-mode %d > %sclasp_log_mttg.txt", folder_out, 300, fi[PARALLEL].value, folder_out);
 				system(cmd);
 			}
-			else if (resolving_flag == 4) {
-				printf("CLASPモード指定：-parallel=ON -time %d\n", 600);
-				sprintf(cmd, "clasp.exe %smttg_pbo.txt --time-limit %d --parallel-mode %d > %sclasp_log_mttg.txt", folder_out, 600, fi[PARALLEL].value, folder_out);
-				system(cmd);
-			}
 			//打ち切り故障判定時間
-			else if (resolving_flag == 5) {
+			else if (resolving_flag == 4) {
 				printf("CLASPモード指定：-parallel=ON -time %d\n", fi[TIME].value);
 				sprintf(cmd, "clasp.exe %smttg_pbo.txt --time-limit %d --parallel-mode %d > %sclasp_log_mttg.txt", folder_out, fi[TIME].value, fi[PARALLEL].value, folder_out);
 				system(cmd);

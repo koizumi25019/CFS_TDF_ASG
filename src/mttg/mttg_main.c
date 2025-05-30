@@ -141,13 +141,8 @@ int mttg_main(void) {
 		fclose(fout_mttg_pbo);
 
 		//========================================================================
-		//	clasp ⇒ テストベクトル生成
+		//	clasp 　 シード生成
 		//========================================================================
-        
-		//claspモード指定
-		clasp_call(resolving_count);
-
-		//clasp情報取得
 		if (CLASP() != CLASP_OKAY) {
 			printf("\n	SYSTEM ERROR: solver error. ");
 			return ERROR;
@@ -204,10 +199,6 @@ int mttg_main(void) {
 		}
 		//打ち切り故障と判定
 		else {
-			//アンセーフシード故障分類に対応予定
-			//if (fi[UNSAFE_SEED].flag == 1) {
-			//	clasp_call(6);
-			//}
 			//シード生成不能故障を未検出故障リストから削除
 			UNDET_FAULT_LIST* unseed_fault;
 			UNDET_FAULT_LIST* pre_node = NULL;
