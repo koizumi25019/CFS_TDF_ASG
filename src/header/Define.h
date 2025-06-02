@@ -225,7 +225,7 @@ int mttg_main(void);
 void mttg_pbo_generate_min(FILE* fp);
 void pbo_generate_fdetect_c_mttg(FILE *fp, UNDET_FAULT_LIST* node);
 void pbo_generate_fault_ex(FILE *fp, UNDET_FAULT_LIST* node, int mode);
-void pbo_generate_power_mttg(FILE *fp);
+void pbo_generate_power_mttg(int change_wasth_flag,FILE *fp);
 //specific_fault_range.c
 int specific_fault_range(char* name,int idx);
 //undet_fault_delete.c

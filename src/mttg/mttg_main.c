@@ -25,12 +25,13 @@ int mttg_main(void) {
 	int i = 0;
 	char txt_cmd[200];
 	char cmd[500];
-	int unsat_flag = OFF;
 	UNDET_FAULT_LIST* head/*, * next*/;
 	int det_fault_clasp_num;
 	int loop = 0;
 	SORTED sorted;
 	int resolving_count = 0;
+	int change_wsath_flag = OFF;
+	int sttg_flag = OFF;
 
 	//シードファイルオープン
 	sprintf(txt_cmd, "%sseed.txt", folder_out);
@@ -87,17 +88,18 @@ int mttg_main(void) {
 		}
 
 		//目標故障選択
-		if (fault_select(unsat_flag,&sorted,loop++) != SUCCESS) {
+		if (fault_select(sttg_flag,&sorted,loop++) != SUCCESS) {
 			printf("【ERROR】:Fault Select(mttg_main.c)\n");
 			return ERROR;
 		}
+
 		file_output(0, 3);
 
 		//PBOサイズ記述
 
 		mttg_pbo_generate_min(fout_mttg_pbo);
 
-		//Phase-Shifter制約式記述
+		//フェーズシフタ制約式記述
 		makeProbFileConsPS_clasp(fout_mttg_pbo);
 
 		//正常回路の記述
@@ -135,7 +137,7 @@ int mttg_main(void) {
 
 		//低消費電力制約
 		if (strcmp(fi[LOW_POWER].name, "ON") == 0) {
-			pbo_generate_power_mttg(fout_mttg_pbo);
+			pbo_generate_power_mttg(change_wsath_flag,fout_mttg_pbo);
 		}
 
 		fclose(fout_mttg_pbo);
@@ -190,36 +192,45 @@ int mttg_main(void) {
 				printf("【ERROR】:Fault Judge(mttg_main.c)\n");
 				return ERROR;
 			}
-
-			//例外終了条件
-			if (det_fault_clasp_num == 0) {
-				unsat_flag = ON;
-			}
-			else unsat_flag = OFF;
 		}
 		//打ち切り故障と判定
 		else {
-			//シード生成不能故障を未検出故障リストから削除
-			UNDET_FAULT_LIST* unseed_fault;
-			UNDET_FAULT_LIST* pre_node = NULL;
-			unseed_fault = ufl;
-			while (1) {
-				if (tfl->type == unseed_fault->type && strcmp(tfl->name, unseed_fault->name) == 0) {//信号線と故障タイプが一致するか確認
-					bitintSetNbit_Zero(detflag, unseed_fault->node_id);
-					ufl_free(unseed_fault, pre_node, 0);
-					break;
+			if (clasp.status == CLASP_UNSAT) {//まだunknown->打ち切り故障の可能性があるので，STTGに切り替えるためにまだ未検出故障から削除しない
+				//シード生成不能故障を未検出故障リストから削除
+				UNDET_FAULT_LIST* unseed_fault;
+				UNDET_FAULT_LIST* pre_node = NULL;
+				unseed_fault = ufl;
+				while (1) {
+					if (tfl->type == unseed_fault->type && strcmp(tfl->name, unseed_fault->name) == 0) {//信号線と故障タイプが一致するか確認
+						bitintSetNbit_Zero(detflag, unseed_fault->node_id);
+						ufl_free(unseed_fault, pre_node, 0);
+						break;
+					}
+					pre_node = unseed_fault;
+					unseed_fault = unseed_fault->next;
 				}
-				pre_node = unseed_fault;
-				unseed_fault = unseed_fault->next;
+				//目標故障解放
+				UNDET_FAULT_LIST* node;
+				UNDET_FAULT_LIST* d_head;
+				node = tfl;
+				while (node != NULL) {
+					d_head = node->next;
+					free(node);
+					node = d_head;
+				}
 			}
-			//目標故障解放
-			UNDET_FAULT_LIST* node;
-			UNDET_FAULT_LIST* d_head;
-			node = tfl;
-			while (node != NULL) {
-				d_head = node->next;
-				free(node);
-				node = d_head;
+			//WSA閾値を変更したSTTGでもシードが求まらない場合は異常終了
+			else if (sttg_flag == ON && change_wsath_flag == ON) {
+				printf("WSAを変更したSTTGでもシードが求まりませんでした。異常終了します。\n");
+				exit(1);
+			}
+			//STTGを行ったにもかかわらずシードが求まらない場合，WSA閾値を変更して再シード生成
+			else if(sttg_flag==ON){
+				change_wsath_flag == ON;
+			}
+			//CLASP UNKNOWN STTGに切り替えて再シード生成
+			else{
+            sttg_flag = ON;
 			}
 		}
 	}

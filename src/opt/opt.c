@@ -135,6 +135,11 @@ bool OPTset(
 		// “ü—Íƒtƒ@ƒCƒ‹
 		//------------------------------------------------------------------------
 
+		/** read the option */
+		else if (strcmp(argv[i], "-set") == 0)
+			return OPTread(argv[++i]);
+
+
 		/* ‰ñ˜Hƒtƒ@ƒCƒ‹–¼‚Ì“o˜^ */
 		else if (!strcmp(argv[i], "-net")) {
 			i++;
@@ -244,10 +249,6 @@ bool OPTset(
 		/** untestable fault */
 		else if (strcmp(argv[i], "-u") == 0)
 			opt.file.output.untestable = _strdup(argv[++i]);
-
-		/** read the option */
-		else if (strcmp(argv[i], "-set") == 0)
-			return OPTread(argv[++i]);
 
 		/** fault drop */
 		else if (strcmp(argv[i], "-d") == 0)

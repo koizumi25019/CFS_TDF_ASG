@@ -6,6 +6,9 @@
 # set fault list(.txt)
 -fault ./input/rprf/s5378_rpr_1.txt
 
+# set seed set(.txt)
+-seed s5378_seed.txt
+
 # set xor-tap list(.txt)
 -xor_tap ./input/xor_tap/tap_32.txt
 
@@ -15,11 +18,8 @@
 # set necessary(.txt)
 -nece ./input/necessary/s5378_nece.txt
 
-# set folder out(.txt)
--folder ./s5378_output/
-
-# set seed set(.txt)
--seed s5378_seed.txt
+# set power mode (ON，OFF)
+-power ON
 
 # set target limit (value)
 -target_limit 300
@@ -27,10 +27,10 @@
 # set abort time (value)
 -time 60
 
-# set power mode (ON，OFF)
--power ON
+# set folder out(.txt)
+-folder ./s5378_output/
 
 # set parallel mode (value)
--parallel 6
+-parallel 24
 
 

@@ -27,6 +27,8 @@ bool CLASP(
 	int resolving_flag = 0;
 	char txt_cmd[200];
 
+	//clasp呼び出し 打ち切り時間10秒
+	printf("clasp call 1回目\n");
 	clasp_call(resolving_flag);
 
 
@@ -48,28 +50,22 @@ bool CLASP(
 		else if (clasp.status == CLASP_STATUS_UNKNOWN) {
 			printf("CLASP：シード生成不能故障(UNKNOWN)です\n");
 			fclose(fileptr);
-			if (resolving_flag == 0)
-			{
-				//再シード生成
-				clasp_call(resolving_flag);
+			if (resolving_flag == 0){
+				//clasp呼び出し 打ち切り時間60秒
+				printf("clasp call 2回目\n");
 				resolving_flag = 1;
+				clasp_call(resolving_flag);
 			}
 			else if (resolving_flag == 1) {
-				//再シード生成
-				clasp_call(resolving_flag);
+				//clasp呼び出し 打ち切り時間300秒
+				printf("clasp call 3回目\n");
 				resolving_flag = 2;
-			}
-			else if (resolving_flag == 2) {
-				//再シード生成
 				clasp_call(resolving_flag);
+			}
+			else{
+				//clasp呼び出し 打ち切り時間600秒
+				printf("clasp call 4回目\n");
 				resolving_flag = 3;
-			}
-			else if (resolving_flag == 3) {
-				//再シード生成
-				clasp_call(resolving_flag);
-				resolving_flag = 4;
-			}
-			else {
 				clasp_call(resolving_flag);
 			}
 		}

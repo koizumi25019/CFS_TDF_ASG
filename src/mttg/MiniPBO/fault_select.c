@@ -19,7 +19,7 @@
 // 引数：int unsat_flag - UNSATフラグ (ON または OFF)
 //===========================================================================================================
 
-int fault_select(int unsat_flag,SORTED* sorted,int loop) {
+int fault_select(int sttg_flag,SORTED* sorted,int loop) {
     int i, j;
     int index = 0;
     int select_faults_num;                    //実際に選択する故障の上限数/
@@ -30,30 +30,19 @@ int fault_select(int unsat_flag,SORTED* sorted,int loop) {
     UNDET_FAULT_LIST** rand_node;
 
     // 単一に切り替えてテスト生成
-    if (unsat_flag == ON) {
+    if (sttg_flag == ON) {
         // 未検出故障リストの先頭の故障を目標故障として設定
         if (ufl == NULL) {
             printf("【WARNING】: No undetected faults available.\n");
             return ERROR;
         }
 
-        // ノードをコピーして tfl リストに追加
-        tfl_node = (UNDET_FAULT_LIST*)malloc(sizeof(UNDET_FAULT_LIST));
-        if (tfl_node == NULL) {
-            printf("【ERROR】: Memory allocation failed.\n");
-            return ERROR;
-        }
+        tfl->netlist->tf_flag = FLAG_UP;//目標故障選択フラグ
+        tfl->next = NULL;
 
-        // 情報のコピー
-        tfl_node->type = ufl->type;
-        strcpy(tfl_node->name, ufl->name);
-        tfl_node->netlist = ufl->netlist;
-        tfl_node->node_id = ufl->node_id;
-        tfl_node->netlist->tf_flag = FLAG_UP;//目標故障選択フラグ
-        tfl_node->next = NULL;
-
-        tfl = tfl_node;
         tfl_num = 1;
+
+        printf("STTGの1次故障名：%s\n", tfl->name);
 
         printf("【INFO】: single fault test generation.\n");
         return SUCCESS;

@@ -166,7 +166,7 @@ void pbo_generate_fault_ex(FILE *fp, UNDET_FAULT_LIST* node,int mode) {
 //  戻り値 : なし
 //  引  数 : ファイルポインタ
 //=========================================================================
-void pbo_generate_power_mttg(FILE *fp) {
+void pbo_generate_power_mttg(int change_wsath_flag,FILE* fp) {
 	int i;
 	char* cons1 = (char*)NULL;
 
@@ -180,17 +180,22 @@ void pbo_generate_power_mttg(FILE *fp) {
 		if (nl[i].open_pass == NO) {
 
 			fprintf(fp, "1 x%d +1 x%d x%d +1 ~x%d ~x%d >=1;\n", suffix, nl[i].suf_1t, nl[i].suf_2t, nl[i].suf_1t, nl[i].suf_2t);
-			
+
 			//WSA制約
-			sprintf(cons1,"%s-1 x%d ", cons1, suffix);
+			sprintf(cons1, "%s-1 x%d ", cons1, suffix);
 			suffix++;
 		}
 	}
 
 	//WSA制約(WSA閾値)
-	sprintf(cons1,  "%s>=-%d;\n",cons1,n_net *  fi[WSATH].value / 100);
-	suffix++;
-
+	if (change_wsath_flag == ON) {
+		sprintf(cons1, "%s>=-%d;\n", cons1, n_net * 30 / 100);
+		suffix++;
+	}
+	else{
+		sprintf(cons1, "%s>=-%d;\n", cons1, n_net * fi[WSATH].value / 100);
+	    suffix++;
+    }
 	fprintf(fp, "%s", cons1);
 
 }
