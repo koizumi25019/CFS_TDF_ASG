@@ -1,4 +1,4 @@
-//-------------------------------------------------------------------------------------------------------------
+Ôªø//-------------------------------------------------------------------------------------------------------------
 //	include
 //-------------------------------------------------------------------------------------------------------------
 #include <math.h>
@@ -15,9 +15,9 @@
 
 
 //*************************************************************************************************************
-//	@name		ÅFÅ@CreateLFSRmodel
-//	@function	ÅF	create the lfsr model
-//	@return		ÅF	(bool) okay, error 
+//	@name		Ôºö„ÄÄCreateLFSRmodel
+//	@function	Ôºö	create the lfsr model
+//	@return		Ôºö	(bool) okay, error 
 //*************************************************************************************************************
 bool CreateLFSRmodel(
 	void
@@ -35,19 +35,19 @@ bool CreateLFSRmodel(
 
 	/** alloc the memory for phase-shifter constraint */
 	for (int i = 0; i < readdata.psnet.num; i++)
-		//readdata.psnet.nlist[i].cons:iî‘ñ⁄ÇÃÉtÉFÅ[ÉYÉVÉtÉ^ÇÃêßñÒéÆÇï∂éöóÒÇ∆ÇµÇƒäiî[Ç∑ÇÈÉ|ÉCÉìÉ^
+		//readdata.psnet.nlist[i].cons:iÁï™ÁõÆ„ÅÆ„Éï„Çß„Éº„Ç∫„Ç∑„Éï„Çø„ÅÆÂà∂Á¥ÑÂºè„ÇíÊñáÂ≠óÂàó„Å®„Åó„Å¶Ê†ºÁ¥ç„Åô„Çã„Éù„Ç§„É≥„Çø
 		readdata.psnet.nlist[i].cons = (char*)allocMemory(MAXSIZE_BUFFER, sizeof(char));
 
 	for (int i = 0; i < readdata.psnet.maxslength; i++)
-		//readdata.psnet.maxslength:ÉtÉFÅ[ÉYÉVÉtÉ^ÇÃç≈ëÂÉXÉLÉÉÉìí∑(ç≈ëÂÇÃÉVÉtÉgâÒêî
+		//readdata.psnet.maxslength:„Éï„Çß„Éº„Ç∫„Ç∑„Éï„Çø„ÅÆÊúÄÂ§ß„Çπ„Ç≠„É£„É≥Èï∑(ÊúÄÂ§ß„ÅÆ„Ç∑„Éï„ÉàÂõûÊï∞
 	{
 		/** simulate the LFSR */
-		//iÇÃêîÇ™Ç¬Ç‹ÇËLFSRÇâÒÇ∑âÒêîÇ∆Ç»ÇÈ
+		//i„ÅÆÊï∞„Åå„Å§„Åæ„ÇäLFSR„ÇíÂõû„ÅôÂõûÊï∞„Å®„Å™„Çã
 		if (i != 0)
 			SimulateLFSR(lfsr, poly, 1);
 
 		/** create the pahase-shifer constraint */
-		//Ç±Ç±ÇÃiÇÃêîÇ™mcycleÇ∆Ç»ÇÈÇ¬Ç‹ÇËåªç›ÇÃLFSRÇâÒÇµÇΩâÒêî
+		//„Åì„Åì„ÅÆi„ÅÆÊï∞„Ååmcycle„Å®„Å™„Çã„Å§„Åæ„ÇäÁèæÂú®„ÅÆLFSR„ÇíÂõû„Åó„ÅüÂõûÊï∞
 		if (CreateConsPhaseShifter(lfsr, i) != LFSR_MODEL_OKAY) return LFSR_MODEL_ERROR;
 	}
 
@@ -64,9 +64,9 @@ bool CreateLFSRmodel(
 #endif
 
 	/** alloc the memory for solution for seed */
-	//readdata.lfsrnet.num + 1:ÉVÅ[ÉhÇÃÉrÉbÉgêîÇ…â¡Ç¶ÇƒÅAï∂éöóÒÇÃèIí[Çï\Ç∑\0Çäiî[Ç∑ÇÈÇΩÇﬂÇÃó]ï™Ç»1ÉoÉCÉgÇÃÇΩÇﬂ+1
-	//2éüå≥îzóÒÇ…Ç∑ÇÈÇ±Ç∆Ç≈àŸÇ»ÇÈéÌóﬁÇÃclaspÇÃâûìöÇä«óù
-	//clasp.sol[0]Ç…ÇÕÉVÅ[ÉhÇ…ä÷Ç∑ÇÈclaspâûìöÇÅAclasp.sol[1]Ç…ÇÕÉeÉXÉgÉpÉ^Å[ÉìÇ…ëŒÇ∑ÇÈclaspâûìöÇäiî[Ç∑ÇÈÇÊÇ§Ç»ä¥Ç∂
+	//readdata.lfsrnet.num + 1:„Ç∑„Éº„Éâ„ÅÆ„Éì„ÉÉ„ÉàÊï∞„Å´Âä†„Åà„Å¶„ÄÅÊñáÂ≠óÂàó„ÅÆÁµÇÁ´Ø„ÇíË°®„Åô\0„ÇíÊ†ºÁ¥ç„Åô„Çã„Åü„ÇÅ„ÅÆ‰ΩôÂàÜ„Å™1„Éê„Ç§„Éà„ÅÆ„Åü„ÇÅ+1
+	//2Ê¨°ÂÖÉÈÖçÂàó„Å´„Åô„Çã„Åì„Å®„ÅßÁï∞„Å™„ÇãÁ®ÆÈ°û„ÅÆclasp„ÅÆÂøúÁ≠î„ÇíÁÆ°ÁêÜ
+	//clasp.sol[0]„Å´„ÅØ„Ç∑„Éº„Éâ„Å´Èñ¢„Åô„ÇãclaspÂøúÁ≠î„Çí„ÄÅclasp.sol[1]„Å´„ÅØ„ÉÜ„Çπ„Éà„Éë„Çø„Éº„É≥„Å´ÂØæ„Åô„ÇãclaspÂøúÁ≠î„ÇíÊ†ºÁ¥ç„Åô„Çã„Çà„ÅÜ„Å™ÊÑü„Åò
 	clasp.sol[SOL_SEED] = (char*)allocMemory(readdata.lfsrnet.num + 1, sizeof(char));
 	clasp.sol[SOL_SEED][readdata.lfsrnet.num] = '\0';
 
@@ -81,9 +81,9 @@ bool CreateLFSRmodel(
 }
 
 //*************************************************************************************************************
-//	@name		ÅFÅ@LFSRsetPolynomial
-//	@function	ÅF	set the polynomial
-//	@return		ÅF	(void)
+//	@name		Ôºö„ÄÄLFSRsetPolynomial
+//	@function	Ôºö	set the polynomial
+//	@return		Ôºö	(void)
 //*************************************************************************************************************
 void LFSRsetPolynomial(
 	BIT_INT** poly				  /**< polynomial */
@@ -101,9 +101,9 @@ void LFSRsetPolynomial(
 }
 
 //*************************************************************************************************************
-//	@name		ÅFÅ@LFSRinit
-//	@function	ÅF	initial the LFSR
-//	@return		ÅF	(void)
+//	@name		Ôºö„ÄÄLFSRinit
+//	@function	Ôºö	initial the LFSR
+//	@return		Ôºö	(void)
 //*************************************************************************************************************
 void LFSRinti(
 	BIT_INT** lfsr				  /**< lfsr */
@@ -128,9 +128,9 @@ void LFSRinti(
 }
 
 //*************************************************************************************************************
-//	@name		ÅFÅ@LFSRsimulate
-//	@function	ÅF	simulate the LFSR
-//	@return		ÅF	(void) 
+//	@name		Ôºö„ÄÄLFSRsimulate
+//	@function	Ôºö	simulate the LFSR
+//	@return		Ôºö	(void) 
 //*************************************************************************************************************
 void SimulateLFSR(
 	BIT_INT* lfsr,				  /**< lfsr */
@@ -179,158 +179,74 @@ void SimulateLFSR(
 }
 
 //*************************************************************************************************************
-//	@name		ÅFÅ@CreateConsLFSR_XOR
-//	@function	ÅF	create the lfsr constraint for xor
-//	@return		ÅF	(bool) okay, error 
+//	@name		Ôºö„ÄÄCreateConsLFSR_XOR
+//	@function	Ôºö	create the lfsr constraint for xor
+//	@return		Ôºö	(bool) okay, error 
 //*************************************************************************************************************
-bool CreateConsPhaseShifter(
-	BIT_INT* lfsr,				  /**< lfsr */
-	int      		      mcycle			  /**< lfsr */
-)
+static bool append_phase_literal(char* text, size_t* length, const char* format, int variable_id)
 {
-	int			nin = 0;
-	int* in = (int*)NULL;
-	int			one_flag = 0;
+    int written = _snprintf_s(text + *length, MAXSIZE_CONS - *length,
+        _TRUNCATE, format, variable_id);
+    if (written < 0) {
+        printf("[ERROR] Phase-shifter constraints exceed the text buffer.\n");
+        return false;
+    }
+    *length += (size_t)written;
+    return true;
+}
 
-	/**  */
-	for (int i = 0; i < readdata.psnet.num; i++)
-	{
-		if (readdata.psnet.nlist[i].out_schain[mcycle]->n_out != 0)
-		{
-
-			nin = PSgetInputBit(&readdata.psnet.nlist[i], lfsr, &in);
-
-#ifdef NDEBUG
-			assert(nin < 15);
-#endif
-			/** create the constraint */
-			//one_flag = 0;
-
-			/** number of inputs >=1   */
-			if (nin != 1)
-			{
-				/**********************************************************************
-				/**		  Å@   ÅQÅQ					*
-				/**	 x1	Å°---Å_Å_   Å_				*
-				/**	     :     ) )XOR )---Å° z		*
-				/**	 xN	Å°---Å^Å^	Å^				*
-				/**	        Å@ ÅPÅP  Å@Å@Å@Å@		*
-				/*********************************************************************/					
-				for (int j = 0; j < (int)pow(2, nin); j++)//2ÇÃphase-shifterÇÃì¸óÕêîèÊ												
-				{
-					one_flag = 0;//ì¸óÕÇ™0ÇÃÇ∆Ç´ÉJÉEÉìÉgÇ≥ÇÍÅAç≈èIìIÇ…one_flagÇ≈ì¸óÕÇÃ0ÇÃêîÇêîÇ¶ÇƒÇ¢ÇÈ
-					//one_flagÇÕXORÇÃèoóÕÇ™0Ç©1Ç©ÇÃîªíËÇ…égópÇ∑ÇÈ
-
-					/** input +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+- */
-					for (int k = 0; k < nin; k++)														
-					{
-
-						/** n-bit =1  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+ */						
-						if ((j & (int)pow(2, k)) != false)
-						{
-							/**          x                                           */
-							if (k == 0)
-							{
-								sprintf_s(readdata.psnet.nlist[i].cons, MAXSIZE_CONS,
-									"%s1 x%d ", readdata.psnet.nlist[i].cons, in[k]);//in[k]:Phase-ShifterÇÃì¸óÕÇ™LFSRÇÃÇ«ÇÃà íuÇ…Ç»Ç¡ÇƒÇ¢ÇÈÇ©Çäiî[
-							}
-							else
-							{
-								sprintf_s(readdata.psnet.nlist[i].cons, MAXSIZE_CONS,
-									"%s+1 x%d ", readdata.psnet.nlist[i].cons, in[k]);
-							}
-						}
-						/** n-bit =0  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+ */						
-						else//ì¸óÕÇ™0ÇÃèÍçáÇÕî€íË~Ç™Ç¬Ç≠
-						{
-							/**          ~x                                          */
-							if (k == 0)
-							{
-								sprintf_s(readdata.psnet.nlist[i].cons, MAXSIZE_CONS,
-									"%s1 ~x%d ", readdata.psnet.nlist[i].cons, in[k]);
-							}
-							else
-							{
-								sprintf_s(readdata.psnet.nlist[i].cons, MAXSIZE_CONS,
-									"%s+1 ~x%d ", readdata.psnet.nlist[i].cons, in[k]);
-							}
-							one_flag++;
-						}
-					}
-					/** +-+-+-++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ */
-
-					/** output +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ */
-					/**     n-bit =1  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+ */
-					if (one_flag % 2 == 1)//XORÇÃèoóÕÇ™ÇPÇ…Ç»ÇÈèÍçá
-					{
-						sprintf_s(readdata.psnet.nlist[i].cons, MAXSIZE_CONS,
-							/**   z   >=1									         */
-							"%s+1 x%d >=1; \n",
-							readdata.psnet.nlist[i].cons,
-							readdata.psnet.nlist[i].out_schain[mcycle]->varsgc//Phase - ShifterÇÃXORÇÃèoóÕÇÉXÉLÉÉÉìÉ`ÉFÅ[ÉìÇÃïœêîî‘çÜ
-						);
-					}
-					/**     n-bit =0  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+ */
-					else /** if (flag_one % 2 == 0) */
-					{
-						sprintf_s(readdata.psnet.nlist[i].cons, MAXSIZE_CONS,
-							/**   ~z   >=1									         */
-							"%s+1 ~x%d >=1; \n",
-							readdata.psnet.nlist[i].cons,
-							readdata.psnet.nlist[i].out_schain[mcycle]->varsgc
-						);
-					}
-					/** +-+-+-++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ */
-				}
-				OPBcalcSize(&opb.total, 0, pow(2,nin), 0, 0);
-			}
-
-			/** number of inputs =1   */
-			else
-			{
-				/**********************************************************************
-				/**		  Å@   ÅQÅQ					*
-				/**	 	     Å_Å_   Å_				*
-				/**	 x	Å°-----) )XOR )---Å° y		*		(x + ~y) (~x + y)
-				/**	         Å^Å^	Å^				*
-				/**	        Å@ ÅPÅP  Å@Å@Å@Å@		*
-				/*********************************************************************/
-				sprintf_s(readdata.psnet.nlist[i].cons, MAXSIZE_CONS,
-					/**  x   +  ~y   >=1										 */
-					"%s1 x%d +1 ~x%d >=1;\n",
-					readdata.psnet.nlist[i].cons,
-					in[0],
-					readdata.psnet.nlist[i].out_schain[mcycle]->varsgc
-				);
-				sprintf_s(readdata.psnet.nlist[i].cons, MAXSIZE_CONS,
-					/**  x   +  ~y   >=1										 */
-					"%s1 ~x%d +1 x%d >=1;\n",										//Ç»ÇÒÇ©à·Ç§
-					readdata.psnet.nlist[i].cons,
-					in[0],
-					readdata.psnet.nlist[i].out_schain[mcycle]->varsgc
-				);
-			}
-			//printf("readdata.psnet.nlist[%d].cons:\n%s\n", i, readdata.psnet.nlist[i].cons);
-			free(in);
-		}
-	}
-
-	//ps debug
-	//for (int i = 0; i < readdata.psnet.num; i++) {
-	//	printf("readdata.psnet.nlist[%d].cons:\n%s\n", i, readdata.psnet.nlist[i].cons);
-	//}
-
-
-
-
-
-	return LFSR_MODEL_OKAY;
+bool CreateConsPhaseShifter(BIT_INT* lfsr, int cycle)
+{
+    for (int channel_index = 0; channel_index < readdata.psnet.num; channel_index++) {
+        PS_NLIST* channel = &readdata.psnet.nlist[channel_index];
+        NLIST* destination;
+        int* inputs = NULL;
+        int input_count;
+        unsigned int assignment_count;
+        size_t length;
+        if (cycle >= channel->nout_slength || channel->out_schain[cycle] == NULL) {
+            continue;
+        }
+        destination = channel->out_schain[cycle];
+        if (destination->type != IN && destination->type != DFF) {
+            continue; /* Terminal-output padding is not a scan input. */
+        }
+        input_count = PSgetInputBit(channel, lfsr, &inputs);
+        if (input_count < 0 || input_count >= 15 || destination->varsgc == 0) {
+            free(inputs);
+            printf("[ERROR] Unsupported phase-shifter parity width or unassigned scan input.\n");
+            return LFSR_MODEL_ERROR;
+        }
+        assignment_count = 1u << input_count;
+        length = strlen(channel->cons);
+        /* Each clause excludes an input assignment with the wrong parity output. */
+        for (unsigned int assignment = 0; assignment < assignment_count; assignment++) {
+            int parity = 0;
+            for (int input = 0; input < input_count; input++) {
+                int bit = (assignment >> input) & 1u;
+                parity ^= bit;
+                if (!append_phase_literal(channel->cons, &length,
+                    bit ? "+1 ~x%d " : "+1 x%d ", inputs[input])) {
+                    free(inputs);
+                    return LFSR_MODEL_ERROR;
+                }
+            }
+            if (!append_phase_literal(channel->cons, &length,
+                parity ? "+1 x%d >=1;\n" : "+1 ~x%d >=1;\n", destination->varsgc)) {
+                free(inputs);
+                return LFSR_MODEL_ERROR;
+            }
+        }
+        OPBcalcSize(&opb.total, 0, (int)assignment_count, 0, 0);
+        free(inputs);
+    }
+    return LFSR_MODEL_OKAY;
 }
 
 //*************************************************************************************************************
-//	@name		ÅFÅ@PSgetInputBitint
-//	@function	ÅF	get the phase-shifter input-bitint
-//	@return		ÅF	(int) number of phase-phase-shifter input-bitint
+//	@name		Ôºö„ÄÄPSgetInputBitint
+//	@function	Ôºö	get the phase-shifter input-bitint
+//	@return		Ôºö	(int) number of phase-phase-shifter input-bitint
 //*************************************************************************************************************
 int PSgetInputBit(
 	PS_NLIST* psnet,			  /**< phase-shifter net */

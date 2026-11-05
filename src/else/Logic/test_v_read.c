@@ -22,20 +22,43 @@ int test_v_read(void) {
 	FILE *fp;
 	char *str;
 	char *p_str;
-	char txt_cmd[50];
+	char txt_cmd[200];
 
 	//fopen
-	sprintf(txt_cmd, "% stp.txt", folder_out);
+	if (sprintf_s(txt_cmd, sizeof(txt_cmd), "%stp.txt", folder_out) < 0) {
+		printf("[ERROR] Test-pattern path is too long.\n");
+		return ERROR;
+	}
 	fp = fopen(txt_cmd, "r");
+	if (fp == NULL) {
+		printf("[ERROR] Cannot open test-pattern file: %s\n", txt_cmd);
+		return ERROR;
+	}
 
 	//テストパターン領域確保
 	str = (char*)malloc(sizeof(char)*((n_pi + n_ppi) + 1));
+	if (str == NULL) {
+		fclose(fp);
+		printf("[ERROR] Cannot allocate test-pattern buffer.\n");
+		return ERROR;
+	}
 
 	//テストパターン読込
-	fgets(str, (n_pi + n_ppi + 1), fp);
+	if (fgets(str, (n_pi + n_ppi + 1), fp) == NULL) {
+		fclose(fp);
+		free(str);
+		printf("[ERROR] Cannot read test-pattern file: %s\n", txt_cmd);
+		return ERROR;
+	}
 
 	//改行コード切り出し
 	p_str = strtok(str, "\n");
+	if (p_str == NULL || strlen(p_str) < (size_t)(n_pi + n_ppi)) {
+		fclose(fp);
+		free(str);
+		printf("[ERROR] Test pattern is shorter than expected.\n");
+		return ERROR;
+	}
 
 	//格納
 	for (i = 0; i < n_pi ; i++) {

@@ -1,0 +1,126 @@
+﻿Completion of Read_Netlist
+System.Management.Automation.RemoteException
+ LSIM_2v_sequential
+|----+----|----+----|----+----|----+----|----+----|
+******************
+ FSIM_2v_sequential(PPSFP_MAXdrop)
+|----+----|----+----|----+----|----+----|----+----|
+*******
+System.Management.Automation.RemoteException
+ File_Output_FaultDictionary
+|----+----|----+----|----+----|----+----|----+----|
+//===============================================
+// XID : DEBUG-mode
+//===============================================
+START CPU-Time
+Completion of Option_Setting
+Completion of File_Open
+Completion of Initialize
+Completion of testable transition fault
+Completion of Read_Test_Pattern_File
+Completion of Faults_Set
+Completion of Levelize
+Completion of Search_Fout_Stem
+Completion of Search_FFR
+Completion of Rconvergence_Block
+
+
+END CPU-Time
+
+
+//-------------------------------------------------------
+// Report
+//-------------------------------------------------------
+Mode                            : Fault Simulation
+Target Fault Model              : TDF
+Target Circuit                  : ./input/circuit/s27.v
+Target Test Set                 : ./verify_final_resolving/tp.txt
+#of Test Pattern                : 1
+#of Primary Input               : 4
+#of Pseudo Primary Input        : 3
+#of Initial X-bit Ratio         : 0.00%
+#of Fault Coverage              : 13.46%
+#of Target Fault                : 52
+#of Detected Fault              : 7
+#of Undetected Fault            : 45
+Total CPU time                  : 0.00 (sec)
+//-------------------------------------------------------
+	Setup options completed ... 
+�ySUCCESS�z:init exturn
+	Initialize the global variables completed ... 
+�yINFO�z: Transition fault set created successfully.
+	Reading the files completed ... 
+//---------------------------------------------------
+//	    Transition Fault ASG   Information
+//---------------------------------------------------
+// Target Circuit              :./input/circuit/s27.v
+// Fault Type                  :TDF
+// Seed Generation             :MTTG
+// Number of Total Faults      :2
+// Number of Unseed Faults     :0
+// Number of Abort Faults      :0
+// Number of High Power Faults :0
+// Number of Detected Faults   :0
+// Number of Undetected Faults :2
+// Number of Seeds             :0
+// Rate of Detected Faults     :0.00%
+// Elapsed time                :0.01sec
+// Time to abort solver        :5sec
+// Time to graph               :0.00sec
+// Target faults limit         :2
+// Rand Option                 :OFF
+// CPS Experimental Mode       :ON
+// FP Experimental Mode        :ON
+// Resolving Experimental Mode :ON
+// STTG/WSATH Experimental Mode:OFF
+// Parallel Mode Option        :OFF
+// Low Power Mode              :OFF
+// WSA                         :30[��]
+//---------------------------------------------------
+	Create the lfsr model completed ... 
+
+	Reading necessary infomation progress  >> 50.00%
+	Reading necessary infomation progress  >> 100.00%
+Generating graph progress  >> 50.00%
+Generating graph progress  >> 100.00%
+	Making Graph CPU time�F	0.000[s]
+�yINFO�z: selected 2 faults as target faults.
+clasp call 1���
+clasp���[�h�w��Ȃ��@�ł��؂莞�ԁF5
+CLASP�F�V�[�h�����s�\�̏�(UNSAT)�ł�
+[MTTG] Target fault moved to the unseed list.
+�yINFO�z: selected 1 faults as target faults.
+clasp call 1���
+clasp���[�h�w��Ȃ��@�ł��؂莞�ԁF5
+//---------------------------------------------------
+//	    Transition Fault ASG   Information
+//---------------------------------------------------
+// Target Circuit              :./input/circuit/s27.v
+// Fault Type                  :TDF
+// Seed Generation             :MTTG
+// Number of Total Faults      :2
+// Number of Unseed Faults     :1
+// Number of Abort Faults      :0
+// Number of High Power Faults :0
+// Number of Detected Faults   :1
+// Number of Undetected Faults :0
+// Number of Seeds             :1
+// Rate of Detected Faults     :50.00%
+// Elapsed time                :0.26sec
+// Time to abort solver        :5sec
+// Time to graph               :0.00sec
+// Target faults limit         :2
+// Rand Option                 :OFF
+// CPS Experimental Mode       :ON
+// FP Experimental Mode        :ON
+// Resolving Experimental Mode :ON
+// STTG/WSATH Experimental Mode:OFF
+// Parallel Mode Option        :OFF
+// Low Power Mode              :OFF
+// WSA                         :30[��]
+//---------------------------------------------------
+�ySUCCESS�z:MTTG
+
+
+----------�yFINISH�zTDF_ASG----------
+*

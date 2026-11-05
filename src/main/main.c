@@ -1,87 +1,85 @@
-//11
+ï»¿//11
 //------------------------------------------------------------------------
-//ƒCƒ“ƒNƒ‹[ƒh
+//ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰
 //------------------------------------------------------------------------
 #include <stdio.h>
 #include <time.h>
 #include<stdlib.h>
 #include<string.h>
-#define _CRT_SECURE_NO_WARNINGS
 
 //------------------------------------------------------------------------
-//©ìƒCƒ“ƒNƒ‹[ƒh
+//è‡ªä½œã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰
 //------------------------------------------------------------------------
 #include"../header/Define.h"
 
-//’Ç‰Á
+//è¿½åŠ 
 #include "../asg/init.h"
 #include "../opt/opt.h"
 
 //===================================================
-//ŠÖ”–¼:main
-//‹@”\:TDF_ASG‚Ìmain
-//–ß‚è’lFint ³íI—¹:SUCCESS(=0) , ˆÙíI—¹:ERROR(=-1)
-//ˆø”FƒRƒ}ƒ“ƒhƒ‰ƒCƒ“ˆø”‚Ì”, ƒRƒ}ƒ“ƒhƒ‰ƒCƒ“ˆø”
+//é–¢æ•°å:main
+//æ©Ÿèƒ½:TDF_ASGã®main
+//æˆ»ã‚Šå€¤ï¼šint æ­£å¸¸çµ‚äº†:SUCCESS(=0) , ç•°å¸¸çµ‚äº†:ERROR(=-1)
+//å¼•æ•°ï¼šã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³å¼•æ•°ã®æ•°, ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³å¼•æ•°
 //===================================================
 int main(int argc, char *argv[]) {
-	clock_t time; //ƒ^ƒCƒ€Œv‘ª•Ï”
-	char cmd[500];
-	char txt_cmd[50];
+	clock_t start_time; //ã‚¿ã‚¤ãƒ è¨ˆæ¸¬å¤‰æ•°
 
-    //ƒIƒvƒVƒ‡ƒ“İ’è
-	if (OPT(argc, argv) != true) return false;
+    //ã‚ªãƒ—ã‚·ãƒ§ãƒ³è¨­å®š
+	if (OPT(argc, argv) != true) return ERROR;
 
-	//ƒlƒbƒgƒŠƒXƒg‹N“®
+	//ãƒãƒƒãƒˆãƒªã‚¹ãƒˆèµ·å‹•
 	read_nl(fi[CIRCUIT].name);
+	if (validate_circuit_gates() != SUCCESS) {
+		return ERROR;
+	}
 	make_ppo_ppi();
 
-	//‰Šú‰»
+	//åˆæœŸåŒ–
 	if (init_exturn() != SUCCESS) {
-		printf("yERRORz:init exturn(main.c)\n");
+		printf("ã€ERRORã€‘:init exturn(main.c)\n");
 		exit(ERROR);
 	}
-	printf("ySUCCESSz:init exturn\n");
+	printf("ã€SUCCESSã€‘:init exturn\n");
 
-	//‰Šú‰»ASG•”•ª
-	if (InitGlobalVars() != true) return false;
+	//åˆæœŸåŒ–ASGéƒ¨åˆ†
+	if (InitGlobalVars() != true) return ERROR;
 
-	//Á”ï“d—Íl—¶‚Ìê‡
+	//æ¶ˆè²»é›»åŠ›è€ƒæ…®ã®å ´åˆ
 	if ((strcmp(fi[LOW_POWER].name, "ON")) == 0) {
 		if (check_open_pass() != SUCCESS) {
-			printf("yERRORz:open pass(main.c)\n");
+			printf("ã€ERRORã€‘:open pass(main.c)\n");
 			return ERROR;
 		}
-		printf("ySUCCESSz:open pass\n");
+		printf("ã€SUCCESSã€‘:open pass\n");
 	}
 
-	//ƒ^ƒCƒ€Œv‘ª
-	time = clock();
+	//ã‚¿ã‚¤ãƒ è¨ˆæ¸¬
+	start_time = clock();
 
-	//‘JˆÚŒÌáMTTGŠJn
+	//é·ç§»æ•…éšœMTTGé–‹å§‹
 	if (mttg_main() != SUCCESS) {
-		printf("yERRORz:MTTG(main.c)\n");
+		printf("ã€ERRORã€‘:MTTG(main.c)\n");
 		return ERROR;
 	}
 	if (fi[TARGET_LIMIT].value == 1) {
-		printf("ySUCCESSz:STTG\n");
+		printf("ã€SUCCESSã€‘:STTG\n");
 	}
 	else {
-		printf("ySUCCESSz:MTTG\n");
+		printf("ã€SUCCESSã€‘:MTTG\n");
 	}
 
-	//ƒtƒ@ƒCƒ‹¶¬
-	if (file_output(time,2) != SUCCESS) {
-		printf("yERRORz:File Output(main.c)\n");
+	//ãƒ•ã‚¡ã‚¤ãƒ«ç”Ÿæˆ
+	if (file_output(start_time,2) != SUCCESS) {
+		printf("ã€ERRORã€‘:File Output(main.c)\n");
 		return ERROR;
 	}
 
-	//ƒvƒƒOƒ‰ƒ€I—¹ƒ[ƒ‹‘—M
+	//ãƒ—ãƒ­ã‚°ãƒ©ãƒ çµ‚äº†ãƒ¡ãƒ¼ãƒ«é€ä¿¡
 	//system("chcp 65001");
-	//sprintf(txt_cmd,"YuyaMail.exe");
-	//system(txt_cmd);
 	//system("chcp 932");
 
-	printf("\n\n----------yFINISHzTDF_ASG----------\n");
+	printf("\n\n----------ã€FINISHã€‘TDF_ASG----------\n");
 	return SUCCESS;
 
 }

@@ -1,5 +1,5 @@
-//------------------------------------------------------------------------
-//ƒCƒ“ƒNƒ‹[ƒh
+ï»¿//------------------------------------------------------------------------
+//ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰
 //------------------------------------------------------------------------
 #include <stdio.h>
 #include <time.h>
@@ -7,17 +7,17 @@
 #include<string.h>
 
 //------------------------------------------------------------------------
-//©ìƒCƒ“ƒNƒ‹[ƒh
+//è‡ªä½œã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰
 //------------------------------------------------------------------------
 #include"../header/Define.h"
-//’Ç‰Á
+//è¿½åŠ 
 #include "../asg/opb/opb.h"
 
 //=========================================================================
-//  ŠÖ”–¼ : mttg_pbo_generate_min
-//  ‹@  ”\ : MTTG—pPBOƒtƒ@ƒCƒ‹‹LqyÅ“K‰»ŠÖ”EƒTƒCƒY(variableEconstraintE‚»‚Ì‘¼)z
-//  –ß‚è’l : ‚È‚µ
-//  ˆø  ” : ƒtƒ@ƒCƒ‹ƒ|ƒCƒ“ƒ^
+//  é–¢æ•°å : mttg_pbo_generate_min
+//  æ©Ÿ  èƒ½ : MTTGç”¨PBOãƒ•ã‚¡ã‚¤ãƒ«è¨˜è¿°ã€æœ€é©åŒ–é–¢æ•°ãƒ»ã‚µã‚¤ã‚º(variableãƒ»constraintãƒ»ãã®ä»–)ã€‘
+//  æˆ»ã‚Šå€¤ : ãªã—
+//  å¼•  æ•° : ãƒ•ã‚¡ã‚¤ãƒ«ãƒã‚¤ãƒ³ã‚¿
 //=========================================================================
 void mttg_pbo_generate_min(FILE* fp) {
 
@@ -26,12 +26,12 @@ void mttg_pbo_generate_min(FILE* fp) {
 
 
 	//---------------------------------------------
-	//PBOƒTƒCƒYŒvZ
+	//PBOã‚µã‚¤ã‚ºè¨ˆç®—
 	//---------------------------------------------
 	size_pbo = mttg_calc_pbo_size();
 
 	//-----------------------------------------------------------------------------
-	//PBOƒtƒ@ƒCƒ‹‹Lq
+	//PBOãƒ•ã‚¡ã‚¤ãƒ«è¨˜è¿°
 	//-----------------------------------------------------------------------------
 	if (strcmp(fi[LOW_POWER].name, "OFF") == 0) {
 		fprintf(fp, "* #variable= %d ", size_pbo.val + 1);
@@ -43,7 +43,7 @@ void mttg_pbo_generate_min(FILE* fp) {
 	}
 	else if (strcmp(fi[LOW_POWER].name, "ON") == 0) {
 		fprintf(fp, "* #variable= %d ", size_pbo.val);
-		fprintf(fp, "#constraint= %d ", size_pbo.h_constraint + opb.total.cons);//’Ç‰Á + opb.total.cons
+		fprintf(fp, "#constraint= %d ", size_pbo.h_constraint + opb.total.cons);//è¿½åŠ  + opb.total.cons
 		fprintf(fp, "#product= %d sizeproduct= %d\n", 2 * size_pbo.s_constraint, 4 * size_pbo.s_constraint);
 		fprintf(fp, "*\n");
 		fprintf(fp, "*  this is a dummy instance\n");
@@ -59,10 +59,10 @@ void mttg_pbo_generate_min(FILE* fp) {
 }
 
 //=========================================================================
-//  ŠÖ”–¼ : pbo_generate_fdetect_c_mttg
-//  ‹@  ”\ : ŒÌáŒŸo‰ñ˜H‹Lq(MTTGŒÀ’è)
-//  –ß‚è’l : ‚È‚µ
-//  ˆø  ” : ƒtƒ@ƒCƒ‹ƒ|ƒCƒ“ƒ^C‘ÎÛŒÌá
+//  é–¢æ•°å : pbo_generate_fdetect_c_mttg
+//  æ©Ÿ  èƒ½ : æ•…éšœæ¤œå‡ºå›è·¯è¨˜è¿°(MTTGé™å®š)
+//  æˆ»ã‚Šå€¤ : ãªã—
+//  å¼•  æ•° : ãƒ•ã‚¡ã‚¤ãƒ«ãƒã‚¤ãƒ³ã‚¿ï¼Œå¯¾è±¡æ•…éšœ
 //=========================================================================
 void pbo_generate_fdetect_c_mttg(FILE *fp, UNDET_FAULT_LIST* node) {
 
@@ -70,7 +70,7 @@ void pbo_generate_fdetect_c_mttg(FILE *fp, UNDET_FAULT_LIST* node) {
 	unsigned int *fdetct_in;
 
 	if ((fdetct_in = (unsigned int*)calloc(fc_ppo, sizeof(unsigned int))) == NULL) {
-		printf("yERRORz:No calloc Fault Det Circuit(sttg_pbo_generate.c)\n"); 
+		printf("ã€ERRORã€‘:No calloc Fault Det Circuit(sttg_pbo_generate.c)\n"); 
 		exit(1);
 	}
 
@@ -80,49 +80,50 @@ void pbo_generate_fdetect_c_mttg(FILE *fp, UNDET_FAULT_LIST* node) {
 	j = 0;
 	for (i = 0; i < n_net; i++) {
 		if (nl[i].fault_pass == YES && nl[i].ppo_flag == 1 ) {
-			//œEXOR
-			fprintf(fp, "1 ~x%d +1 ~x%d +1 ~x%d >=1;\n", nl[i].suf_2t, nl[i].suf_fc, suffix);
-			fprintf(fp, "1 x%d +1 x%d +1 ~x%d >=1;\n", nl[i].suf_2t, nl[i].suf_fc, suffix);
-			fprintf(fp, "1 x%d +1 ~x%d +1 x%d >=1;\n", nl[i].suf_2t, nl[i].suf_fc, suffix);
-			fprintf(fp, "1 ~x%d +1 x%d +1 x%d >=1;\n", nl[i].suf_2t, nl[i].suf_fc, suffix);
+			//â—EXOR
+			fprintf(fp, "1 ~x%d +1 ~x%d +1 ~x%d >=1;\n", nl[i].suf_2t, nl[i].suf_fc, bool_id);
+			fprintf(fp, "1 x%d +1 x%d +1 ~x%d >=1;\n", nl[i].suf_2t, nl[i].suf_fc, bool_id);
+			fprintf(fp, "1 x%d +1 ~x%d +1 x%d >=1;\n", nl[i].suf_2t, nl[i].suf_fc, bool_id);
+			fprintf(fp, "1 ~x%d +1 x%d +1 x%d >=1;\n", nl[i].suf_2t, nl[i].suf_fc, bool_id);
 			if (fc_ppo == 1) {
-				node->tfl_det_suffix = suffix;
+				node->tfl_det_suffix = bool_id;
 			}
-			fdetct_in[j] = suffix;
-			suffix++;
+			fdetct_in[j] = bool_id;
+			bool_id++;
 			j++;
 		}
 	}
 
-	if (fc_ppo != 1) {//fc_ppo:ŒÌá‰ñ˜H‚ÌŠO•”o—Í‚Ì”‚ª•¡”‚Ìê‡§–ñ®‚ğ’Ç‰ÁB’Ç‰Á‚·‚é‚Ì‚ÍORƒQ[ƒg
+	if (fc_ppo != 1) {//fc_ppo:æ•…éšœå›è·¯ã®å¤–éƒ¨å‡ºåŠ›ã®æ•°ãŒè¤‡æ•°ã®å ´åˆåˆ¶ç´„å¼ã‚’è¿½åŠ ã€‚è¿½åŠ ã™ã‚‹ã®ã¯ORã‚²ãƒ¼ãƒˆ
 		for (i = 0; (unsigned int)i < fc_ppo; i++) { 
-			fprintf(fp, "1 ~x%d +1 x%d >=1;\n", fdetct_in[i], suffix); 
+			fprintf(fp, "1 ~x%d +1 x%d >=1;\n", fdetct_in[i], bool_id);
 		}
 		for (i = 0; (unsigned int)i < fc_ppo; i++) { 
 			fprintf(fp, "1 x%d +", fdetct_in[i]);
 		}
-		fprintf(fp, "1 ~x%d >=1;\n", suffix);
-		node->tfl_det_suffix = suffix;
-		suffix++;
+		fprintf(fp, "1 ~x%d >=1;\n", bool_id);
+		node->tfl_det_suffix = bool_id;
+		bool_id++;
 	}
+	free(fdetct_in);
 }
 
 //=========================================================================
-//  ŠÖ”–¼ : pbo_generate_fault_ex
-//  ‹@  ”\ : ŒÌá—ã‹N‹Lq(MTTGŒÀ’è)
-//  –ß‚è’l : ‚È‚µ
-//  ˆø  ” : ƒtƒ@ƒCƒ‹ƒ|ƒCƒ“ƒ^C‘ÎÛŒÌá,ƒn[ƒh(mode=0),ƒ\ƒtƒg(mode=1)
+//  é–¢æ•°å : pbo_generate_fault_ex
+//  æ©Ÿ  èƒ½ : æ•…éšœåŠ±èµ·è¨˜è¿°(MTTGé™å®š)
+//  æˆ»ã‚Šå€¤ : ãªã—
+//  å¼•  æ•° : ãƒ•ã‚¡ã‚¤ãƒ«ãƒã‚¤ãƒ³ã‚¿ï¼Œå¯¾è±¡æ•…éšœ,ãƒãƒ¼ãƒ‰(mode=0),ã‚½ãƒ•ãƒˆ(mode=1)
 //=========================================================================
 void pbo_generate_fault_ex(FILE *fp, UNDET_FAULT_LIST* node,int mode) {
 
 	//int i;
 
 
-	//–Ú•WŒÌá1ŒÂ–Ú(ƒn[ƒh)
+	//ç›®æ¨™æ•…éšœ1å€‹ç›®(ãƒãƒ¼ãƒ‰)
 	if(mode == 0) {
 		fprintf(fp, "1 x%d >=1;\n", node->tfl_det_suffix);
-		//ŒÌáŒŸo‰ñ˜H‚É‚¨‚¯‚éÅIo—Íæ‚ğˆêˆÓ‚É”»’f‚·‚é‚½‚ß‚Ì•Ï”
-		//ŒÌá‚ªŒŸo‚³‚ê‚é‰ñ˜Hã‚Å‚ÌˆÊ’u‚ğ¦‚·
+		//æ•…éšœæ¤œå‡ºå›è·¯ã«ãŠã‘ã‚‹æœ€çµ‚å‡ºåŠ›å…ˆã‚’ä¸€æ„ã«åˆ¤æ–­ã™ã‚‹ãŸã‚ã®å¤‰æ•°
+		//æ•…éšœãŒæ¤œå‡ºã•ã‚Œã‚‹å›è·¯ä¸Šã§ã®ä½ç½®ã‚’ç¤ºã™
 
 		switch (node->type) {
 		case STF:
@@ -138,64 +139,58 @@ void pbo_generate_fault_ex(FILE *fp, UNDET_FAULT_LIST* node,int mode) {
 		}
 	}
 
-	//–Ú•WŒÌá1ŒÂ–ÚˆÈŠO(ƒ\ƒtƒg)
+	//ç›®æ¨™æ•…éšœ1å€‹ç›®ä»¥å¤–(ã‚½ãƒ•ãƒˆ)
 	else if (mode == 1) {
-		fprintf(fp, "1 x%d +1 x%d >=1;\n", suffix, node->tfl_det_suffix);
+		fprintf(fp, "1 x%d +1 x%d >=1;\n", bool_id, node->tfl_det_suffix);
 
 		switch (node->type) {
 		case STF:
-			fprintf(fp, "1 x%d +1 x%d >=1;\n", suffix, node->netlist->suf_1t);
-			fprintf(fp, "1 x%d +1 ~x%d >=1;\n", suffix, node->netlist->suf_2t);
-			fprintf(fp, "1 x%d +1 x%d >=1;\n", suffix,node->tfl_suf_fc);
+			fprintf(fp, "1 x%d +1 x%d >=1;\n", bool_id, node->netlist->suf_1t);
+			fprintf(fp, "1 x%d +1 ~x%d >=1;\n", bool_id, node->netlist->suf_2t);
+			fprintf(fp, "1 x%d +1 x%d >=1;\n", bool_id,node->tfl_suf_fc);
 			break;
 		case STR:
-			fprintf(fp, "1 x%d +1 ~x%d >=1;\n", suffix,node->netlist->suf_1t);
-			fprintf(fp, "1 x%d +1 x%d >=1;\n", suffix,node->netlist->suf_2t);
-			fprintf(fp, "1 x%d +1 ~x%d >=1;\n", suffix, node->tfl_suf_fc);
+			fprintf(fp, "1 x%d +1 ~x%d >=1;\n", bool_id,node->netlist->suf_1t);
+			fprintf(fp, "1 x%d +1 x%d >=1;\n", bool_id,node->netlist->suf_2t);
+			fprintf(fp, "1 x%d +1 ~x%d >=1;\n", bool_id, node->tfl_suf_fc);
 			break;
 		}
-		suffix++;
+		bool_id++;
 	}
 
 }
 
 
 //=========================================================================
-//  ŠÖ”–¼ : pbo_generate_power_mttg
-//  ‹@  ”\ : Á”ï“d—Í§–ñ(MTTG)(ƒ\ƒtƒg)
-//  –ß‚è’l : ‚È‚µ
-//  ˆø  ” : ƒtƒ@ƒCƒ‹ƒ|ƒCƒ“ƒ^
+//  é–¢æ•°å : pbo_generate_power_mttg
+//  æ©Ÿ  èƒ½ : æ¶ˆè²»é›»åŠ›åˆ¶ç´„(MTTG)(ã‚½ãƒ•ãƒˆ)
+//  æˆ»ã‚Šå€¤ : ãªã—
+//  å¼•  æ•° : ãƒ•ã‚¡ã‚¤ãƒ«ãƒã‚¤ãƒ³ã‚¿
 //=========================================================================
-void pbo_generate_power_mttg(int change_wsath_flag,FILE* fp) {
+void pbo_generate_power_mttg(int change_wsath_25, int change_wsath_30, FILE* fp) {
 	int i;
-	char* cons1 = (char*)NULL;
-
-	if ((cons1 = (char*)calloc(500000, sizeof(char))) == NULL) {
-		printf("yERRORz:No calloc cons1(mttg_pbo_generate.c)\n");
-		exit(1);
+	unsigned int wsa_bool_id = bool_id;
+	int wsath = fi[WSATH].value;
+	if (strcmp(fi[STTG_WSATH_MODE].name, "ON") == 0) { // [STTG/WSATH INTEGRATION]
+		wsath = (change_wsath_30 == ON) ? 30 : ((change_wsath_25 == ON) ? 25 : 29);
 	}
 
-	//M†ü‘JˆÚ§–ñ
+
+	//ä¿¡å·ç·šé·ç§»åˆ¶ç´„
 	for (i = 0; i < n_net; i++) {
 		if (nl[i].open_pass == NO) {
 
-			fprintf(fp, "1 x%d +1 x%d x%d +1 ~x%d ~x%d >=1;\n", suffix, nl[i].suf_1t, nl[i].suf_2t, nl[i].suf_1t, nl[i].suf_2t);
+			fprintf(fp, "1 x%d +1 x%d x%d +1 ~x%d ~x%d >=1;\n", bool_id, nl[i].suf_1t, nl[i].suf_2t, nl[i].suf_1t, nl[i].suf_2t);
 
-			//WSA§–ñ
-			sprintf(cons1, "%s-1 x%d ", cons1, suffix);
-			suffix++;
+			bool_id++;
 		}
 	}
 
-	//WSA§–ñ(WSAè‡’l)
-	if (change_wsath_flag == ON) {
-		sprintf(cons1, "%s>=-%d;\n", cons1, n_net * 30 / 100);
-		suffix++;
+	// WSA threshold constraint
+	for (i = 0; i < n_net; i++) {
+		if (nl[i].open_pass == NO) fprintf(fp, "-1 x%d ", wsa_bool_id++);
 	}
-	else{
-		sprintf(cons1, "%s>=-%d;\n", cons1, n_net * fi[WSATH].value / 100);
-	    suffix++;
-    }
-	fprintf(fp, "%s", cons1);
+	fprintf(fp, ">=-%d;\n", n_net * wsath / 100);
+	bool_id++;
 
 }

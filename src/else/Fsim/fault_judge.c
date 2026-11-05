@@ -1,191 +1,176 @@
-//------------------------------------------------------------------------
-//インクルード
-//------------------------------------------------------------------------
-#include<stdio.h>
-#include<time.h>
-#include<stdlib.h>
-#include<string.h>
-#include<math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-//------------------------------------------------------------------------
-//自作インクルード
-//------------------------------------------------------------------------
-#include"../../header/Define.h"
+#include "../../header/Define.h"
 
-//===================================================
-//関数名:fault_judge
-//機能:検出故障特定
-//戻り値：検出された故障数
-//引数：なし
-//===================================================
-int fault_judge(void) {
-	UNDET_FAULT_LIST *d_head;
-	UNDET_FAULT_LIST *u_head;
-	UNDET_FAULT_LIST *df_node;
-	UNDET_FAULT_LIST *pre_node;
-	UNDET_FAULT_LIST *node;
-	char str[256];
-	char txt_cmd[300];
-	char* p_str_type;
-	int  p_type;
-	char* p_str_net;
-	int i = 1;
-	int j, k;
-	int val_1[1000];
-	int val_2[1000];
-	int count = 0;
-	int det_fault_num_clasp = 0;//1テストパターンでの検出故障数
+static int same_fault(int type, const char* name, const UNDET_FAULT_LIST* fault)
+{
+	return fault->type == type && strcmp(fault->name, name) == 0;
+}
 
-	//故障辞書ファイルopen
-	sprintf(txt_cmd, "%sfsim_log.txt", folder_out);
-	if ((fout_fsim_result = fopen(txt_cmd, "r")) == NULL) {
-		printf("【ERROR】:File open fsim_log.txt(fault_judge.c)\n");
+static UNDET_FAULT_LIST* clone_fault(const UNDET_FAULT_LIST* source)
+{
+	UNDET_FAULT_LIST* copy = (UNDET_FAULT_LIST*)malloc(sizeof(*copy));
+
+	if (copy == NULL) {
+		printf("[ERROR] Failed to allocate a detected-fault node.\n");
+		exit(EXIT_FAILURE);
+	}
+
+	*copy = *source;
+	copy->next = NULL;
+	return copy;
+}
+
+static void prepend_classified_fault(
+	UNDET_FAULT_LIST** list,
+	int* count,
+	const UNDET_FAULT_LIST* source)
+{
+	UNDET_FAULT_LIST* copy = clone_fault(source);
+
+	copy->next = *list;
+	*list = copy;
+	(*count)++;
+}
+
+static void classify_sttg_fault(
+	const UNDET_FAULT_LIST* fault,
+	int sttg_enabled,
+	int changed_to_wsath_25)
+{
+	if (strcmp(fi[STTG_WSATH_MODE].name, "ON") != 0 || sttg_enabled != ON) {
+		return;
+	}
+	if (tfl == NULL || !same_fault(tfl->type, tfl->name, fault)) {
+		return;
+	}
+
+	if (changed_to_wsath_25 == ON) {
+		prepend_classified_fault(&hpfl, &hpfl_num, fault);
+	}
+	else {
+		prepend_classified_fault(&atfl, &atfl_num, fault);
+	}
+}
+
+static int parse_fault_type(const char* token, int* type)
+{
+	if (token == NULL || type == NULL) {
+		return ERROR;
+	}
+	if (strcmp(token, "STR") == 0) {
+		*type = STR;
+		return SUCCESS;
+	}
+	if (strcmp(token, "STF") == 0) {
+		*type = STF;
+		return SUCCESS;
+	}
+	return ERROR;
+}
+
+static void release_target_faults(void)
+{
+	UNDET_FAULT_LIST* current = tfl;
+
+	while (current != NULL) {
+		UNDET_FAULT_LIST* next = current->next;
+		free(current);
+		current = next;
+	}
+	tfl = NULL;
+}
+
+int fault_judge(int sttg_enabled, int changed_to_wsath_25)
+{
+	char line[256];
+	char result_path[300];
+	int line_number = 0;
+	int detected_target_count = 0;
+	int detected_count = 0;
+
+	sprintf_s(result_path, sizeof(result_path), "%sfsim_log.txt", folder_out);
+	if (fopen_s(&fout_fsim_result, result_path, "r") != 0) {
+		printf("[ERROR] Cannot open fsim_log.txt (fault_judge.c).\n");
 		return ERROR;
 	}
 
-	d_head = dfl;
+	while (fgets(line, sizeof(line), fout_fsim_result) != NULL) {
+		char* context = NULL;
+		char* type_token;
+		char* fault_name;
+		int fault_type;
+		UNDET_FAULT_LIST* current;
+		UNDET_FAULT_LIST* previous;
+		UNDET_FAULT_LIST* detected_copy;
 
-	//----------------------------------------
-	//tp0
-	//STR G9
-	//STF G6
-	//STF G8
-	//STF G16
-	//STF G8_G16_B
-	//----------------------------------------
+		line_number++;
+		if (ufl_num == 0) {
+			break;
+		}
+		if (line_number == 1 || line[0] == '\n' || line[0] == '\r') {
+			continue;
+		}
 
-	while (fgets(str, 256, fout_fsim_result) != NULL) {
-		if (ufl_num == 0)break;
-		if (i != 1 && strcmp(str,"\n")!=0) { 
-			p_str_type= strtok(str, " \t\n"); //STR or STF
-			if (strcmp(p_str_type, "STR") == 0) {
-				p_type = STR;
-			}
-			else if (strcmp(p_str_type, "STF") == 0) {
-				p_type = STF;
-			}
-			p_str_net = strtok(NULL, " \t\n"); //G9
-			for (j = 0; j < n_net; j++) {
-				if (strcmp(p_str_net, nl[j].name) == 0) {
-					for (k = 0; k < nl[j].n_in; k++) {
-						val_1[k] = nl[j].in[k]->val_1t;
-						val_2[k] = nl[j].in[k]->val_2t;
-					}
-					break;
-				}
-			}
+		type_token = strtok_s(line, " \t\r\n", &context);
+		fault_name = strtok_s(NULL, " \t\r\n", &context);
+		if (fault_name == NULL || parse_fault_type(type_token, &fault_type) != SUCCESS) {
+			continue;
+		}
 
-			u_head = ufl;
+		previous = NULL;
+		current = ufl;
+		while (current != NULL && !same_fault(fault_type, fault_name, current)) {
+			previous = current;
+			current = current->next;
+		}
+		if (current == NULL) {
+			continue;
+		}
 
-			//ノードの1番最初が検出した場合の処理
-			if (p_type == u_head->type) {
-				if (strcmp(u_head->name, p_str_net) == 0) {
-						//検出故障ノード
-						df_node = (UNDET_FAULT_LIST*)malloc(sizeof(UNDET_FAULT_LIST));
-
-						//情報コピー
-						strcpy(df_node->name, u_head->name);
-						df_node->type=u_head->type;
-						df_node->netlist = u_head->netlist;
-
-						//目標故障設定
-						if (u_head->netlist->tf_flag == FLAG_UP) {
-							count++;//目標故障が検出された場合countする
-						}
-
-						//線形リスト生成
-						df_node->next =d_head;
-						d_head = df_node;
-
-						//検出、未検出故障数更新
-						dfl_num++;//検出故障数更新
-						det_fault_num_clasp++;//1テストパターンでの検出故障数
-
-						//追加
-						bitintSetNbit_Zero(detflag, u_head->node_id);//node_idは故障に一意に割り当てられているもの
-
-						//検出故障を未検出故障リストから削除
-						ufl_free(u_head, NULL, -1);
-						/*pre_node = u_head->next;
-						free(u_head);
-						ufl = pre_node;*/
-
-						continue;
-				}
-			}
-
-			pre_node = ufl;
-			u_head = ufl->next;
-			//それ以外の処理
-			while (u_head != NULL) {
-				if (p_type == u_head->type) {
-					if (strcmp(u_head->name, p_str_net) == 0) {
-							//検出故障ノード
-							df_node = (UNDET_FAULT_LIST*)malloc(sizeof(UNDET_FAULT_LIST));
-
-							//情報コピー
-							strcpy(df_node->name, u_head->name);
-							df_node->type = u_head->type;
-							df_node->netlist = u_head->netlist;
-
-							//目標故障
-							if (u_head->netlist->tf_flag == FLAG_UP) {
-								count++;
-							}
-
-							//線形リスト生成
-							df_node->next = d_head;
-							d_head = df_node;
-
-							//検出、未検出故障数更新
-							dfl_num++;
-							det_fault_num_clasp++;
-
-							//追加
-							bitintSetNbit_Zero(detflag, u_head->node_id);//node_idは故障に一意に割り当てられているもの
-
-							//検出故障を未検出故障リストから削除
-							ufl_free(u_head, pre_node, -1);
-							/*pre_node = u_head->next->next;
-							free(u_head->next);
-							u_head->next = pre_node;*/
-
-							break;
-					}
-				}
-				pre_node = pre_node->next;
-				u_head = u_head->next;
+		for (UNDET_FAULT_LIST* target = tfl; target != NULL; target = target->next) {
+			if (same_fault(current->type, current->name, target)) {
+				detected_target_count++;
+				break;
 			}
 		}
-		i++;
+
+		detected_copy = clone_fault(current);
+		detected_copy->next = dfl;
+		dfl = detected_copy;
+		dfl_num++;
+		detected_count++;
+
+		bitintSetNbit_Zero(detflag, current->node_id);
+		classify_sttg_fault(current, sttg_enabled, changed_to_wsath_25);
+		ufl_free(current, previous, -1);
 	}
 
-	//dfl 検出故障リストの更新
-	dfl = d_head;
-
-	//目標故障削除
-	node = tfl;
-	while (node != NULL) {
-		d_head = node->next;
-		free(node);
-		node = d_head;
-	}
-
-	// 故障検出したシード数をインクリメント
-	if (det_fault_num_clasp > 0) {
+	release_target_faults();
+	if (detected_count > 0) {
 		seed_num++;
 	}
 
-	//標準出力
 	standard_output();
-
-	//ファイル操作
 	fclose(fout_fsim_result);
+	fout_fsim_result = NULL;
 
-	sprintf(txt_cmd, "%smttg.txt", folder_out);
-	fout_mttg = fopen(txt_cmd, "a+");
-	fprintf(fout_mttg, "%d: tfl_num:%d\ttfl_det_fault:%d\tdet_fault:%d\n", seed_num, tfl_num, count, det_fault_num_clasp);
+	sprintf_s(result_path, sizeof(result_path), "%smttg.txt", folder_out);
+	if (fopen_s(&fout_mttg, result_path, "a+") != 0) {
+		printf("[ERROR] Cannot open mttg.txt (fault_judge.c).\n");
+		return ERROR;
+	}
+	fprintf(
+		fout_mttg,
+		"%d: tfl_num:%d\ttfl_det_fault:%d\tdet_fault:%d\n",
+		seed_num,
+		tfl_num,
+		detected_target_count,
+		detected_count);
 	fclose(fout_mttg);
-	
-	return det_fault_num_clasp;
+	fout_mttg = NULL;
+
+	return detected_count;
 }

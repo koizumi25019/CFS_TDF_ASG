@@ -22,7 +22,7 @@ void AssigneVarsGC(
 )
 {
 	/** for lfsr *///LFSRのための変数を確保
-	//opb.constant.vars:これまでに割り当てられた変数の総数を保持するカウンター。つまりsuffixに相当
+	//opb.constant.vars:これまでに割り当てられた変数の総数を保持するカウンター。つまりbool_idに相当
 	//readdata.lfsrnet.num:LFSRの信号線数
 	opb.constant.vars += readdata.lfsrnet.num;
 

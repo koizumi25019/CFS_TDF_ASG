@@ -1,0 +1,10 @@
+c clasp version 3.3.8
+c Reading from ..._parallel_20261104_114427/mttg_pbo.txt
+c Solving...
+s UNSATISFIABLE
+c 
+c Models         : 0
+c Calls          : 1
+c Time           : 0.000s (Solving: 0.00s 1st Model: 0.00s Unsat: 0.00s)
+c CPU Time       : 0.000s
+c Threads        : 2        (Winner: 0)

@@ -1,0 +1,7 @@
+G11	str	1
+G9	stf	1
+G12	str	1
+G7	stf	1
+G15	str	1
+G11_G6_A	str	1
+G12_G15_A	str	1

@@ -1,5 +1,5 @@
-//------------------------------------------------------------------------
-//ƒCƒ“ƒNƒ‹[ƒh
+ï»¿//------------------------------------------------------------------------
+//ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰
 //------------------------------------------------------------------------
 #include<stdio.h>
 #include<time.h>
@@ -7,15 +7,15 @@
 #include<string.h>
 
 //------------------------------------------------------------------------
-//©ìƒCƒ“ƒNƒ‹[ƒh
+//è‡ªä½œã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰
 //------------------------------------------------------------------------
 #include"../../header/Define.h"
 
 //===================================================
-//ŠÖ”–¼:file_output
-//‹@”\:ƒtƒ@ƒCƒ‹¶¬
-//–ß‚è’lFint ³íI—¹:0 , ˆÙíI—¹:1
-//ˆø”F¶¬ƒeƒXƒgƒpƒ^[ƒ“”Ši”[•Ï”,ŠÔ,ƒeƒXƒg•s”\ŒÌá(=0),‘SŒÌáƒtƒ@ƒCƒ‹(=1),ƒƒOƒtƒ@ƒCƒ‹(=2),–Ú•WŒÌáW‡ƒƒOƒtƒ@ƒCƒ‹(=3)
+//é–¢æ•°å:file_output
+//æ©Ÿèƒ½:ãƒ•ã‚¡ã‚¤ãƒ«ç”Ÿæˆ
+//æˆ»ã‚Šå€¤ï¼šint æ­£å¸¸çµ‚äº†:0 , ç•°å¸¸çµ‚äº†:1
+//å¼•æ•°ï¼šç”Ÿæˆãƒ†ã‚¹ãƒˆãƒ‘ã‚¿ãƒ¼ãƒ³æ•°æ ¼ç´å¤‰æ•°,æ™‚é–“,ãƒ†ã‚¹ãƒˆä¸èƒ½æ•…éšœæ™‚(=0),å…¨æ•…éšœãƒ•ã‚¡ã‚¤ãƒ«(=1),ãƒ­ã‚°ãƒ•ã‚¡ã‚¤ãƒ«(=2),ç›®æ¨™æ•…éšœé›†åˆãƒ­ã‚°ãƒ•ã‚¡ã‚¤ãƒ«(=3)
 //===================================================
 int file_output(clock_t time,int mode) {
 	UNDET_FAULT_LIST* node;
@@ -25,33 +25,33 @@ int file_output(clock_t time,int mode) {
 
 	if (mode == 0) {
 
-		//M†üƒŠƒeƒ‰ƒ‹î•ñƒtƒ@ƒCƒ‹
+		//ä¿¡å·ç·šãƒªãƒ†ãƒ©ãƒ«æƒ…å ±ãƒ•ã‚¡ã‚¤ãƒ«
 		sprintf(txt_cmd, "%ssignal_literal.txt", folder_out);
 		if ((fout_literal = (fopen(txt_cmd, "w"))) == NULL) {
-			printf("yERRORz:File open signal_literal.txt(file_output.c)\n");
+			printf("ã€ERRORã€‘:File open signal_literal.txt(file_output.c)\n");
 			return ERROR;
 		}
 
-		//ƒV[ƒh¶¬•s”\ŒÌáƒtƒ@ƒCƒ‹
+		//ã‚·ãƒ¼ãƒ‰ç”Ÿæˆä¸èƒ½æ•…éšœãƒ•ã‚¡ã‚¤ãƒ«
 		sprintf(txt_cmd, "%sunseed_fault.txt", folder_out);
 		if ((fout_unseed_fault = (fopen(txt_cmd, "w"))) == NULL) {
-			printf("yERRORz:File open unseed_fault.txt(file_output.c)\n");
+			printf("ã€ERRORã€‘:File open unseed_fault.txt(file_output.c)\n");
 			return ERROR;
 		}
 
-		//‚Á”ï“d—ÍŒÌáƒtƒ@ƒCƒ‹
+		//é«˜æ¶ˆè²»é›»åŠ›æ•…éšœãƒ•ã‚¡ã‚¤ãƒ«
 		if ((strcmp(fi[LOW_POWER].name, "ON")) == 0) {
 			sprintf(txt_cmd, "%suntest_high_fault.txt", folder_out);
 			if ((fout_high_fault = (fopen(txt_cmd, "w"))) == NULL) {
-				printf("yERRORz:File open untest_high_fault.txt(file_output.c)\n");
+				printf("ã€ERRORã€‘:File open untest_high_fault.txt(file_output.c)\n");
 				return ERROR;
 			}
 		}
 
-		//‰Šú–¢ŒŸoŒÌáƒtƒ@ƒCƒ‹
+		//åˆæœŸæœªæ¤œå‡ºæ•…éšœãƒ•ã‚¡ã‚¤ãƒ«
 		sprintf(txt_cmd, "%sinit_undet_fault.txt", folder_out);
 		if ((fout_init_undet = (fopen(txt_cmd, "w"))) == NULL) {
-			printf("yERRORz:File open init_undet_fault.txt(file_output.c)\n");
+			printf("ã€ERRORã€‘:File open init_undet_fault.txt(file_output.c)\n");
 			return ERROR;
 		}
 
@@ -117,12 +117,12 @@ int file_output(clock_t time,int mode) {
 
 	}
 
-	//‘SŒÌáƒtƒ@ƒCƒ‹‹Lq
+	//å…¨æ•…éšœãƒ•ã‚¡ã‚¤ãƒ«è¨˜è¿°
 	else if (mode == 1) {
 
 		sprintf(txt_cmd, "%sall_fault.txt", folder_out);
 		if ((fout_fault = (fopen(txt_cmd, "w"))) == NULL) {
-			printf("yERRORz:File open all_fault.txt(file_output.c)\n");
+			printf("ã€ERRORã€‘:File open all_fault.txt(file_output.c)\n");
 			return ERROR;
 		}
 
@@ -143,13 +143,13 @@ int file_output(clock_t time,int mode) {
 		fclose(fout_fault);
 	}
 
-	//LOGƒtƒ@ƒCƒ‹‹Lq
+	//LOGãƒ•ã‚¡ã‚¤ãƒ«è¨˜è¿°
 	else if (mode == 2) {
 
-		//LOGƒtƒ@ƒCƒ‹
+		//LOGãƒ•ã‚¡ã‚¤ãƒ«
 		sprintf(txt_cmd, "%slog.txt", folder_out);
 		if ((fout_log = fopen(txt_cmd, "w")) == NULL) {
-			printf("yERRORz:File open log.txt(file_output.c)\n");
+			printf("ã€ERRORã€‘:File open log.txt(file_output.c)\n");
 			return ERROR;
 		}
 
@@ -166,16 +166,21 @@ int file_output(clock_t time,int mode) {
 		}
 		fprintf(fout_log, "// Number of Total Faults      :%d\n", (int)all_num);
 		fprintf(fout_log, "// Number of Unseed Faults     :%d\n", (int)unseed_num);
+		fprintf(fout_log, "// Number of Abort Faults      :%d\n", (int)atfl_num); // [STTG/WSATH INTEGRATION]
 		fprintf(fout_log, "// Number of High Power Faults :%d\n", (int)hpfl_num);
 		fprintf(fout_log, "// Number of Detected Faults   :%d\n", (int)dfl_num);
 		fprintf(fout_log, "// Number of Undetected Faults :%d\n", (int)ufl_num);
 		fprintf(fout_log, "// Number of Seeds             :%d\n", seed_num);
 		fprintf(fout_log, "// Rate of Detected Faults     :%.2lf%%\n", (((double)dfl_num) / ((double)all_num)) * 100.0);
-		fprintf(fout_log, "// Elapsed time                :%.2lfsec\n", (double)clock() / CLOCKS_PER_SEC);
+		fprintf(fout_log, "// Elapsed time                :%.2lfsec\n", (double)(clock() - time) / CLOCKS_PER_SEC);
 		fprintf(fout_log, "// Time to abort solver        :%dsec\n", fi[TIME].value);
 		fprintf(fout_log, "// Time to graph               :%.2lfsec\n", (double)time_graph / CLOCKS_PER_SEC);
 		fprintf(fout_log, "// Target faults limit         :%d\n", fi[TARGET_LIMIT].value);
 		fprintf(fout_log, "// Rand Option                 :%s\n", fi[RAND].name);
+		fprintf(fout_log, "// CPS Experimental Mode       :%s\n", fi[CPS_MODE].name); // [CPS INTEGRATION]
+		fprintf(fout_log, "// FP Experimental Mode        :%s\n", fi[FP_MODE].name); // [FP INTEGRATION]
+		fprintf(fout_log, "// Resolving Experimental Mode :%s\n", fi[RESOLVING_MODE].name); // [RESOLVING INTEGRATION]
+		fprintf(fout_log, "// STTG/WSATH Experimental Mode:%s\n", fi[STTG_WSATH_MODE].name); // [STTG/WSATH INTEGRATION]
 		if (fi[PARALLEL].flag == 0) {
 		fprintf(fout_log, "// Parallel Mode Option        :OFF\n");
 		}
@@ -185,15 +190,15 @@ int file_output(clock_t time,int mode) {
 		}
 		fprintf(fout_log, "// Mode 1 Option               :%s\n", fi[MODE_1].name);
 		fprintf(fout_log, "// Low Power Mode              :%s\n", fi[LOW_POWER].name);
-		fprintf(fout_log, "// WSA                         :%d[“]\n", fi[WSATH].value);
+		fprintf(fout_log, "// WSA                         :%d[ï¼…]\n", fi[WSATH].value);
 		fprintf(fout_log, "//---------------------------------------------------\n");
 
 		fclose(fout_log);
 
-		//ÅI–¢ŒŸoŒÌáƒtƒ@ƒCƒ‹(‹ó‚É‚È‚é‚Í‚¸)
+		//æœ€çµ‚æœªæ¤œå‡ºæ•…éšœãƒ•ã‚¡ã‚¤ãƒ«(ç©ºã«ãªã‚‹ã¯ãš)
 		sprintf(txt_cmd, "%sundet.txt", folder_out);
 		if ((fout_undet = fopen(txt_cmd, "w")) == NULL) {
-			printf("yERRORz:File open undet.txt(file_output.c)\n");
+			printf("ã€ERRORã€‘:File open undet.txt(file_output.c)\n");
 			return ERROR;
 		}
 
@@ -213,10 +218,10 @@ int file_output(clock_t time,int mode) {
 
 		fclose(fout_undet);
 
-		//ŒŸoŒÌáƒtƒ@ƒCƒ‹ƒI[ƒvƒ“
+		//æ¤œå‡ºæ•…éšœãƒ•ã‚¡ã‚¤ãƒ«ã‚ªãƒ¼ãƒ—ãƒ³
 		sprintf(txt_cmd, "%sdet.txt", folder_out);
 		if ((fout_det = fopen(txt_cmd, "w")) == NULL) {
-			printf("yERRORz:File open det.txt(file_output.c)\n");
+			printf("ã€ERRORã€‘:File open det.txt(file_output.c)\n");
 			return ERROR;
 		}
 
@@ -235,13 +240,32 @@ int file_output(clock_t time,int mode) {
 		}
 
 		fclose(fout_det);
+
+		// [STTG/WSATH INTEGRATION] abort-fault classification output
+		sprintf(txt_cmd, "%sabort_fault.txt", folder_out);
+		if ((fout_abort_fault = fopen(txt_cmd, "w")) == NULL) {
+			printf("[ERROR]: File open abort_fault.txt(file_output.c)\n");
+			return ERROR;
+		}
+		node = atfl;
+		while (node != NULL) {
+			fprintf(fout_abort_fault, "%s\n", node->name);
+			if (node->type == STR) {
+				fprintf(fout_abort_fault, "STR\n");
+			}
+			else {
+				fprintf(fout_abort_fault, "STF\n");
+			}
+			node = node->next;
+		}
+		fclose(fout_abort_fault);
 	}
 
-	//–Ú•WŒÌá‘I‘ğƒtƒ@ƒCƒ‹
+	//ç›®æ¨™æ•…éšœé¸æŠãƒ•ã‚¡ã‚¤ãƒ«
 	else if (mode == 3) {
 		sprintf(txt_cmd, "%stfl_log.txt", folder_out);
 		if ((fout_tfl_log = fopen(txt_cmd, "a+")) == NULL) {
-			printf("yERRORz:File open tfl_log.txt(init_exturn.c)\n");
+			printf("ã€ERRORã€‘:File open tfl_log.txt(init_exturn.c)\n");
 			return ERROR;
 		}
 

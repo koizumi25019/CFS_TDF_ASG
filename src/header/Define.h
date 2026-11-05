@@ -1,10 +1,10 @@
-#include"Command_Info.h"
+ï»¿#include"Command_Info.h"
 #include"Stack.h"
 #include<time.h>
-//’Ç‰Á
+//è¿½åŠ 
 #include "../asg/target.h"
 //------------------------------------------------------------------------
-// ÀsƒXƒe[ƒ^ƒX
+// å®Ÿè¡Œã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹
 //------------------------------------------------------------------------
 #define		NO				0
 #define		YES				1
@@ -16,7 +16,7 @@
 
 
 //------------------------------------------------------------------------
-// ƒtƒ‰ƒO
+// ãƒ•ãƒ©ã‚°
 //------------------------------------------------------------------------
 #define		ON				1
 #define		OFF				0
@@ -25,13 +25,13 @@
 
 
 //------------------------------------------------------------------------
-//@ƒtƒ@ƒCƒ‹î•ñ
+//ã€€ãƒ•ã‚¡ã‚¤ãƒ«æƒ…å ±
 //------------------------------------------------------------------------
 
-/* “ü—Íƒtƒ@ƒCƒ‹ */
+/* å…¥åŠ›ãƒ•ã‚¡ã‚¤ãƒ« */
 #define		CIRCUIT			0
 
-/* ƒIƒvƒVƒ‡ƒ“ */
+/* ã‚ªãƒ—ã‚·ãƒ§ãƒ³ */
 #define		RAND			1
 #define		TIME			2
 #define		LOW_POWER		4
@@ -41,94 +41,101 @@
 #define     FOLDER          8
 #define     MODE_1          9
 #define     PARALLEL       10
+#define     CPS_MODE       11  // [CPS INTEGRATION] experimental CPS mode (default: OFF)
+#define     FP_MODE        12  // [FP INTEGRATION] fault-propagation constraints (default: OFF)
+#define     RESOLVING_MODE 13  // [RESOLVING INTEGRATION] retry clasp UNKNOWN (default: OFF)
+#define     STTG_WSATH_MODE 14 // [STTG/WSATH INTEGRATION] staged fallback (default: OFF)
 
 //------------------------------------------------------------------------
 //all0 all1
 //------------------------------------------------------------------------
-#define		all1		4294967295	//˜_—’l1‚Ì‚Æ‚«‚Ì’l
-#define		all0		0			//˜_—’l0‚Ì‚Æ‚«‚Ì’l
+#define		all1		4294967295	//è«–ç†å€¤1ã®ã¨ãã®å€¤
+#define		all0		0			//è«–ç†å€¤0ã®ã¨ãã®å€¤
 
 //------------------------------------------------------------------------
-//ŒÌá‚Ìƒ^ƒCƒv
+//æ•…éšœã®ã‚¿ã‚¤ãƒ—
 //------------------------------------------------------------------------
 #define		STF		    0		   //STF(1->0)
 #define		STR			1          //STR(0->1)
 
 //------------------------------------------------------------------------
-//ƒ\[ƒgƒe[ƒuƒ‹
+//ã‚½ãƒ¼ãƒˆãƒ†ãƒ¼ãƒ–ãƒ«
 //------------------------------------------------------------------------
 NLIST** sort_nl;
-STACK Level;			//ƒŒƒxƒ‰ƒCƒY—p‚ÌƒXƒ^ƒbƒN
+STACK Level;			//ãƒ¬ãƒ™ãƒ©ã‚¤ã‚ºç”¨ã®ã‚¹ã‚¿ãƒƒã‚¯
 
 //------------------------------------------------------------------------
-//o—Íƒtƒ@ƒCƒ‹
+//å‡ºåŠ›ãƒ•ã‚¡ã‚¤ãƒ«
 //------------------------------------------------------------------------
-FILE* fout_tp;			   //ƒeƒXƒgƒpƒ^[ƒ“W‡ƒtƒ@ƒCƒ‹
-FILE* fout_seed;           //seedƒtƒ@ƒCƒ‹
+FILE* fout_tp;			   //ãƒ†ã‚¹ãƒˆãƒ‘ã‚¿ãƒ¼ãƒ³é›†åˆãƒ•ã‚¡ã‚¤ãƒ«
+FILE* fout_seed;           //seedãƒ•ã‚¡ã‚¤ãƒ«
 
-FILE* fout_fault;		   //ŒÌáW‡ƒtƒ@ƒCƒ‹
-FILE* fout_pin_input;	   //“ü—Íƒsƒ“ƒtƒ@ƒCƒ‹
-FILE* fout_pin;			   //“ü—Íƒsƒ“ƒtƒ@ƒCƒ‹(ŒÌáƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“)
-FILE* fout_log;			   //ƒƒOƒtƒ@ƒCƒ‹
-FILE* fout_undet;		   //ÅI–¢ŒŸoŒÌáƒtƒ@ƒCƒ‹(‹óƒtƒ@ƒCƒ‹)
-FILE* fout_det;			   //ÅIŒŸoŒÌáƒtƒ@ƒCƒ‹(‰Šú–¢ŒŸoŒÌáW‡ƒtƒ@ƒCƒ‹)
+FILE* fout_fault;		   //æ•…éšœé›†åˆãƒ•ã‚¡ã‚¤ãƒ«
+FILE* fout_pin_input;	   //å…¥åŠ›ãƒ”ãƒ³ãƒ•ã‚¡ã‚¤ãƒ«
+FILE* fout_pin;			   //å…¥åŠ›ãƒ”ãƒ³ãƒ•ã‚¡ã‚¤ãƒ«(æ•…éšœã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³)
+FILE* fout_log;			   //ãƒ­ã‚°ãƒ•ã‚¡ã‚¤ãƒ«
+FILE* fout_undet;		   //æœ€çµ‚æœªæ¤œå‡ºæ•…éšœãƒ•ã‚¡ã‚¤ãƒ«(ç©ºãƒ•ã‚¡ã‚¤ãƒ«)
+FILE* fout_det;			   //æœ€çµ‚æ¤œå‡ºæ•…éšœãƒ•ã‚¡ã‚¤ãƒ«(ï¼åˆæœŸæœªæ¤œå‡ºæ•…éšœé›†åˆãƒ•ã‚¡ã‚¤ãƒ«)
 
-FILE* fout_unseed_fault;	//ƒeƒXƒg•s”\ŒÌáW‡ƒtƒ@ƒCƒ‹
-FILE* fout_high_fault;		//‚Á”ï“d—ÍŒÌáW‡ƒtƒ@ƒCƒ‹
-FILE* fout_init_undet;		//‰Šú–¢ŒŸoW‡ƒtƒ@ƒCƒ‹
-FILE* fout_untest_pbo;		//ƒeƒXƒg•s”\ŒÌáíœ—p‚ÌSTTG‚ÌPBOƒtƒ@ƒCƒ‹
-FILE* fout_literal;			//ƒeƒXƒg•s”\íœ‘O‚ÌƒŠƒeƒ‰ƒ‹î•ñ
+FILE* fout_unseed_fault;	//ãƒ†ã‚¹ãƒˆä¸èƒ½æ•…éšœé›†åˆãƒ•ã‚¡ã‚¤ãƒ«
+FILE* fout_abort_fault;          // [STTG/WSATH INTEGRATION]
+FILE* fout_high_fault;		//é«˜æ¶ˆè²»é›»åŠ›æ•…éšœé›†åˆãƒ•ã‚¡ã‚¤ãƒ«
+FILE* fout_init_undet;		//åˆæœŸæœªæ¤œå‡ºé›†åˆãƒ•ã‚¡ã‚¤ãƒ«
+FILE* fout_untest_pbo;		//ãƒ†ã‚¹ãƒˆä¸èƒ½æ•…éšœå‰Šé™¤ç”¨ã®STTGã®PBOãƒ•ã‚¡ã‚¤ãƒ«
+FILE* fout_literal;			//ãƒ†ã‚¹ãƒˆä¸èƒ½å‰Šé™¤å‰ã®ãƒªãƒ†ãƒ©ãƒ«æƒ…å ±
 
-FILE* fout_mttg_pbo;		//MTTG‚ÌPBOƒtƒ@ƒCƒ‹
-FILE* fout_mini_pbo;		//–Ú•WŒÌá‘I‘ğ‚ÌminiPBO
-FILE* fout_mini_pbo_copy;	//–Ú•WŒÌá‘I‘ğ‚Ì1‚Â‘O‚Ìƒtƒ@ƒCƒ‹•Û‘¶—p
-FILE* fout_fsim_result;	    //ŒÌá«‘ƒtƒ@ƒCƒ‹
-FILE* fout_mttg;	        //1TP“–‚½‚è‚ÅŒŸo‚³‚ê‚½ŒÌá”ƒtƒ@ƒCƒ‹
-FILE* fout_log;				//ƒƒOƒtƒ@ƒCƒ‹
-FILE* fout_tfl_log;         //–Ú•WŒÌáW‡ƒƒOƒtƒ@ƒCƒ‹
-
-//------------------------------------------------------------------------
-//“ü—Íƒtƒ@ƒCƒ‹
-//------------------------------------------------------------------------
-FILE* fin_mini_pbo_result;	    //–Ú•WŒÌá‘I‘ğ—p‚ÌPBOŒ‹‰Êƒtƒ@ƒCƒ‹
+FILE* fout_mttg_pbo;		//MTTGã®PBOãƒ•ã‚¡ã‚¤ãƒ«
+FILE* fout_mini_pbo;		//ç›®æ¨™æ•…éšœé¸æŠæ™‚ã®miniPBO
+FILE* fout_mini_pbo_copy;	//ç›®æ¨™æ•…éšœé¸æŠæ™‚ã®1ã¤å‰ã®ãƒ•ã‚¡ã‚¤ãƒ«ä¿å­˜ç”¨
+FILE* fout_fsim_result;	    //æ•…éšœè¾æ›¸ãƒ•ã‚¡ã‚¤ãƒ«
+FILE* fout_mttg;	        //1TPå½“ãŸã‚Šã§æ¤œå‡ºã•ã‚ŒãŸæ•…éšœæ•°ãƒ•ã‚¡ã‚¤ãƒ«
+FILE* fout_log;				//ãƒ­ã‚°ãƒ•ã‚¡ã‚¤ãƒ«
+FILE* fout_tfl_log;         //ç›®æ¨™æ•…éšœé›†åˆãƒ­ã‚°ãƒ•ã‚¡ã‚¤ãƒ«
 
 //------------------------------------------------------------------------
-//ƒtƒHƒ‹ƒ_[w’è								
+//å…¥åŠ›ãƒ•ã‚¡ã‚¤ãƒ«
 //------------------------------------------------------------------------
-char* folder_out;		//o—Íƒtƒ@ƒCƒ‹—p‚ÌƒtƒHƒ‹ƒ_[æ
+FILE* fin_mini_pbo_result;	    //ç›®æ¨™æ•…éšœé¸æŠç”¨ã®PBOçµæœãƒ•ã‚¡ã‚¤ãƒ«
 
 //------------------------------------------------------------------------
-//‘JˆÚŒÌá—p
+//ãƒ•ã‚©ãƒ«ãƒ€ãƒ¼æŒ‡å®š								
 //------------------------------------------------------------------------
-int all_num;					//‘SŒÌá”
-UNDET_FAULT_LIST *afl;			//‘SŒÌáƒŠƒXƒg
-int dfl_num;					//ŒŸoŒÌá”
-UNDET_FAULT_LIST *dfl;			//ŒŸoŒÌáƒŠƒXƒg
-int ufl_num;					//–¢ŒŸoŒÌá”
-UNDET_FAULT_LIST *ufl;			//–¢ŒŸoŒÌáƒŠƒXƒg
-int unseed_num;					//ƒV[ƒh¶¬•s”\ŒÌá”
-UNDET_FAULT_LIST* unseed;		//ƒV[ƒh¶¬•s”\ŒÌáƒŠƒXƒg
-int hpfl_num;					//‚Á”ï“d—ÍŒÌá”
-UNDET_FAULT_LIST *hpfl;			//‚Á”ï“d—ÍŒÌáƒŠƒXƒg
-int node_num;                   //‘ŒÌáM†ü” 
-int tfl_num;					//–Ú•WŒÌá”
-UNDET_FAULT_LIST* tfl;			//–Ú•WŒÌáƒŠƒXƒg
-UNDET_FAULT_LIST** tfl_node;	//–Ú•WŒÌá‚ÌM†üW‡
+char* folder_out;		//å‡ºåŠ›ãƒ•ã‚¡ã‚¤ãƒ«ç”¨ã®ãƒ•ã‚©ãƒ«ãƒ€ãƒ¼å…ˆ
+
+//------------------------------------------------------------------------
+//é·ç§»æ•…éšœç”¨
+//------------------------------------------------------------------------
+int all_num;					//å…¨æ•…éšœæ•°
+UNDET_FAULT_LIST *afl;			//å…¨æ•…éšœãƒªã‚¹ãƒˆ
+int dfl_num;					//æ¤œå‡ºæ•…éšœæ•°
+UNDET_FAULT_LIST *dfl;			//æ¤œå‡ºæ•…éšœãƒªã‚¹ãƒˆ
+int ufl_num;					//æœªæ¤œå‡ºæ•…éšœæ•°
+UNDET_FAULT_LIST *ufl;			//æœªæ¤œå‡ºæ•…éšœãƒªã‚¹ãƒˆ
+int unseed_num;					//ã‚·ãƒ¼ãƒ‰ç”Ÿæˆä¸èƒ½æ•…éšœæ•°
+UNDET_FAULT_LIST* unseed;		//ã‚·ãƒ¼ãƒ‰ç”Ÿæˆä¸èƒ½æ•…éšœãƒªã‚¹ãƒˆ
+int hpfl_num;					//é«˜æ¶ˆè²»é›»åŠ›æ•…éšœæ•°
+UNDET_FAULT_LIST *hpfl;			//é«˜æ¶ˆè²»é›»åŠ›æ•…éšœãƒªã‚¹ãƒˆ
+int atfl_num;                  // [STTG/WSATH INTEGRATION] abort fault count
+UNDET_FAULT_LIST *atfl;        // [STTG/WSATH INTEGRATION] abort fault list
+int node_num;                   //ç·æ•…éšœä¿¡å·ç·šæ•° 
+int tfl_num;					//ç›®æ¨™æ•…éšœæ•°
+UNDET_FAULT_LIST* tfl;			//ç›®æ¨™æ•…éšœãƒªã‚¹ãƒˆ
+UNDET_FAULT_LIST** tfl_node;	//ç›®æ¨™æ•…éšœã®ä¿¡å·ç·šé›†åˆ
 
 
 
 //------------------------------------------------------------------------
-//‚»‚Ì‘¼							
+//ãã®ä»–							
 //------------------------------------------------------------------------
-#define		X	-1				//ƒhƒ“ƒgƒPƒA
-unsigned int suffix;			//“Y‚¦š
-STACK Open;						//ƒI[ƒvƒ“ƒpƒX—p‚ÌƒXƒ^ƒbƒN
-unsigned int fc_ppo;			//PPO”‰Šú‰»
-QUE Que;						//ƒLƒ…[
-int seed_num;						//ƒeƒXƒgƒxƒNƒgƒ‹”
+#define		X	-1				//ãƒ‰ãƒ³ãƒˆã‚±ã‚¢
+unsigned int bool_id;       // claspç”¨ãƒ–ãƒ¼ãƒ«å¤‰æ•°IDã®å‰²ã‚Šå½“ã¦ã‚«ã‚¦ãƒ³ã‚¿
+STACK Open;						//ã‚ªãƒ¼ãƒ—ãƒ³ãƒ‘ã‚¹ç”¨ã®ã‚¹ã‚¿ãƒƒã‚¯
+unsigned int fc_ppo;			//PPOæ•°åˆæœŸåŒ–
+QUE Que;						//ã‚­ãƒ¥ãƒ¼
+int seed_num;						//ãƒ†ã‚¹ãƒˆãƒ™ã‚¯ãƒˆãƒ«æ•°
 
 //------------------------------------------------------------------------
-//ƒvƒƒgƒ^ƒCƒvéŒ¾
+//ãƒ—ãƒ­ãƒˆã‚¿ã‚¤ãƒ—å®£è¨€
 //------------------------------------------------------------------------
 //Level_stack.c
 void level_push(NLIST* p);
@@ -163,6 +170,8 @@ int nor(NLIST *net, int flag);
 int or (NLIST *net, int flag);
 //logic_sim.c
 int logic_sim(void);
+int logic_sim_frame(int frame);
+int validate_circuit_gates(void);
 //logic_sim_1time.c
 int logic_sim_1time(void);
 //logic_sim_2time.c
@@ -172,7 +181,7 @@ int ppo_ppi_cat(void);
 //test_v_read.c
 int test_v_read(void);
 //fault_judge.c
-int fault_judge(void);
+int fault_judge(int sttg_flag, int change_wsath_flag);
 //file_output.c
 int file_output(clock_t time, int mode);
 //pin_make.c
@@ -218,18 +227,18 @@ PBO mttg_calc_pbo_size(void);
 PBO mttg_calc_hard_constraint(void);
 int mttg_calc_soft_constraint(void);
 //mttg_check_wsa.c
-int mttg_check_wsa(void);
+int mttg_check_wsa(int change_wsath_25, int change_wsath_30);
 //mttg_main.c
 int mttg_main(void);
 //mttg_pbo_generate.c
 void mttg_pbo_generate_min(FILE* fp);
 void pbo_generate_fdetect_c_mttg(FILE *fp, UNDET_FAULT_LIST* node);
 void pbo_generate_fault_ex(FILE *fp, UNDET_FAULT_LIST* node, int mode);
-void pbo_generate_power_mttg(int change_wasth_flag,FILE *fp);
+void pbo_generate_power_mttg(int change_wsath_25, int change_wsath_30, FILE *fp);
 //specific_fault_range.c
 int specific_fault_range(char* name,int idx);
 //undet_fault_delete.c
 int undet_fault_delete(UNDET_FAULT_LIST* node);
 void ufl_free(UNDET_FAULT_LIST* node, UNDET_FAULT_LIST* pre_node,int mode);
 //clasp_call.c
-void clasp_call(int resolving_flag);
+int clasp_call(int retry_index);

@@ -23,7 +23,7 @@ PBO mttg_calc_pbo_size(void) {
 	pbo.val = 0;
 	pbo.h_constraint = 0;
 	pbo.s_constraint = 0;
-	suffix = n_net*2+101;//’Ç‰Á
+	bool_id = n_net*2+101;//’Ç‰Á
 
 
 
@@ -61,10 +61,10 @@ PBO mttg_calc_pbo_size(void) {
 	//---------------------------------------------
 	if (tfl_num == 1) {
 		if (fc_ppo == 1) {
-			pbo.val = suffix + fc_ppo + pbo.s_constraint - 1;
+			pbo.val = bool_id + fc_ppo + pbo.s_constraint - 1;
 		}
 		else if (fc_ppo != 1) {
-			pbo.val = suffix + fc_ppo + 1 + pbo.s_constraint;
+			pbo.val = bool_id + fc_ppo + 1 + pbo.s_constraint;
 		}
 	}
 
@@ -175,6 +175,10 @@ PBO mttg_calc_hard_constraint(void) {
 					p.h_constraint += 4;
 					break;
 				}
+				if (k == 0 && strcmp(fi[FP_MODE].name, "ON") == 0) { // [FP INTEGRATION]
+					p.h_constraint += 2;
+					if (nl[i].n_out != 0) p.h_constraint++;
+				}
 			}
 		}
 		//-------------------------------------------------------------------------------------
@@ -192,8 +196,8 @@ PBO mttg_calc_hard_constraint(void) {
 		//-------------------------------------------------------------------
 		//tfl‚ª•¡”‚ ‚éê‡
 		if (tfl_num != 1) {
-			if (fc_ppo == 1)p.val += suffix - p.val; 	            //PPO‚ª’Pˆê‚Ìê‡
-			else if (fc_ppo != 1)p.val += suffix + fc_ppo - p.val;	//PPO‚ª•¡”‚Ìê‡*/
+			if (fc_ppo == 1)p.val += bool_id - p.val; 	            //PPO‚ª’Pˆê‚Ìê‡
+			else if (fc_ppo != 1)p.val += bool_id + fc_ppo - p.val;	//PPO‚ª•¡”‚Ìê‡*/
 		}
 		//---------------------------------------------
 		//ŒÌá—ã‹N‚É‚Â‚¢‚Ä
@@ -207,7 +211,7 @@ PBO mttg_calc_hard_constraint(void) {
 
 		//“Y‚¦šİ’è(tfl_num!=1)
 		if (tfl_num != 1) {
-			suffix = p.val + 1;
+			bool_id = p.val + 1;
 		}
 
 		//Ÿ‚ÌŒÌá‚Ö

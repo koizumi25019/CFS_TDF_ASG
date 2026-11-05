@@ -1,60 +1,31 @@
-//------------------------------------------------------------------------
-//ƒCƒ“ƒNƒ‹[ƒh
-//------------------------------------------------------------------------
-#include<stdio.h>
-#include<time.h>
-#include<stdlib.h>
-#include<string.h>
-#include<math.h>
+ï»¿//------------------------------------------------------------------------
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "../header/Define.h"
 
-//------------------------------------------------------------------------
-//©ìƒCƒ“ƒNƒ‹[ƒh
-//------------------------------------------------------------------------
-#include"../header/Define.h"
-
-//===================================================
-//ŠÖ”–¼:mttg_check_wsa
-//‹@”\:WSAŒvZ(‚Á”ï“d—ÍŒÌá‚©”Û‚©)
-//     ”O‚Ì‚½‚ßƒeƒXƒg¶¬‚³‚ê‚½‚à‚Ì‚ª’áÁ”ï‚©ÄŠm”F
-//–ß‚è’lFint ³íI—¹:SUCCESS(=0) , ˆÙíI—¹:ERROR(=-1)
-//ˆø”F‚È‚µ
-//===================================================
-int mttg_check_wsa(void) {
-	char cmd[500];
-	char str[20000];
-	char txt_cmd[100];
-	FILE* fout_high;
-	FILE* fout_low;
-	int flag = ERROR;
-
-	//WSA‰ğÍ
-	sprintf(cmd, "WSA.exe -sc %s -tptx %stp.txt -mode 1 -rate %d -high %shigh_mttg.txt -low %slow_mttg.txt -rep %s%s_wsa_rep.txt", fi[CIRCUIT].name,folder_out, fi[WSATH].value,folder_out,folder_out,folder_out, module_name);
-	system(cmd);
-
-	//Œ‹‰Êƒtƒ@ƒCƒ‹ƒI[ƒvƒ“(‚Á”ï“d—ÍƒeƒXƒgƒpƒ^[ƒ“,’áÁ”ï“d—ÍƒeƒXƒgƒpƒ^[ƒ“)
-	sprintf(txt_cmd, "%shigh_mttg.txt", folder_out);
-	if ((fout_high = (fopen(txt_cmd, "r"))) == NULL) {
-		printf("yERRORz:File open high_mttg.txt(mttg_check_wsa.c)\n");
-		return ERROR;
-	}
-
-	sprintf(txt_cmd, "%slow_mttg.txt", folder_out);
-	if ((fout_low = (fopen(txt_cmd, "r"))) == NULL) {
-		printf("yERRORz:File open low_mttg.txt(mttg_check_wsa.c)\n");
-		return ERROR;
-	}
-
-	//‚Á”ï“d—ÍŒÌá‚Ìê‡¨ƒeƒXƒg¶¬‚¨‚©‚µ‚¢
-	if ((fgets(str, n_net + 1, fout_low)) != NULL) {
-		flag = SAT;
-	}
-	else if ((fgets(str, n_net + 1, fout_high)) != NULL) {
-		flag = UNSAT;
-	}
-
-	fclose(fout_high);
-	fclose(fout_low);
-
-	return flag;
-
+int mttg_check_wsa(int changed_to_25, int changed_to_30)
+{
+    char command[4096];
+    char path[1024];
+    FILE* result = NULL;
+    int threshold = fi[WSATH].value;
+    int accepted;
+    if (strcmp(fi[STTG_WSATH_MODE].name, "ON") == 0) {
+        threshold = changed_to_30 ? 30 : (changed_to_25 ? 25 : 29);
+    }
+    sprintf_s(command, sizeof(command),
+        "WSA.exe -sc \"%s\" -tptx \"%stp.txt\" -mode 1 -rate %d -high \"%shigh_mttg.txt\" -low \"%slow_mttg.txt\" -rep \"%s%s_wsa_rep.txt\"",
+        fi[CIRCUIT].name, folder_out, threshold, folder_out, folder_out, folder_out, module_name);
+    if (system(command) != 0) {
+        return ERROR;
+    }
+    sprintf_s(path, sizeof(path), "%slow_mttg.txt", folder_out);
+    if (fopen_s(&result, path, "r") != 0) {
+        return ERROR;
+    }
+    /* Only presence is needed; do not read n_net bytes into a fixed-size buffer. */
+    accepted = fgetc(result) != EOF;
+    fclose(result);
+    return accepted ? SAT : UNSAT;
 }

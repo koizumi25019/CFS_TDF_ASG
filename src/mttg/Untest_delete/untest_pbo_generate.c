@@ -177,6 +177,7 @@ void pbo_generate_fault_c(FILE* fp, UNDET_FAULT_LIST* node, int idx) {
 				fprintf(fp, "1 ~x%d +1 x%d +1 x%d >=1;\n", sort_nl[i]->in[0]->suf_fc, sort_nl[i]->in[1]->suf_fc, sort_nl[i]->suf_fc);
 				break;
 			}
+			if (strcmp(fi[FP_MODE].name, "ON") == 0) { // [FP INTEGRATION]
 			if (idx == 0) {//fは何個目の目標故障かを示している　1次故障に対して故障伝搬変数を導入 //CONS_SIZEはとりあえず50000にしてる
 				//故障伝搬変数に関する制約作成
 				if (0 != sort_nl[i]->n_out) {
@@ -186,8 +187,9 @@ void pbo_generate_fault_c(FILE* fp, UNDET_FAULT_LIST* node, int idx) {
 
 					for (int m = 0; m < sort_nl[i]->n_out; m++)
 					{
+						if (sort_nl[i]->out[m]->fault_pass != YES || sort_nl[i]->out[m]->prop == 0) continue; // [FP INTEGRATION]
 						//+ ACT(Y)
-						fprintf(fp, " +1 x%d", sort_nl[i]->prop);
+						fprintf(fp, " +1 x%d", sort_nl[i]->out[m]->prop); // [FP INTEGRATION] ACT(Y)
 					}
 					fprintf(fp, " >=1;\n");
 
@@ -208,6 +210,7 @@ void pbo_generate_fault_c(FILE* fp, UNDET_FAULT_LIST* node, int idx) {
 					sort_nl[i]->suf_fc);
 
 				//OPBcalcSize(&opb.total, 0, 1, 0, 0);
+			}
 			}
 		}
 	}
@@ -234,25 +237,25 @@ void pbo_generate_fdetect_c(FILE *fp, UNDET_FAULT_LIST* node) {
 	for (i = 0; i < n_net; i++) {
 		if (nl[i].fault_pass == YES && nl[i].ppo_flag ==1)  {
 			//●EXOR
-			fprintf(fp, "1 ~x%d +1 ~x%d +1 ~x%d >=1;\n", nl[i].suf_2t, nl[i].suf_fc, suffix);
-			fprintf(fp, "1 x%d +1 x%d +1 ~x%d >=1;\n", nl[i].suf_2t, nl[i].suf_fc, suffix);
-			fprintf(fp, "1 x%d +1 ~x%d +1 x%d >=1;\n", nl[i].suf_2t, nl[i].suf_fc, suffix);
-			fprintf(fp, "1 ~x%d +1 x%d +1 x%d >=1;\n", nl[i].suf_2t, nl[i].suf_fc, suffix);
-			fdetct_in[j] = suffix;
-			suffix++;
+			fprintf(fp, "1 ~x%d +1 ~x%d +1 ~x%d >=1;\n", nl[i].suf_2t, nl[i].suf_fc, bool_id);
+			fprintf(fp, "1 x%d +1 x%d +1 ~x%d >=1;\n", nl[i].suf_2t, nl[i].suf_fc, bool_id);
+			fprintf(fp, "1 x%d +1 ~x%d +1 x%d >=1;\n", nl[i].suf_2t, nl[i].suf_fc, bool_id);
+			fprintf(fp, "1 ~x%d +1 x%d +1 x%d >=1;\n", nl[i].suf_2t, nl[i].suf_fc, bool_id);
+			fdetct_in[j] = bool_id;
+			bool_id++;
 			j++;
 		}
 	}
 
 	if (fc_ppo != 1) {
-		for (i = 0; (unsigned int)i < fc_ppo; i++) { fprintf(fp, "1 ~x%d +1 x%d >=1;\n", fdetct_in[i], suffix); }
+		for (i = 0; (unsigned int)i < fc_ppo; i++) { fprintf(fp, "1 ~x%d +1 x%d >=1;\n", fdetct_in[i], bool_id); }
 		for (i = 0; (unsigned int)i < fc_ppo; i++) { fprintf(fp, "1 x%d +", fdetct_in[i]); }
-		fprintf(fp, "1 ~x%d >=1;\n", suffix);
-		fprintf(fp, "1 x%d >=1;\n", suffix);
-		suffix++;
+		fprintf(fp, "1 ~x%d >=1;\n", bool_id);
+		fprintf(fp, "1 x%d >=1;\n", bool_id);
+		bool_id++;
 	}
 	else if (fc_ppo == 1) {
-		fprintf(fp, "1 x%d >=1;\n", suffix - 1);
+		fprintf(fp, "1 x%d >=1;\n", bool_id - 1);
 	}
 
 	//ここから故障励起関連だと思う
@@ -296,17 +299,17 @@ void pbo_generate_power(FILE *fp) {
 	for (i = 0; i < n_net; i++) {
 		if (nl[i].open_pass == NO) {
 
-			fprintf(fp, "1 x%d +1 x%d x%d +1 ~x%d ~x%d >=1;\n", suffix, nl[i].suf_1t, nl[i].suf_2t, nl[i].suf_1t, nl[i].suf_2t);
+			fprintf(fp, "1 x%d +1 x%d x%d +1 ~x%d ~x%d >=1;\n", bool_id, nl[i].suf_1t, nl[i].suf_2t, nl[i].suf_1t, nl[i].suf_2t);
 			 
 			//WSA制約
-			sprintf(cons1, "%s-1 x%d ", cons1, suffix);
-			suffix++;
+			sprintf(cons1, "%s-1 x%d ", cons1, bool_id);
+			bool_id++;
 		}
 	}
 
 	//WSA制約(WSA閾値)
 	sprintf(cons1, "%s>=-%d;\n", cons1, n_net *  fi[WSATH].value / 100);
-	suffix++;
+	bool_id++;
 
 	fprintf(fp, "%s", cons1);
 }

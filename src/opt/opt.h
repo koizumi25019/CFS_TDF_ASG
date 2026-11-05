@@ -44,7 +44,6 @@ typedef struct Input_File
 	char* xortap;			  /**< xor-tap file */
 	char* scanchain;		  /**< scan-chain file */
 	char* necessary;		  /**< necessary file */
-	char* graph;			  /**< graph file */
 	int lfsr;				  /**< num lfsr */
 	int loop;				  /**< num of selection compatible group  */
 }

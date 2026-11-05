@@ -1,5 +1,5 @@
-//------------------------------------------------------------------------
-//ƒCƒ“ƒNƒ‹[ƒh
+ï»¿//------------------------------------------------------------------------
+//ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰
 //------------------------------------------------------------------------
 #include <stdio.h>
 #include <time.h>
@@ -9,7 +9,7 @@
 #include<sys/stat.h>
 
 //------------------------------------------------------------------------
-//©ìƒCƒ“ƒNƒ‹[ƒh
+//è‡ªä½œã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰
 //------------------------------------------------------------------------
 #include"../../header/Define.h"
 
@@ -19,58 +19,65 @@
 //}
 
 //===================================================
-//ŠÖ”–¼:init_exturn
-//‹@”\:‰Šú‰»ŠÖ˜A
-//–ß‚è’lFint ³íI—¹:SUCCESS(=0) , ˆÙíI—¹:ERROR(=-1)
-//ˆø”F‚È‚µ
+//é–¢æ•°å:init_exturn
+//æ©Ÿèƒ½:åˆæœŸåŒ–é–¢é€£
+//æˆ»ã‚Šå€¤ï¼šint æ­£å¸¸çµ‚äº†:SUCCESS(=0) , ç•°å¸¸çµ‚äº†:ERROR(=-1)
+//å¼•æ•°ï¼šãªã—
 //===================================================
 int init_exturn(void) {
 	char txt_cmd[300];
 	//char* file_n;
 	int str_file;
 
-	//‘JˆÚŒÌáŠÖ˜A
+	//é·ç§»æ•…éšœé–¢é€£
 	hpfl = NULL;
-	ufl_num = 0;		            //–¢ŒŸoŒÌá”
-	dfl_num;				        //ŒŸoŒÌá”
-	unseed_num = 0;		            //ƒV[ƒh¶¬•s”\ŒÌá”
-	hpfl_num = 0;			        //‚Á”ï“d—ÍŒÌá”
-	seed_num = 0;					    //ƒeƒXƒgƒxƒNƒgƒ‹”
+	atfl = NULL;                    // [STTG/WSATH INTEGRATION]
+	atfl_num = 0;                   // [STTG/WSATH INTEGRATION]
+	ufl_num = 0;		            //æœªæ¤œå‡ºæ•…éšœæ•°
+	dfl_num = 0;
+	unseed_num = 0;		            //ã‚·ãƒ¼ãƒ‰ç”Ÿæˆä¸èƒ½æ•…éšœæ•°
+	hpfl_num = 0;			        //é«˜æ¶ˆè²»é›»åŠ›æ•…éšœæ•°
+	seed_num = 0;					    //ãƒ†ã‚¹ãƒˆãƒ™ã‚¯ãƒˆãƒ«æ•°
 
-	//ƒLƒ…[
-	Que.max = n_net * 1000;	        //Å‘å’l
-	Que.front = 0;				    //æ“ªƒCƒ“ƒfƒbƒNƒX
-	Que.rear = 0;				    //––”öƒCƒ“ƒfƒbƒNƒX
-	Que.num = 0;				    //—v‘f”
+	//ã‚­ãƒ¥ãƒ¼
+	Que.max = n_net * 1000;	        //æœ€å¤§å€¤
+	Que.front = 0;				    //å…ˆé ­ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
+	Que.rear = 0;				    //æœ«å°¾ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
+	Que.num = 0;				    //è¦ç´ æ•°
 	if ((Que.que = (NLIST**)calloc(n_net * 1000, sizeof(NLIST*))) == NULL) {
-		printf("yERRORz:No calloc Que(init_exturn.c)");
+		printf("ã€ERRORã€‘:No calloc Que(init_exturn.c)");
 		exit(EXIT_FAILURE);
 	}
 
-	//ƒŒƒxƒ‰ƒCƒY
-	Level.max_num = n_net * 100;	//Å‘å’l
-	Level.ptr = 0;					//ƒCƒ“ƒfƒbƒNƒX
+	//ãƒ¬ãƒ™ãƒ©ã‚¤ã‚º
+	Level.max_num = n_net;
+	Level.ptr = 0;					//ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
 	if ((Level.stk = (NLIST**)calloc(n_net, sizeof(NLIST*))) == NULL) {
-		printf("yERRORz:No calloc Level stack(init_exturn.c)\n");
+		printf("ã€ERRORã€‘:No calloc Level stack(init_exturn.c)\n");
 		return ERROR;
 	}
 
-	//ƒI[ƒvƒ“ƒpƒX
-	Open.max_num = n_net * 100;		//Å‘å’l
-	Open.ptr = 0;					//ƒCƒ“ƒfƒbƒNƒX
+	//ã‚ªãƒ¼ãƒ—ãƒ³ãƒ‘ã‚¹
+	Open.max_num = n_net;
+	Open.ptr = 0;					//ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
 	if ((Open.stk = (NLIST**)calloc(n_net, sizeof(NLIST*))) == NULL) {
-		printf("yERRORz:No calloc Open stack(init_exturn.c)\n");
+		printf("ã€ERRORã€‘:No calloc Open stack(init_exturn.c)\n");
 		return ERROR;
 	}
 
-	//ƒtƒHƒ‹ƒ_[‚Ìì¬
-	if ((folder_out = (char*)calloc(100, sizeof(char))) == NULL) {
-		printf("yERRORz:No calloc Folder name output(init_exturn.c)\n");
+	//ãƒ•ã‚©ãƒ«ãƒ€ãƒ¼ã®ä½œæˆ
+	if ((folder_out = (char*)calloc(strlen(fi[FOLDER].name) + 2, sizeof(char))) == NULL) {
+		printf("ã€ERRORã€‘:No calloc Folder name output(init_exturn.c)\n");
 		return ERROR;
 	}
 	strcpy(folder_out,fi[FOLDER].name);
-	str_file = strlen(fi[FOLDER].name) - 1;
-	fi[FOLDER].name[str_file] = '\0';
+	str_file = (int)strlen(folder_out);
+	if (str_file == 0) {
+		return ERROR;
+	}
+	if (folder_out[str_file - 1] != '/' && folder_out[str_file - 1] != '\\') {
+		strcat(folder_out, "/");
+	}
 
 	//char new_name[100];
 	//int cnt = 0;
@@ -80,25 +87,25 @@ int init_exturn(void) {
 	//	snprintf(new_name, sizeof(new_name), "%s_%d", fi[FOLDER].name, cnt);
 	//}
 
-	//// folder_out‚ğnew_name‚ÉXV
+	//// folder_outã‚’new_nameã«æ›´æ–°
 	//strcpy(folder_out, new_name);
 
 	if (_mkdir(folder_out) != 0) {
-		printf("yERRORz:Please Delete Same name Folder(init_exturn.c)\n");
+		printf("ã€ERRORã€‘:Please Delete Same name Folder(init_exturn.c)\n");
 		return ERROR;
 	}
 
-	//ƒtƒ@ƒCƒ‹‚ğ‰Šú‰»
+	//ãƒ•ã‚¡ã‚¤ãƒ«ã‚’åˆæœŸåŒ–
 	sprintf(txt_cmd, "%smttg.txt", folder_out);;
 	if ((fout_mttg = fopen(txt_cmd, "w")) == NULL) {
-		printf("yERRORz:File open mttg.txt(init_exturn.c)\n");
+		printf("ã€ERRORã€‘:File open mttg.txt(init_exturn.c)\n");
 		return ERROR;
 	}
 	fclose(fout_mttg);
 
 	sprintf(txt_cmd, "%stfl_log.txt", folder_out);
 	if ((fout_tfl_log = fopen(txt_cmd, "w")) == NULL) {
-		printf("yERRORz:File open tfl_log.txt(init_exturn.c)\n");
+		printf("ã€ERRORã€‘:File open tfl_log.txt(init_exturn.c)\n");
 		return ERROR;
 	}
 	fclose(fout_tfl_log);

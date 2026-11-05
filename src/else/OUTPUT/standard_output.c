@@ -32,6 +32,7 @@ void standard_output(void) {
 	}
 	printf("// Number of Total Faults      :%d\n", (int)all_num);
 	printf("// Number of Unseed Faults     :%d\n", (int)unseed_num);
+	printf("// Number of Abort Faults      :%d\n", (int)atfl_num); // [STTG/WSATH INTEGRATION]
 	printf("// Number of High Power Faults :%d\n", (int)hpfl_num);
 	printf("// Number of Detected Faults   :%d\n", (int)dfl_num);
 	printf("// Number of Undetected Faults :%d\n", (int)ufl_num);
@@ -42,6 +43,10 @@ void standard_output(void) {
 	printf("// Time to graph               :%.2lfsec\n", (double)time_graph / CLOCKS_PER_SEC);
 	printf("// Target faults limit         :%d\n", fi[TARGET_LIMIT].value);
 	printf("// Rand Option                 :%s\n", fi[RAND].name);
+	printf("// CPS Experimental Mode       :%s\n", fi[CPS_MODE].name); // [CPS INTEGRATION]
+	printf("// FP Experimental Mode        :%s\n", fi[FP_MODE].name); // [FP INTEGRATION]
+	printf("// Resolving Experimental Mode :%s\n", fi[RESOLVING_MODE].name); // [RESOLVING INTEGRATION]
+	printf("// STTG/WSATH Experimental Mode:%s\n", fi[STTG_WSATH_MODE].name); // [STTG/WSATH INTEGRATION]
 	if (fi[PARALLEL].flag == 0) {
 	printf("// Parallel Mode Option        :OFF\n");
 	}

@@ -1,130 +1,86 @@
-//------------------------------------------------------------------------
-//ƒCƒ“ƒNƒ‹[ƒh
-//------------------------------------------------------------------------
-#include<stdio.h>
-#include<time.h>
-#include<stdlib.h>
-#include<string.h>
-#include<math.h>
+ï»¿//------------------------------------------------------------------------
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "../header/Define.h"
 
-//------------------------------------------------------------------------
-//©ìƒCƒ“ƒNƒ‹[ƒh
-//------------------------------------------------------------------------
-#include"../header/Define.h"
-
-// ŠÖ”ƒvƒƒgƒ^ƒCƒvéŒ¾
-NLIST* search_netlist(char* name);
-
-//===================================================
-// ŠÖ”–¼:transition_fault_set
-// ‹@”\:‘JˆÚŒÌá‚Ì–¢ŒŸoŒÌáW‡‚ğ\‘¢‘Ì‚ÉŠi”[
-// –ß‚è’lFint ³íI—¹:SUCCESS(=0) , ˆÙíI—¹:ERROR(=-1)
-// ˆø”F‚È‚µ
-//===================================================
-
-int transition_delay_fault_set(void) {
-
-	int id = 0;
-	char line[100];//ƒtƒ@ƒCƒ‹‚Ì1s•ª‚ğæ“¾
-	char *n_line=NULL;//ƒtƒ@ƒCƒ‹‚Ìˆês•ª‚ğ‡˜•ÏX—p
-	n_line = (char*)allocMemory(50000, sizeof(char));
-	char fault_type[10];
-	char net_name[50];
-	UNDET_FAULT_LIST* head = NULL;
-	UNDET_FAULT_LIST* node;
-	NLIST* net_info; 
-
-	//–¢ŒŸoŒÌáW‡ƒtƒ@ƒCƒ‹ƒI[ƒvƒ“
-	FILE* fp = fopen(fi[FAULT].name, "r");
-	if (fp == NULL) {
-		printf("yERRORz: File open failed (%s)\n", fi[FAULT].name);
-		return ERROR;
-	}
-
-	// ƒtƒ@ƒCƒ‹‚©‚çŠes‚ğ“Ç‚İæ‚Á‚Ä‰ğÍ
-	while (fgets(line, sizeof(line), fp) != NULL) {//ƒtƒ@ƒCƒ‹‚Ì1s•ª‚ğæ“¾
-
-		// V‚µ‚¢–¢ŒŸoŒÌáƒm[ƒh‚ğì¬
-		node = (UNDET_FAULT_LIST*)malloc(sizeof(UNDET_FAULT_LIST));
-		if (node == NULL) {
-			printf("yERRORz: Memory allocation failed\n");
-			fclose(fp);
-			return ERROR;
-		}
-
-		// sscanf ‚Å fault_type ‚Æ net_name ‚ğ“Ç‚İæ‚é
-		if (sscanf(line, "%s %s", net_name, fault_type) != 2) {
-			printf("yWARNINGz: Invalid format in line: %s", line);
-			continue;//Œ»İ‚Ì”½•œ(itertion)‚ğƒXƒLƒbƒv‚µAŸ‚Ì”½•œ‚ÉˆÚ‚é
-		}
-
-		// ƒlƒbƒg–¼‚ğŠî‚Éƒ\[ƒgÏ‚İƒlƒbƒgƒŠƒXƒg‚©‚çŠY“–‚·‚éî•ñ‚ğ’T‚·
-		net_info = search_netlist(net_name); 
-		if (net_info == NULL) {
-			printf("yERRORz: Net not found (%s)\n", net_name);
-			continue;
-		}
-
-		// ŒÌáî•ñ‚ÌŠi”[ (NLIST ‚Ìî•ñ‚ğ UNDET_FAULT_LIST ‚É”½‰f)
-		node->netlist = net_info;  // NLIST ‚Ìƒ|ƒCƒ“ƒ^‚ğ‚»‚Ì‚Ü‚Üg—p‰Â”\
-		strcpy(node->name, net_name);
-
-		// ŒÌáƒ^ƒCƒv‚Ìİ’è
-	    //nece.txt‚Ìstring:G16\tsa0\n‚Æ“¯‚¶‚æ‚¤‚È‹LqŒ`®‚É‚µ‚½‚¢‚Ì‚Å‡˜•ÏX
-		if (strcmp(fault_type, "STR") == 0 || strcmp(fault_type, "sa0") == 0) {
-			node->type = STR;
-			//sprintf(n_line, "%s\t%s\n", net_name, "sa0");
-			sprintf_s(n_line, 50000, "%s\t%s\n", net_name, "sa0");
-			node->string = _strdup(n_line);
-			//STR‚È‚çŒÌá‰ñ˜H‚Ì2–Ú‚ÌM†ü‚Ís-a-0‚Æ“™‰¿
-		}
-		else if (strcmp(fault_type, "STF") == 0 || strcmp(fault_type, "sa1") == 0) {
-			node->type = STF;
-			//sprintf(n_line, "%s\t%s\n", net_name, "sa1");
-			sprintf_s(n_line, 50000, "%s\t%s\n", net_name, "sa1");
-			node->string = _strdup(n_line);
-			//STF‚È‚çŒÌá‰ñ˜H‚Ì2–Ú‚ÌM†ü‚Ís-a-1‚Æ“™‰¿
-		}
-		else {
-			printf("yWARNINGz: Unknown fault type (%s)\n", fault_type);
-			free(node);
-			continue;
-		}
-
-		//M†üŒÌáID“ü—Í
-		node->node_id = id;
-		id++;
-
-		// ƒŠƒXƒg‚Ìæ“ª‚É’Ç‰Á
-		node->next = head;
-		head = node;
-		ufl_num++;
-	}
-
-	fclose(fp);
-
-	// ufl ‚ÉƒŠƒXƒg‚ğŠi”[
-	ufl = head;
-	afl = head;
-	node_num = id;
-
-	printf("yINFOz: Transition fault set created successfully.\n");
-	return SUCCESS;
+static NLIST* find_net(const char* name)
+{
+    for (int index = 0; index < n_net; index++) {
+        if (strcmp(sort_nl[index]->name, name) == 0) {
+            return sort_nl[index];
+        }
+    }
+    return NULL;
 }
 
+int transition_delay_fault_set(void)
+{
+    FILE* input = NULL;
+    char line[1024];
+    int line_number = 0;
+    UNDET_FAULT_LIST* head = NULL;
+    int fault_count = 0;
+    if (fopen_s(&input, fi[FAULT].name, "r") != 0) {
+        return ERROR;
+    }
+    while (fgets(line, sizeof(line), input) != NULL) {
+        char name[256];
+        char type_name[16];
+        char extra[2];
+        char key[280];
+        int type;
+        NLIST* net;
+        UNDET_FAULT_LIST* fault;
+        line_number++;
+        if (strspn(line, " \t\r\n") == strlen(line)) {
+            continue;
+        }
+        if (sscanf_s(line, "%255s %15s %1s", name, (unsigned)sizeof(name),
+            type_name, (unsigned)sizeof(type_name), extra, (unsigned)sizeof(extra)) != 2) {
+            goto invalid_input;
+        }
+        if (strcmp(type_name, "STR") == 0 || strcmp(type_name, "sa0") == 0) {
+            type = STR;
+        } else if (strcmp(type_name, "STF") == 0 || strcmp(type_name, "sa1") == 0) {
+            type = STF;
+        } else {
+            goto invalid_input;
+        }
+        net = find_net(name);
+        if (net == NULL) {
+            goto invalid_input;
+        }
+        for (fault = head; fault != NULL; fault = fault->next) {
+            if (fault->type == type && fault->netlist == net) {
+                goto invalid_input;
+            }
+        }
+        fault = (UNDET_FAULT_LIST*)allocMemory(1, sizeof(*fault));
+        strcpy_s(fault->name, sizeof(fault->name), name);
+        fault->type = type;
+        fault->netlist = net;
+        fault->node_id = fault_count++;
+        sprintf_s(key, sizeof(key), "%s\t%s\n", name, type == STR ? "sa0" : "sa1");
+        fault->string = _strdup(key);
+        fault->next = head;
+        head = fault;
+    }
+    fclose(input);
+    ufl = head;
+    afl = head;
+    ufl_num = fault_count;
+    node_num = fault_count;
+    return fault_count > 0 ? SUCCESS : ERROR;
 
-
-//===================================================
-// ŠÖ”–¼:search_netlist
-// ‹@”\:ƒlƒbƒg–¼‚©‚çƒ\[ƒgƒlƒbƒgƒŠƒXƒg‚ğ’Tõ‚µAŠY“–‚·‚éƒm[ƒh‚Ìî•ñ‚ğ•Ô‚·
-// –ß‚è’lFUNDET_FAULT_LIST* ŠY“–‚·‚éƒm[ƒh, Œ©‚Â‚©‚ç‚È‚¢ê‡‚ÍNULL
-// ˆø”Fchar* name - ƒlƒbƒg–¼
-//===================================================
-NLIST* search_netlist(char* name) {
-	for (int i = 0; i < n_net; i++) {
-		if (strcmp(sort_nl[i]->name, name) == 0) {
-			return sort_nl[i];
-		}
-	}
-	return NULL;
+invalid_input:
+    printf("[ERROR] Invalid or duplicate fault at line %d.\n", line_number);
+    fclose(input);
+    while (head != NULL) {
+        UNDET_FAULT_LIST* next = head->next;
+        free(head->string);
+        free(head);
+        head = next;
+    }
+    return ERROR;
 }

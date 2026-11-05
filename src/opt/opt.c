@@ -1,4 +1,4 @@
-//-------------------------------------------------------------------------------------------------------------
+ï»¿//-------------------------------------------------------------------------------------------------------------
 //	include
 //-------------------------------------------------------------------------------------------------------------
 #include <assert.h>
@@ -8,15 +8,40 @@
 #include "opt.h"
 #include "../asg/read.h"
 #include "../lib/lib.h"
-//’Ç‰Á
+//è¿½åŠ 
 #include "../header/Define.h"
 //#include "debug.h"
 
 
+static int integrated_mode_index(const char* option)
+{
+    if (strcmp(option, "-cps") == 0) return CPS_MODE;
+    if (strcmp(option, "-fp") == 0) return FP_MODE;
+    if (strcmp(option, "-resolving") == 0) return RESOLVING_MODE;
+    if (strcmp(option, "-sttg_wsath") == 0) return STTG_WSATH_MODE;
+    return -1;
+}
+
+static bool set_integrated_mode(int argc, char** argv, int* index, int mode_index)
+{
+    const char* option = argv[*index];
+
+    (*index)++;
+    if (*index >= argc ||
+        (strcmp(argv[*index], "ON") != 0 && strcmp(argv[*index], "OFF") != 0)) {
+        printf("%s requires ON or OFF.\n", option);
+        return OPT_ERROR;
+    }
+
+    fi[mode_index].name = argv[*index];
+    fi[mode_index].flag = ON;
+    return OPT_OKAY;
+}
+
 //*************************************************************************************************************
-//	@name		F@OPT
-//	@function	F	analyze the option
-//	@return		F	(bool) okay, error
+//	@name		ï¼šã€€OPT
+//	@function	ï¼š	analyze the option
+//	@return		ï¼š	(bool) okay, error
 //*************************************************************************************************************
 bool OPT(
 	int					  argc,			      /**< number of command-arguments */
@@ -56,9 +81,9 @@ bool OPT(
 }
 
 //*************************************************************************************************************
-//	@name		F@OPTinit
-//	@function	F	initialize the options
-//	@return		F	(void)
+//	@name		ï¼šã€€OPTinit
+//	@function	ï¼š	initialize the options
+//	@return		ï¼š	(void)
 //*************************************************************************************************************
 void OPTinit(
 	void
@@ -74,9 +99,9 @@ void OPTinit(
 }
 
 //*************************************************************************************************************
-//	@name		F@OPTinitFile
-//	@function	F	initialize the filename
-//	@return		F	(void)
+//	@name		ï¼šã€€OPTinitFile
+//	@function	ï¼š	initialize the filename
+//	@return		ï¼š	(void)
 //*************************************************************************************************************
 void OPTinitFile(
 	void
@@ -101,9 +126,9 @@ void OPTinitFile(
 }
 
 //*************************************************************************************************************
-//	@name		F@OPTinitMode
-//	@function	F	initialize the mode
-//	@return		F	(void)
+//	@name		ï¼šã€€OPTinitMode
+//	@function	ï¼š	initialize the mode
+//	@return		ï¼š	(void)
 //*************************************************************************************************************
 void OPTinitMode(
 	void
@@ -115,9 +140,9 @@ void OPTinitMode(
 }
 
 //*************************************************************************************************************
-//	@name		F@OPTset
-//	@function	F	set the options
-//	@return		F	(bool) okay, error
+//	@name		ï¼šã€€OPTset
+//	@function	ï¼š	set the options
+//	@return		ï¼š	(bool) okay, error
 //*************************************************************************************************************
 bool OPTset(
 	int				      argc,				  /**< number of command-arguments */
@@ -126,13 +151,18 @@ bool OPTset(
 {
 	for (int i = 1; i < argc; i++)
 	{
+        if (strcmp(argv[i], "-help") != 0 && i + 1 >= argc) {
+            printf("[ERROR] Missing value for %s.\n", argv[i]);
+            return OPT_ERROR;
+        }
+        int integrated_mode = integrated_mode_index(argv[i]);
 		/** help */
 		if (strcmp(argv[i], "-help") == 0)
 			return OPT_ERROR;
 
-		//’Ç‰Á
+		//è¿½åŠ 
 		//------------------------------------------------------------------------
-		// “ü—Íƒtƒ@ƒCƒ‹
+		// å…¥åŠ›ãƒ•ã‚¡ã‚¤ãƒ«
 		//------------------------------------------------------------------------
 
 		/** read the option */
@@ -140,7 +170,7 @@ bool OPTset(
 			return OPTread(argv[++i]);
 
 
-		/* ‰ñ˜Hƒtƒ@ƒCƒ‹–¼‚Ì“o˜^ */
+		/* å›è·¯ãƒ•ã‚¡ã‚¤ãƒ«åã®ç™»éŒ² */
 		else if (!strcmp(argv[i], "-net")) {
 			i++;
 			fi[CIRCUIT].name = argv[i];
@@ -148,71 +178,78 @@ bool OPTset(
 		}
 
 		//------------------------------------------------------------------------
-		// ƒIƒvƒVƒ‡ƒ“
+		// ã‚ªãƒ—ã‚·ãƒ§ãƒ³
 		//------------------------------------------------------------------------
 
-		/* ’áÁ”ï“d—Íƒ‚[ƒhæ“¾ */
+		/* ä½æ¶ˆè²»é›»åŠ›ãƒ¢ãƒ¼ãƒ‰å–å¾— */
 		else if (!strcmp(argv[i], "-power")) {
 			i++;
 			fi[LOW_POWER].name = argv[i];
 			fi[LOW_POWER].flag = ON;
 		}
 
-		/* ƒtƒHƒ‹ƒ_[‚Ìw’è */
+		/* ãƒ•ã‚©ãƒ«ãƒ€ãƒ¼ã®æŒ‡å®š */
 		else if (!strcmp(argv[i], "-folder")) {
 			i++;
 			fi[FOLDER].name = argv[i];
 			fi[FOLDER].flag = ON;
 		}
 
-		/* ƒ‰ƒ“ƒ_ƒ€‘½dŒÌá‘I‘ğ(default:OFF)æ“¾ */
+		/* ãƒ©ãƒ³ãƒ€ãƒ å¤šé‡æ•…éšœé¸æŠ(default:OFF)å–å¾— */
 		else if (!strcmp(argv[i], "-rand")) {
 			i++;
 			fi[RAND].name = argv[i];
 			fi[RAND].flag = ON;
 		}
 
-		/* Solver‘Å‚¿Ø‚èŠÔ(default:10)æ“¾ */
+		/* Solveræ‰“ã¡åˆ‡ã‚Šæ™‚é–“(default:10)å–å¾— */
 		else if (!strcmp(argv[i], "-time")) {
 			i++;
 			fi[TIME].value = atoi(argv[i]);
 			fi[TIME].flag = ON;
 		}
 
-		/* WSAè‡’lÁ”ï“d—Íè‡’l(default:20)æ“¾ */
+		/* WSAé–¾å€¤ï¼æ¶ˆè²»é›»åŠ›é–¾å€¤(default:20)å–å¾— */
 		else if (!strcmp(argv[i], "-wsath")) {
 			i++;
 			fi[WSATH].value = atoi(argv[i]);
 			fi[WSATH].flag = ON;
 		}
 
-		/* –Ú•WŒÌá‚ÌãŒÀæ“¾(0‚Ìê‡‚Í§ŒÀ‚È‚µ) */
+		/* ç›®æ¨™æ•…éšœã®ä¸Šé™å–å¾—(0ã®å ´åˆã¯åˆ¶é™ãªã—) */
 		else if (!strcmp(argv[i], "-target_limit")) {
 			i++;
 			fi[TARGET_LIMIT].value = atoi(argv[i]);
 			fi[TARGET_LIMIT].flag = ON;
 		}
 
-		/*ŒÌáƒtƒ@ƒCƒ‹æ“¾*/
+		/*æ•…éšœãƒ•ã‚¡ã‚¤ãƒ«å–å¾—*/
 		else if (!strcmp(argv[i], "-fault")) {
 			i++;
 			fi[FAULT].name = argv[i];
 			fi[FAULT].flag = ON;
 		}
 
-		/* CLASP --mode 1 w’è */
+		/* CLASP --mode 1 æŒ‡å®š */
 		else if (!strcmp(argv[i], "-mode_1")) {
 			i++;
 			fi[MODE_1].name = argv[i];
 			fi[MODE_1].flag = ON;
 		}
 
-		/* CLASP PARALLELƒ‚[ƒh w’è */
+		/* CLASP PARALLELãƒ¢ãƒ¼ãƒ‰ æŒ‡å®š */
 		else if (!strcmp(argv[i], "-parallel")) {
 			i++;
 			fi[PARALLEL].value = atoi(argv[i]);
 			fi[PARALLEL].flag = ON;
 		}
+
+        /* Integrated experimental modes are OFF by default. */
+        else if (integrated_mode >= 0) {
+            if (set_integrated_mode(argc, argv, &i, integrated_mode) != OPT_OKAY) {
+                return OPT_ERROR;
+            }
+        }
 
 		/** scan-chain */
 		else if (strcmp(argv[i], "-scan_chain") == 0)
@@ -225,10 +262,6 @@ bool OPTset(
 		/** necessary */
 		else if (strcmp(argv[i], "-nece") == 0)
 			opt.file.input.necessary = _strdup(argv[++i]);
-
-		/** graph */
-		else if (strcmp(argv[i], "-graph") == 0)
-			opt.file.input.graph = _strdup(argv[++i]);
 
 		/** lfsr bits */
 		else if (strcmp(argv[i], "-b") == 0)
@@ -269,13 +302,13 @@ bool OPTset(
 	}
 
 	//------------------------------------------------------------------------
-	// •K—vƒRƒ}ƒ“ƒh‚Ì“ü—ÍŠm”F
+	// å¿…è¦ã‚³ãƒãƒ³ãƒ‰ã®å…¥åŠ›ç¢ºèª
 	//------------------------------------------------------------------------
-	if (fi[CIRCUIT].flag == OFF) { printf("‰ñ˜Hƒtƒ@ƒCƒ‹–¼‚ğ“ü—Í‚µ‚Ä‚­‚¾‚³‚¢\n");		return ERROR; }
-	if (fi[LOW_POWER].flag == OFF) { printf("’áÁ”ï“d—ÍwŒü‚©”Û‚©‚ğ“ü—Í‚µ‚Ä‚­‚¾‚³‚¢\n");		return ERROR; }
-	if (fi[FOLDER].flag == OFF) { printf("o—ÍƒtƒHƒ‹ƒ_[–¼‚ğ“ü—Í‚µ‚Ä‚­‚¾‚³‚¢\n");		return ERROR; }
+	if (fi[CIRCUIT].flag == OFF) { printf("å›è·¯ãƒ•ã‚¡ã‚¤ãƒ«åã‚’å…¥åŠ›ã—ã¦ãã ã•ã„\n");		return OPT_ERROR; }
+	if (fi[LOW_POWER].flag == OFF) { printf("ä½æ¶ˆè²»é›»åŠ›æŒ‡å‘ã‹å¦ã‹ã‚’å…¥åŠ›ã—ã¦ãã ã•ã„\n");		return OPT_ERROR; }
+	if (fi[FOLDER].flag == OFF) { printf("å‡ºåŠ›ãƒ•ã‚©ãƒ«ãƒ€ãƒ¼åã‚’å…¥åŠ›ã—ã¦ãã ã•ã„\n");		return OPT_ERROR; }
 	//------------------------------------------------------------------------
-	// default‚Ìİ’è
+	// defaultã®è¨­å®š
 	//------------------------------------------------------------------------
 	if (fi[RAND].flag == OFF) {
 		fi[RAND].name = "OFF";
@@ -283,8 +316,23 @@ bool OPTset(
 	if (fi[TIME].flag == OFF) {
 		fi[TIME].value = 10;
 	}
+	if (fi[MODE_1].flag == OFF) {
+		fi[MODE_1].name = "OFF";
+	}
 	if (fi[WSATH].flag == OFF) {
 		fi[WSATH].value = 30;
+	}
+	if (fi[CPS_MODE].flag == OFF) {
+		fi[CPS_MODE].name = "OFF";
+	}
+	if (fi[FP_MODE].flag == OFF) {
+		fi[FP_MODE].name = "OFF";
+	}
+	if (fi[RESOLVING_MODE].flag == OFF) {
+		fi[RESOLVING_MODE].name = "OFF";
+	}
+	if (fi[STTG_WSATH_MODE].flag == OFF) {
+		fi[STTG_WSATH_MODE].name = "OFF";
 	}
 
 	return OPT_OKAY;
@@ -292,9 +340,9 @@ bool OPTset(
 
 
 //*************************************************************************************************************
-//	@name		F@OPTread
-//	@function	F	read the option-setting file
-//	@return		F	(bool) okay, error
+//	@name		ï¼šã€€OPTread
+//	@function	ï¼š	read the option-setting file
+//	@return		ï¼š	(bool) okay, error
 //*************************************************************************************************************
 bool OPTread(
 	char* filename			  /**< filename */
@@ -452,7 +500,7 @@ bool OPTread(
 					}
 				}
 			}
-			/** •K{Š„‚è“–‚Äî•ñƒtƒ@ƒCƒ‹ */
+			/** å¿…é ˆå‰²ã‚Šå½“ã¦æƒ…å ±ãƒ•ã‚¡ã‚¤ãƒ« */
 			else if (strcmp(token1, "-nece") == 0)
 			{
 				token2 = strtok_s(NULL, "\n\0", &context);
@@ -466,7 +514,7 @@ bool OPTread(
 					}
 				}
 			}
-			//ƒlƒbƒgƒŠƒXƒg“Ç‚İ‚İ
+			//ãƒãƒƒãƒˆãƒªã‚¹ãƒˆèª­ã¿è¾¼ã¿
 			else if (!strcmp(token1, "-net"))
 			{
 				token2 = strtok_s(NULL, "\n\0", &context);
@@ -482,7 +530,7 @@ bool OPTread(
 
 				}
 			}
-			//’áÁ”ï“d—Íƒ‚[ƒhw’è
+			//ä½æ¶ˆè²»é›»åŠ›ãƒ¢ãƒ¼ãƒ‰æŒ‡å®š
 			else if (!strcmp(token1, "-power"))
 			{
 				token2 = strtok_s(NULL, "\n\0", &context);
@@ -498,7 +546,7 @@ bool OPTread(
 
 				}
 			}
-			//ƒtƒHƒ‹ƒ_[w’è
+			//ãƒ•ã‚©ãƒ«ãƒ€ãƒ¼æŒ‡å®š
 			else if (!strcmp(token1, "-folder"))
 			{
 				token2 = strtok_s(NULL, "\n\0", &context);
@@ -514,7 +562,7 @@ bool OPTread(
 
 				}
 			}
-			//ƒ‰ƒ“ƒ_ƒ€‘I‘ğƒ‚[ƒhw’è
+			//ãƒ©ãƒ³ãƒ€ãƒ é¸æŠãƒ¢ãƒ¼ãƒ‰æŒ‡å®š
 			else if (!strcmp(token1, "-rand"))
 			{
 				token2 = strtok_s(NULL, "\n\0", &context);
@@ -530,7 +578,7 @@ bool OPTread(
 
 				}
 			}
-			//Solver‘Å‚¿Ø‚èŠÔ(default:10)æ“¾ 
+			//Solveræ‰“ã¡åˆ‡ã‚Šæ™‚é–“(default:10)å–å¾— 
 			else if (!strcmp(token1, "-time"))
 			{
 				token2 = strtok_s(NULL, "\n\0", &context);
@@ -546,7 +594,7 @@ bool OPTread(
 
 				}
 			}
-			//WSAè‡’lÁ”ï“d—Íè‡’l(default:20)æ“¾
+			//WSAé–¾å€¤ï¼æ¶ˆè²»é›»åŠ›é–¾å€¤(default:20)å–å¾—
 			else if (!strcmp(token1, "-wsath"))
 			{
 				token2 = strtok_s(NULL, "\n\0", &context);
@@ -562,7 +610,7 @@ bool OPTread(
 
 				}
 			}
-			//–Ú•WŒÌá‚ÌãŒÀæ“¾(0‚Ìê‡‚Í§ŒÀ‚È‚µ)“¾
+			//ç›®æ¨™æ•…éšœã®ä¸Šé™å–å¾—(0ã®å ´åˆã¯åˆ¶é™ãªã—)å¾—
 			else if (!strcmp(token1, "-target_limit"))
 			{
 				token2 = strtok_s(NULL, "\n\0", &context);
@@ -578,7 +626,7 @@ bool OPTread(
 
 				}
 			}
-			//ŒÌáƒtƒ@ƒCƒ‹æ“¾
+			//æ•…éšœãƒ•ã‚¡ã‚¤ãƒ«å–å¾—
 			else if (!strcmp(token1, "-fault"))
 			{
 				token2 = strtok_s(NULL, "\n\0", &context);
@@ -594,7 +642,7 @@ bool OPTread(
 
 				}
 			}
-			//ŒÌáƒtƒ@ƒCƒ‹æ“¾
+			//æ•…éšœãƒ•ã‚¡ã‚¤ãƒ«å–å¾—
 			else if (!strcmp(token1, "-mode_1"))
 			{
 				token2 = strtok_s(NULL, "\n\0", &context);
@@ -610,7 +658,7 @@ bool OPTread(
 
 				}
 			}
-			//CLASP PARALLELƒ‚[ƒh w’è
+			//CLASP PARALLELãƒ¢ãƒ¼ãƒ‰ æŒ‡å®š
 			else if (!strcmp(token1, "-parallel"))
 			{
 				token2 = strtok_s(NULL, "\n\0", &context);
@@ -625,6 +673,29 @@ bool OPTread(
 					}
 				}
 			}
+			// [CPS INTEGRATION] experimental CPS mode (default: OFF)
+			else if (!strcmp(token1, "-cps"))
+			{
+				token2 = strtok_s(NULL, "\n\0", &context);
+
+				for (int i = 0; i < strlen(token2); i++)
+				{
+					if (token2[i] != ' ' && token2[i] != '\t')
+					{
+						char* cps_value = strtok_s(&token2[i], " \n\0", &context);
+						if (strcmp(cps_value, "ON") != 0 && strcmp(cps_value, "OFF") != 0)
+						{
+							printf("\n\tCOMMAND ERROR: option setup is failed. ");
+							printf("-cps requires ON or OFF.\n\n");
+							return OPT_ERROR;
+						}
+
+						fi[CPS_MODE].name = _strdup(cps_value);
+						fi[CPS_MODE].flag = ON;
+						break;
+					}
+				}
+			}
 			else
 			{
 				printf("\n	COMMAND ERROR: option setup is failed. ");
@@ -635,7 +706,7 @@ bool OPTread(
 	}
 
 	//------------------------------------------------------------------------
-    // default‚Ìİ’è
+    // defaultã®è¨­å®š
     //------------------------------------------------------------------------
 	if (fi[RAND].flag == OFF) {
 		fi[RAND].name = "OFF";
@@ -646,6 +717,18 @@ bool OPTread(
 	if (fi[WSATH].flag == OFF) {
 		fi[WSATH].value = 20;
 	}
+	if (fi[CPS_MODE].flag == OFF) {
+		fi[CPS_MODE].name = "OFF";
+	}
+	if (fi[FP_MODE].flag == OFF) {
+		fi[FP_MODE].name = "OFF";
+	}
+	if (fi[RESOLVING_MODE].flag == OFF) {
+		fi[RESOLVING_MODE].name = "OFF";
+	}
+	if (fi[STTG_WSATH_MODE].flag == OFF) {
+		fi[STTG_WSATH_MODE].name = "OFF";
+	}
 
 	free(buffer);
 
@@ -655,9 +738,9 @@ bool OPTread(
 }
 
 //*************************************************************************************************************
-//	@name		F@OPTcheck
-//	@function	F	check for essential options
-//	@return		F	(bool) okay, error
+//	@name		ï¼šã€€OPTcheck
+//	@function	ï¼š	check for essential options
+//	@return		ï¼š	(bool) okay, error
 //*************************************************************************************************************
 bool OPTcheck(
 	void
@@ -671,14 +754,24 @@ bool OPTcheck(
 }
 
 //*************************************************************************************************************
-//	@name		F@OPTcheckMode
-//	@function	F	check for essential mode
-//	@return		F	(bool) okay, error
+//	@name		ï¼šã€€OPTcheckMode
+//	@function	ï¼š	check for essential mode
+//	@return		ï¼š	(bool) okay, error
 //*************************************************************************************************************
 bool OPTcheckMode(
 	void
 )
 {
+	if (opt.file.input.lfsr != 100) {
+		printf("[ERROR] This circuit encoding currently requires a 100-bit LFSR.\n");
+		return OPT_ERROR;
+	}
+	if (fi[TIME].value <= 0 || fi[WSATH].value < 0 || fi[WSATH].value > 100 ||
+		fi[TARGET_LIMIT].value < 0 || fi[FAULT].flag != ON ||
+		(strcmp(fi[LOW_POWER].name, "ON") != 0 && strcmp(fi[LOW_POWER].name, "OFF") != 0)) {
+		printf("[ERROR] Invalid time, threshold, target limit, power mode or fault file.\n");
+		return OPT_ERROR;
+	}
 #ifdef NDEBUG
 	assert(opt.mode.drop == DROP_NO || opt.mode.drop == DROP_YES);
 #endif
@@ -694,9 +787,9 @@ bool OPTcheckMode(
 }
 
 //*************************************************************************************************************
-//	@name		F@OPTcheckFile
-//	@function	F	check for essential file
-//	@return		F	(bool) okay, error
+//	@name		ï¼šã€€OPTcheckFile
+//	@function	ï¼š	check for essential file
+//	@return		ï¼š	(bool) okay, error
 //*************************************************************************************************************
 bool OPTcheckFile(
 	void
@@ -728,9 +821,9 @@ bool OPTcheckFile(
 }
 
 //*************************************************************************************************************
-//	@name		F@OPTdispHelp
-//	@function	F	display the help
-//	@return		F	(void)
+//	@name		ï¼šã€€OPTdispHelp
+//	@function	ï¼š	display the help
+//	@return		ï¼š	(void)
 //*************************************************************************************************************
 void OPTdispHelp(
 	void
@@ -757,7 +850,11 @@ void OPTdispHelp(
 
 	PrintHelpMessage("\n		>> mode option \n");
 	PrintHelpMessage("		   -d              :   fault drop [Y(YES)/N(NO)]. %cY%c is default. \n", '"', '"');
+	PrintHelpMessage("\t\t   -cps            :   experimental CPS mode [ON/OFF]. OFF is default. \n");
 
+	PrintHelpMessage("\t\t   -fp             :   fault-propagation constraints [ON/OFF]. OFF is default. \n");
+	PrintHelpMessage("\t\t   -resolving      :   retry clasp UNKNOWN with 60/180/300 sec [ON/OFF]. OFF is default. \n");
+	PrintHelpMessage("\t\t   -sttg_wsath     :   STTG and WSA 25/30 fallback [ON/OFF]. OFF is default. \n");
 	PrintHelpMessage("\n		>> help \n");
 	PrintHelpMessage("		   -help           :   print the help. \n");
 

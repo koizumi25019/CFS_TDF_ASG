@@ -1,5 +1,5 @@
-//------------------------------------------------------------------------
-//ƒCƒ“ƒNƒ‹[ƒh
+ï»¿//------------------------------------------------------------------------
+//ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰
 //------------------------------------------------------------------------
 #include<stdio.h>
 #include<time.h>
@@ -7,235 +7,347 @@
 #include<string.h>
 
 //------------------------------------------------------------------------
-//©ìƒCƒ“ƒNƒ‹[ƒh
+//è‡ªä½œã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰
 //------------------------------------------------------------------------
 #include"../header/Define.h"
 #include"../asg/opb/clasp/clasp.h"
 #include"../asg/createSGmodel.h"
 #include"../asg/opb/opb.h"
 
+// [STTG/WSATH INTEGRATION] Release copied target faults before selecting a retry target.
+static void release_target_faults(void) {
+	UNDET_FAULT_LIST* node = tfl;
+	while (node != NULL) {
+		UNDET_FAULT_LIST* next = node->next;
+		free(node);
+		node = next;
+	}
+	tfl = NULL;
+	tfl_num = 0;
+}
+
+static int discard_target_as_unseed(void) {
+	UNDET_FAULT_LIST* target;
+	UNDET_FAULT_LIST* current;
+	UNDET_FAULT_LIST* previous;
+	if (tfl == NULL) return ERROR;
+	target = tfl;
+	current = ufl;
+	previous = NULL;
+	while (current != NULL) {
+		if (current->type == target->type && strcmp(current->name, target->name) == 0) {
+			bitintSetNbit_Zero(detflag, current->node_id);
+			ufl_free(current, previous, 0);
+			release_target_faults();
+			return SUCCESS;
+		}
+		previous = current;
+		current = current->next;
+	}
+	release_target_faults();
+	return ERROR;
+}
+
 
 //===================================================
-//ŠÖ”–¼:mttg_main
-//‹@”\:‘JˆÚŒÌá‚ÌMTTG‚ÌƒƒCƒ“
-//–ß‚è’lFint ³íI—¹:SUCCESS(=0) , ˆÙíI—¹:ERROR(=-1)
-//ˆø”F‚È‚µ
+//é–¢æ•°å:mttg_main
+//æ©Ÿèƒ½:é·ç§»æ•…éšœã®MTTGã®ãƒ¡ã‚¤ãƒ³
+//æˆ»ã‚Šå€¤ï¼šint æ­£å¸¸çµ‚äº†:SUCCESS(=0) , ç•°å¸¸çµ‚äº†:ERROR(=-1)
+//å¼•æ•°ï¼šãªã—
 //===================================================
+/* Count the emitted constraints instead of maintaining a second circuit model. */
+static int write_problem_file(FILE* body, const char* path, unsigned int relaxation_start)
+{
+    FILE* output = NULL;
+    unsigned int maximum_variable = 0;
+    unsigned int constraint_count = 0;
+    int character;
+    rewind(body);
+    while ((character = fgetc(body)) != EOF) {
+        if (character == ';') {
+            constraint_count++;
+        }
+        if (character == 'x') {
+            unsigned int variable;
+            if (fscanf_s(body, "%u", &variable) == 1 && variable > maximum_variable) {
+                maximum_variable = variable;
+            }
+        }
+    }
+    if (ferror(body) || fopen_s(&output, path, "w") != 0) {
+        return ERROR;
+    }
+    {
+        int transition_count = strcmp(fi[LOW_POWER].name, "ON") == 0
+            ? untest_calc_soft_constraint() : 0;
+        fprintf(output, "* #variable= %u #constraint= %u #product= %d sizeproduct= %d\n",
+            maximum_variable, constraint_count, 2 * transition_count, 4 * transition_count);
+    }
+    fprintf(output, "min:");
+    for (int target = 1; target < tfl_num; target++) {
+        fprintf(output, " +1 x%u", relaxation_start + target - 1);
+    }
+    fprintf(output, ";\n");
+    rewind(body);
+    while ((character = fgetc(body)) != EOF) {
+        fputc(character, output);
+    }
+    {
+        int failed = ferror(body) || ferror(output);
+        if (fclose(output) != 0) {
+            failed = 1;
+        }
+        return failed ? ERROR : SUCCESS;
+    }
+}
+
 int mttg_main(void) {
+	unsigned int relaxation_start;
 	int i = 0;
-	char txt_cmd[200];
-	char cmd[500];
-	UNDET_FAULT_LIST* head/*, * next*/;
-	int det_fault_clasp_num;
-	int loop = 0;
-	SORTED sorted;
-	int resolving_count = 0;
-	int change_wsath_flag = OFF;
+	char output_path[1024];
+	char simulation_command[4096];
+	UNDET_FAULT_LIST* target_fault/*, * next*/;
+	int detected_fault_count;
+	int generation_attempt_count = 0;
+	SORTED sorted = {0};
+	int change_wsath_25 = OFF; // [STTG/WSATH INTEGRATION]
+	int change_wsath_30 = OFF; // [STTG/WSATH INTEGRATION]
 	int sttg_flag = OFF;
+	int retry_single_fault = OFF; // [CPS INTEGRATION]
 
-	//ƒV[ƒhƒtƒ@ƒCƒ‹ƒI[ƒvƒ“
-	sprintf(txt_cmd, "%sseed.txt", folder_out);
-	if ((fout_seed = (fopen(txt_cmd, "w"))) == NULL) {
-		printf("yERRORz:File open seed.txt(mttg_main.c)\n");
+	//ã‚·ãƒ¼ãƒ‰ãƒ•ã‚¡ã‚¤ãƒ«ã‚ªãƒ¼ãƒ—ãƒ³
+	sprintf_s(output_path, sizeof(output_path), "%sseed.txt", folder_out);
+	if (fopen_s(&fout_seed, output_path, "w") != 0) {
+		printf("ã€ERRORã€‘:File open seed.txt(mttg_main.c)\n");
 		return ERROR;
 	}
 
-	//PINƒtƒ@ƒCƒ‹¶¬
+	//PINãƒ•ã‚¡ã‚¤ãƒ«ç”Ÿæˆ
 	if (pin_make() != SUCCESS) {
-		printf("yERRORz:pin make(mttg_main.c)\n");
+		printf("ã€ERRORã€‘:pin make(mttg_main.c)\n");
 		return ERROR;
 	}
 
-	//ƒŒƒxƒ‰ƒCƒY
+	//ãƒ¬ãƒ™ãƒ©ã‚¤ã‚º
 	if (levelize() != SUCCESS) {
-		printf("yERRORz:levelize(mttg_main.c)\n");
+		printf("ã€ERRORã€‘:levelize(mttg_main.c)\n");
 		return ERROR;
 	}
 
-	//–¢ŒŸoŒÌáƒŠƒXƒg‚Ìì¬
+	//æœªæ¤œå‡ºæ•…éšœãƒªã‚¹ãƒˆã®ä½œæˆ
 	if (fi[FAULT].flag == ON) {
 		if (transition_delay_fault_set() != SUCCESS) {
-			printf("yERRORz:Transition_Delay_Fault_Set(mttg_main.c)\n");
+			printf("ã€ERRORã€‘:Transition_Delay_Fault_Set(mttg_main.c)\n");
 			return ERROR;
 		}
 	}
 
-	//‘SŒÌá”‚ÌŠi”[
+	//å…¨æ•…éšœæ•°ã®æ ¼ç´
 	all_num = ufl_num;
 
-	//ƒtƒ@ƒCƒ‹“Ç‚İ‚İ
+	//ãƒ•ã‚¡ã‚¤ãƒ«èª­ã¿è¾¼ã¿
 	if (ReadFile() != true) return ERROR;
 
-	//•W€o—Í
+	//æ¨™æº–å‡ºåŠ›
 	standard_output();
 
-	//ASG‚Ì³í‰ñ˜H‚É‚¨‚¯‚éƒu[ƒ‹•Ï””Ô†İ’è
+	//ASGã®æ­£å¸¸å›è·¯ã«ãŠã‘ã‚‹ãƒ–ãƒ¼ãƒ«å¤‰æ•°ç•ªå·è¨­å®š
 	AssigneVarsGC();
 
-	//LFSR+PS§–ñ®æ“¾
-	CreateLFSRmodel();
+	//LFSR+PSåˆ¶ç´„å¼å–å¾—
+	if (CreateLFSRmodel() != true) {
+		return ERROR;
+	}
 
-	//ƒeƒXƒg¶¬
+	//ãƒ†ã‚¹ãƒˆç”Ÿæˆ
 	while (ufl_num != 0) {
 
-		//PBOƒtƒ@ƒCƒ‹
-		sprintf(txt_cmd, "%smttg_pbo.txt", folder_out);
-		if ((fout_mttg_pbo = fopen(txt_cmd, "w")) == NULL) {
-			printf("yERRORz:File open mttg_pbo.txt(mttg_main.c)\n");
-			printf("Trying to open: '%s'\n", txt_cmd);
-			perror(txt_cmd);
-			exit(1);
+		//PBOãƒ•ã‚¡ã‚¤ãƒ«
+		sprintf_s(output_path, sizeof(output_path), "%smttg_pbo.txt", folder_out);
+		fout_mttg_pbo = tmpfile();
+		if (fout_mttg_pbo == NULL) {
+			return ERROR;
 		}
 
-		//–Ú•WŒÌá‘I‘ğ
-		if (fault_select(sttg_flag,&sorted,loop++) != SUCCESS) {
-			printf("yERRORz:Fault Select(mttg_main.c)\n");
+		//ç›®æ¨™æ•…éšœé¸æŠ
+		int single_fault_flag = (sttg_flag == ON || retry_single_fault == ON) ? ON : OFF;
+		if (fault_select(single_fault_flag,&sorted,generation_attempt_count++) != SUCCESS) {
+			printf("ã€ERRORã€‘:Fault Select(mttg_main.c)\n");
 			return ERROR;
 		}
 
 		file_output(0, 3);
 
-		//PBOƒTƒCƒY‹Lq
+		//PBOã‚µã‚¤ã‚ºè¨˜è¿°
 
-		mttg_pbo_generate_min(fout_mttg_pbo);
 
-		//ƒtƒF[ƒYƒVƒtƒ^§–ñ®‹Lq
+
+		//ãƒ•ã‚§ãƒ¼ã‚ºã‚·ãƒ•ã‚¿åˆ¶ç´„å¼è¨˜è¿°
 		makeProbFileConsPS_clasp(fout_mttg_pbo);
 
-		//³í‰ñ˜H‚Ì‹Lq
+		//æ­£å¸¸å›è·¯ã®è¨˜è¿°
 		pbo_generate_normal_c(fout_mttg_pbo);
 
-		suffix = n_net * 2 + 101;
+		bool_id = n_net * 2 + 101;
 
-		head = tfl;
+		target_fault = tfl;
 		i = 0;
-		while (head != NULL) {
-			//ŒÌá”ÍˆÍ‚Ì“Á’è
-			specific_fault_range(head->name,i);
-			//ŒÌá‰ñ˜H‚Ì‹Lq
-			pbo_generate_fault_c(fout_mttg_pbo, head,i);//•ÏX
-			//ŒÌáŒŸo‰ñ˜H‚Ì‹Lq
-			pbo_generate_fdetect_c_mttg(fout_mttg_pbo, head);
-			//Ÿ‚ÌŒÌá
-			head = head->next;
+		while (target_fault != NULL) {
+			//æ•…éšœç¯„å›²ã®ç‰¹å®š
+			specific_fault_range(target_fault->name,i);
+			//æ•…éšœå›è·¯ã®è¨˜è¿°
+			pbo_generate_fault_c(fout_mttg_pbo, target_fault,i);//å¤‰æ›´
+			//æ•…éšœæ¤œå‡ºå›è·¯ã®è¨˜è¿°
+			pbo_generate_fdetect_c_mttg(fout_mttg_pbo, target_fault);
+			//æ¬¡ã®æ•…éšœ
+			target_fault = target_fault->next;
 			i++;
 		}
 
-		//ŒÌá—ã‹N
-		head = tfl;
+		relaxation_start = bool_id;
+		//æ•…éšœåŠ±èµ·
+		target_fault = tfl;
 		i = 0;
-		while (head != NULL) {
+		while (target_fault != NULL) {
 			if (i == 0) {
-				pbo_generate_fault_ex(fout_mttg_pbo, head,0);
+				pbo_generate_fault_ex(fout_mttg_pbo, target_fault,0);
 			}
 			else {
-				pbo_generate_fault_ex(fout_mttg_pbo, head, 1);
+				pbo_generate_fault_ex(fout_mttg_pbo, target_fault, 1);
 			}
-			head = head->next;
+			target_fault = target_fault->next;
 			i++;
 		}
 
-		//’áÁ”ï“d—Í§–ñ
+		//ä½æ¶ˆè²»é›»åŠ›åˆ¶ç´„
 		if (strcmp(fi[LOW_POWER].name, "ON") == 0) {
-			pbo_generate_power_mttg(change_wsath_flag,fout_mttg_pbo);
+			pbo_generate_power_mttg(change_wsath_25, change_wsath_30, fout_mttg_pbo);
 		}
 
+		if (write_problem_file(fout_mttg_pbo, output_path, relaxation_start) != SUCCESS) {
+			fclose(fout_mttg_pbo);
+			return ERROR;
+		}
 		fclose(fout_mttg_pbo);
 
 		//========================================================================
-		//	clasp @ ƒV[ƒh¶¬
+		//	clasp ã€€ ã‚·ãƒ¼ãƒ‰ç”Ÿæˆ
 		//========================================================================
 		if (CLASP() != CLASP_OKAY) {
 			printf("\n	SYSTEM ERROR: solver error. ");
 			return ERROR;
 		}
 
-		//ƒV[ƒh¶¬•s”\ŒÌá‚Å‚È‚¢‚Ìê‡
+		//ã‚·ãƒ¼ãƒ‰ç”Ÿæˆä¸èƒ½æ•…éšœã§ãªã„ã®å ´åˆ
 		if (clasp.status != CLASP_STATUS_UNKNOWN && clasp.status != CLASP_UNSAT) {
 
-			//ŒÌáƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“—pƒeƒXƒgƒpƒ^[ƒ“ƒtƒ@ƒCƒ‹ƒI[ƒvƒ“
-			sprintf(txt_cmd, "%stp.txt", folder_out);
-			FILE* fout_tp = fopen(txt_cmd, "w");
+			//æ•…éšœã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ç”¨ãƒ†ã‚¹ãƒˆãƒ‘ã‚¿ãƒ¼ãƒ³ãƒ•ã‚¡ã‚¤ãƒ«ã‚ªãƒ¼ãƒ—ãƒ³
+			sprintf_s(output_path, sizeof(output_path), "%stp.txt", folder_out);
+			FILE* fout_tp = NULL;
+			fopen_s(&fout_tp, output_path, "w");
 			if (fout_tp == NULL) {
-				printf("yERRORz:File open tp.txt(mttg_main.c)\n");
+				printf("ã€ERRORã€‘:File open tp.txt(mttg_main.c)\n");
 				return ERROR;
 			}
 			fprintf(fout_tp, "%s\n", clasp.sol[SOL_TP]);
 			fclose(fout_tp);
 
-			//’áÁ”ïƒeƒXƒgƒpƒ^[ƒ“‚©Šm”F(Á”ï“d—ÍwŒü‚Ì‚İ)
-			if ((mttg_check_wsa() != SAT) && (strcmp(fi[LOW_POWER].name, "ON") == 0)) {
-				printf("yERRORz:MTTG TEST NG PATTERN(mttg_main.c)\n");
+			//ä½æ¶ˆè²»ãƒ†ã‚¹ãƒˆãƒ‘ã‚¿ãƒ¼ãƒ³ã‹ç¢ºèª(æ¶ˆè²»é›»åŠ›æŒ‡å‘æ™‚ã®ã¿)
+			if (strcmp(fi[LOW_POWER].name, "ON") == 0 &&
+				mttg_check_wsa(change_wsath_25, change_wsath_30) != SAT) {
+				printf("ã€ERRORã€‘:MTTG TEST NG PATTERN(mttg_main.c)\n");
 				return ERROR;
 			}
 
-			//˜_—ƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“
+			//è«–ç†ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³
 			if (logic_sim() != SUCCESS) {
-				printf("yERRORz:Logic Simulation(mttg_main.c)\n");
+				printf("ã€ERRORã€‘:Logic Simulation(mttg_main.c)\n");
 				return ERROR;
 			}
 
-			//ƒV[ƒhW‡‚Öo—Í
-			fprintf(fout_seed, "%s\n", clasp.sol[SOL_SEED]);
-
+			//ã‚·ãƒ¼ãƒ‰é›†åˆã¸å‡ºåŠ›
 			//========================================================================
-			//	ŒÌáƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“
+			//	æ•…éšœã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³
 			//========================================================================
-			sprintf(cmd, "XID2.exe -c %s -tx %stp.txt -pin %spin.txt -fm TDF -fsim YES -dic %sfsim_log.txt -det %sxid_det.txt -undet %sxid_undet.txt", fi[CIRCUIT].name, folder_out, folder_out, folder_out, folder_out, folder_out);
-			system(cmd);
+			sprintf_s(simulation_command, sizeof(simulation_command), "XID2.exe -c \"%s\" -tx \"%stp.txt\" -pin \"%spin.txt\" -fm TDF -fsim YES -dic \"%sfsim_log.txt\" -det \"%sxid_det.txt\" -undet \"%sxid_undet.txt\"", fi[CIRCUIT].name, folder_out, folder_out, folder_out, folder_out, folder_out);
+			if (system(simulation_command) != 0) {
+				printf("[ERROR] XID2 fault simulation failed.\n");
+				return ERROR;
+			}
 
-			//ƒRƒ“ƒ\[ƒ‹ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚Ì‰Šú‰»
+			//ã‚³ãƒ³ã‚½ãƒ¼ãƒ«ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã®åˆæœŸåŒ–
 			//system("cls");
 
-			//ŒŸoŒÌá“Á’è&ŒŸoŒÌá”‚ğ–¢ŒŸoŒÌá‚©‚çíœ
-			if ((det_fault_clasp_num = fault_judge()) == ERROR) {
-				printf("yERRORz:Fault Judge(mttg_main.c)\n");
+			//æ¤œå‡ºæ•…éšœç‰¹å®š&æ¤œå‡ºæ•…éšœæ•°ã‚’æœªæ¤œå‡ºæ•…éšœã‹ã‚‰å‰Šé™¤
+			if ((detected_fault_count = fault_judge(sttg_flag, change_wsath_25)) == ERROR) {
+				printf("ã€ERRORã€‘:Fault Judge(mttg_main.c)\n");
 				return ERROR;
 			}
+			if (detected_fault_count > 0) {
+				fprintf(fout_seed, "%s\n", clasp.sol[SOL_SEED]);
+			}
+			if (detected_fault_count == 0 && (single_fault_flag == ON || strcmp(fi[CPS_MODE].name, "ON") != 0)) {
+				printf("[ERROR] Solver/simulator mismatch: no remaining fault was detected.\n");
+				return ERROR;
+			}
+			// [CPS INTEGRATION] Retry the next iteration with one fault after zero detection.
+			tfl = NULL; // fault_judge releases the copied target list
+			sttg_flag = OFF;
+			change_wsath_25 = OFF;
+			change_wsath_30 = OFF;
+			if (strcmp(fi[CPS_MODE].name, "ON") == 0) {
+				retry_single_fault = (detected_fault_count == 0) ? ON : OFF;
+				if (retry_single_fault == ON) {
+					printf("[CPS] No fault was detected; single-fault mode is scheduled.\n");
+				}
+			}
 		}
-		//‘Å‚¿Ø‚èŒÌá‚Æ”»’è
+		//æ‰“ã¡åˆ‡ã‚Šæ•…éšœã¨åˆ¤å®š
 		else {
-			if (clasp.status == CLASP_UNSAT) {//‚Ü‚¾unknown->‘Å‚¿Ø‚èŒÌá‚Ì‰Â”\«‚ª‚ ‚é‚Ì‚ÅCSTTG‚ÉØ‚è‘Ö‚¦‚é‚½‚ß‚É‚Ü‚¾–¢ŒŸoŒÌá‚©‚çíœ‚µ‚È‚¢
-				//ƒV[ƒh¶¬•s”\ŒÌá‚ğ–¢ŒŸoŒÌáƒŠƒXƒg‚©‚çíœ
-				UNDET_FAULT_LIST* unseed_fault;
-				UNDET_FAULT_LIST* pre_node = NULL;
-				unseed_fault = ufl;
-				while (1) {
-					if (tfl->type == unseed_fault->type && strcmp(tfl->name, unseed_fault->name) == 0) {//M†ü‚ÆŒÌáƒ^ƒCƒv‚ªˆê’v‚·‚é‚©Šm”F
-						bitintSetNbit_Zero(detflag, unseed_fault->node_id);
-						ufl_free(unseed_fault, pre_node, 0);
-						break;
-					}
-					pre_node = unseed_fault;
-					unseed_fault = unseed_fault->next;
+			// [STTG/WSATH INTEGRATION] Bounded state machine for solver UNKNOWN.
+			if (clasp.status == CLASP_UNSAT || strcmp(fi[STTG_WSATH_MODE].name, "ON") != 0) {
+				if (discard_target_as_unseed() != SUCCESS) {
+					printf("[ERROR] Failed to discard the current target fault.\n");
+					return ERROR;
 				}
-				//–Ú•WŒÌá‰ğ•ú
-				UNDET_FAULT_LIST* node;
-				UNDET_FAULT_LIST* d_head;
-				node = tfl;
-				while (node != NULL) {
-					d_head = node->next;
-					free(node);
-					node = d_head;
+				sttg_flag = OFF;
+				change_wsath_25 = OFF;
+				change_wsath_30 = OFF;
+				retry_single_fault = OFF;
+				printf("[MTTG] Target fault moved to the unseed list.\n");
+				continue;
+			}
+
+			if (sttg_flag == ON && (strcmp(fi[LOW_POWER].name, "ON") != 0 || change_wsath_30 == ON)) {
+				if (discard_target_as_unseed() != SUCCESS) {
+					printf("[ERROR] Failed to discard the final STTG target fault.\n");
+					return ERROR;
 				}
+				sttg_flag = OFF;
+				change_wsath_25 = OFF;
+				change_wsath_30 = OFF;
+				printf("[STTG/WSATH] Retry stages exhausted; target moved to unseed.\n");
+				continue;
 			}
-			//WSAè‡’l‚ğ•ÏX‚µ‚½STTG‚Å‚àƒV[ƒh‚ª‹‚Ü‚ç‚È‚¢ê‡‚ÍˆÙíI—¹
-			else if (sttg_flag == ON && change_wsath_flag == ON) {
-				printf("WSA‚ğ•ÏX‚µ‚½STTG‚Å‚àƒV[ƒh‚ª‹‚Ü‚è‚Ü‚¹‚ñ‚Å‚µ‚½BˆÙíI—¹‚µ‚Ü‚·B\n");
-				exit(1);
+
+			release_target_faults();
+			if (sttg_flag == OFF) {
+				sttg_flag = ON;
+				printf("[STTG/WSATH] Retry with STTG.\n");
 			}
-			//STTG‚ğs‚Á‚½‚É‚à‚©‚©‚í‚ç‚¸ƒV[ƒh‚ª‹‚Ü‚ç‚È‚¢ê‡CWSAè‡’l‚ğ•ÏX‚µ‚ÄÄƒV[ƒh¶¬
-			else if(sttg_flag==ON){
-				change_wsath_flag == ON;
+			else if (change_wsath_25 == OFF) {
+				change_wsath_25 = ON;
+				printf("[STTG/WSATH] Retry STTG with WSA threshold 25.\n");
 			}
-			//CLASP UNKNOWN STTG‚ÉØ‚è‘Ö‚¦‚ÄÄƒV[ƒh¶¬
-			else{
-            sttg_flag = ON;
+			else {
+				change_wsath_30 = ON;
+				printf("[STTG/WSATH] Retry STTG with WSA threshold 30.\n");
 			}
+			continue;
 		}
 	}
 
-	num_seed = loop;
+	num_seed = seed_num;
 	fclose(fout_seed);
 	return SUCCESS;
 }

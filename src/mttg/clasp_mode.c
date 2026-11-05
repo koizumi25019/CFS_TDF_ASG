@@ -1,67 +1,39 @@
+ï»¿#include <stdio.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "../header/Define.h"
 
-#include"../asg/opb/clasp/clasp.h"
-#include"../header/Define.h"
+int clasp_call(int retry_index)
+{
+    const int retry_timeouts[] = {60, 180, 300};
+    int timeout_seconds = fi[TIME].value;
+    int exit_code;
+    char command[4096];
+    char parallel_option[64] = "";
+    const char* model_option = fi[MODE_1].flag == ON && strcmp(fi[MODE_1].name, "ON") == 0
+        ? " --models=1 --opt-mode=ignore" : "";
 
-void clasp_call(int resolving_flag) {
-
-	char cmd[500];
-
-	if (fi[PARALLEL].flag == ON) {
-		//‰ð‚ª1‚ÂŒ©‚Â‚©‚Á‚½Žž“_‚Å‚»‚Ì‰ð‚ðÌ—p‚·‚éƒ‚[ƒh
-		if (fi[MODE_1].flag == ON) {
-			if (fi[TIME].flag == ON) {
-				printf("mode 1(-mode_1)‚Æ‘Å‚¿Ø‚èŽžŠÔŽw’è(-time)‚ð“¯Žž‚ÉŽw’è‚µ‚È‚¢‚Å‚­‚¾‚³‚¢\n");
-				exit(1);
-			}
-			printf("CLASPƒ‚[ƒhŽw’èF-parallel=ON -mode_1=ON \n");
-			sprintf(cmd, "clasp.exe %smttg_pbo.txt > %sclasp_log_mttg.txt --parallel-mode %d --mode 1", folder_out, folder_out, fi[PARALLEL].value);
-			system(cmd);
-		}
-		//‘Å‚¿Ø‚èŽžŠÔŽw’è
-		else if (fi[TIME].flag == ON) {
-			if (resolving_flag == 0) {
-				printf("CLASPƒ‚[ƒhŽw’èF-parallel=ON -time %d\n", 10);
-				sprintf(cmd, "clasp.exe %smttg_pbo.txt --quiet=1 --time-limit %d --parallel-mode %d > %sclasp_log_mttg.txt", folder_out, 60, fi[PARALLEL].value, folder_out);
-				system(cmd);
-			}
-			else if (resolving_flag == 1) {
-				printf("CLASPƒ‚[ƒhŽw’èF-parallel=ON -time %d\n", 60);
-				sprintf(cmd, "clasp.exe %smttg_pbo.txt --time-limit %d --parallel-mode %d > %sclasp_log_mttg.txt", folder_out, 300, fi[PARALLEL].value, folder_out);
-				system(cmd);
-			}
-			else if (resolving_flag == 2) {
-				printf("CLASPƒ‚[ƒhŽw’èF-parallel=ON -time %d\n", 300);
-				sprintf(cmd, "clasp.exe %smttg_pbo.txt --time-limit %d --parallel-mode %d > %sclasp_log_mttg.txt", folder_out, 600, fi[PARALLEL].value, folder_out);
-				system(cmd);
-			}
-			else if (resolving_flag == 3) {
-				printf("CLASPƒ‚[ƒhŽw’èF-parallel=ON -time %d\n", 600);
-				sprintf(cmd, "clasp.exe %smttg_pbo.txt --time-limit %d --parallel-mode %d > %sclasp_log_mttg.txt", folder_out, 600, fi[PARALLEL].value, folder_out);
-				system(cmd);
-			}
-			else {
-				printf("‘z’è‚µ‚Ä‚¢‚È‚¢ÄƒV[ƒh¶¬‚Å‚·\n");
-				exit(1);
-			}
-		}
-		//paralellƒ‚[ƒh‚Ì‚ÝŽw’è
-		else {
-			printf("CLASPƒ‚[ƒhŽw’èF-parallel=ON\n");
-			sprintf(cmd, "clasp.exe %smttg_pbo.txt  --parallel-mode %d > %sclasp_log_mttg.txt", folder_out, fi[PARALLEL].value, folder_out);
-			system(cmd);
-		}
-	}
-	//mode1‚Ì‚ÝŽw’è
-	else if (fi[MODE_1].flag == ON) {
-		printf("CLASPƒ‚[ƒhŽw’èF-mode 1=ON -time %d\n", fi[TIME].value);
-		sprintf(cmd, "clasp.exe %smttg_pbo.txt --time-limit %d --mode 1 > %sclasp_log_mttg.txt", folder_out, fi[TIME].value, folder_out);
-		system(cmd);
-	}
-	//parallelƒ‚[ƒhŽw’è‚È‚µ
-	else {
-		printf("claspƒ‚[ƒhŽw’è‚È‚µ@‘Å‚¿Ø‚èŽžŠÔF%d\n", fi[TIME].value);
-		sprintf(cmd, "clasp.exe %smttg_pbo.txt --time-limit %d > %sclasp_log_mttg.txt", folder_out, fi[TIME].value, folder_out);
-		system(cmd);
-	}
+    if (retry_index < 0 || retry_index >= 3) {
+        return ERROR;
+    }
+    if (strcmp(fi[RESOLVING_MODE].name, "ON") == 0) {
+        timeout_seconds = retry_timeouts[retry_index];
+    }
+    if (fi[PARALLEL].flag == ON) {
+        sprintf_s(parallel_option, sizeof(parallel_option), " --parallel-mode=%d", fi[PARALLEL].value);
+    }
+    if (sprintf_s(command, sizeof(command),
+        "clasp.exe \"%smttg_pbo.txt\" --quiet=1 --time-limit=%d%s%s > \"%sclasp_log_mttg.txt\"",
+        folder_out, timeout_seconds, parallel_option, model_option, folder_out) < 0) {
+        return ERROR;
+    }
+    printf("[CLASP] Attempt %d, timeout %d seconds.\n", retry_index + 1, timeout_seconds);
+    exit_code = system(command);
+    /* clasp reports SAT/UNSAT using nonzero exit codes. */
+    if (exit_code != 0 && exit_code != 10 && exit_code != 20 && exit_code != 30) {
+        printf("[ERROR] clasp exited with code %d.\n", exit_code);
+        return ERROR;
+    }
+    return SUCCESS;
 }

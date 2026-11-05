@@ -1,202 +1,123 @@
-//-------------------------------------------------------------------------------------------------------------
-//	include
-//-------------------------------------------------------------------------------------------------------------
+Ôªø//-------------------------------------------------------------------------------------------------------------
+#include <errno.h>
+#include <limits.h>
 #include <stdlib.h>
-#include <stdio.h>
-#include <ctype.h>
 #include <string.h>
-#include <assert.h>
-#include <direct.h>
-
 #include "clasp.h"
 #include "../../read.h"
-#include "../../../lib/lib.h"
-//#include "debug.h"
 #include "../../../header/Define.h"
 
-//*************************************************************************************************************
-//	@name		ÅFÅ@CLASP
-//	@function	ÅF	call the "clasp.exe"
-//	@return		ÅF	(bool) okay, error
-//*************************************************************************************************************
-bool CLASP(
-	void
-)
+void CLASPgetObjVal(FILE* log)
 {
-	FILE* fileptr = (FILE*)NULL;
-	int resolving_flag = 0;
-	char txt_cmd[200];
-
-	//claspåƒÇ—èoÇµ ë≈ÇøêÿÇËéûä‘10ïb
-	printf("clasp call 1âÒñ⁄\n");
-	clasp_call(resolving_flag);
-
-
-	while (1) {
-		//clasp logÉtÉ@ÉCÉãÉIÅ[ÉvÉì
-		sprintf(txt_cmd, "%sclasp_log_mttg.txt", folder_out);
-		if ((fileptr = (fopen(txt_cmd, "r"))) == NULL) {
-			printf("ÅyERRORÅz:File open clasp_log_mttg.txt(clasp.c)\n");
-			return ERROR;
-		}
-
-		//claspÇÃstatusÇéÊìæ
-		CLASPgetObjVal(fileptr);
-
-		if (clasp.status == CLASP_UNSAT)
-		{
-			printf("CLASPÅFÉVÅ[Éhê∂ê¨ïsî\åÃè·(UNSAT)Ç≈Ç∑\n");
-		}
-		else if (clasp.status == CLASP_STATUS_UNKNOWN) {
-			printf("CLASPÅFÉVÅ[Éhê∂ê¨ïsî\åÃè·(UNKNOWN)Ç≈Ç∑\n");
-			fclose(fileptr);
-			if (resolving_flag == 0){
-				//claspåƒÇ—èoÇµ ë≈ÇøêÿÇËéûä‘60ïb
-				printf("clasp call 2âÒñ⁄\n");
-				resolving_flag = 1;
-				clasp_call(resolving_flag);
-			}
-			else if (resolving_flag == 1) {
-				//claspåƒÇ—èoÇµ ë≈ÇøêÿÇËéûä‘300ïb
-				printf("clasp call 3âÒñ⁄\n");
-				resolving_flag = 2;
-				clasp_call(resolving_flag);
-			}
-			else{
-				//claspåƒÇ—èoÇµ ë≈ÇøêÿÇËéûä‘600ïb
-				printf("clasp call 4âÒñ⁄\n");
-				resolving_flag = 3;
-				clasp_call(resolving_flag);
-			}
-		}
-		/** get the CLASP solution */
-		else {
-			CLASPgetSol(fileptr);
-			break;
-		}
-	}
-
-	/** close the "CLASP log file" in read-mode */
-	fclose(fileptr);
-
-	//assert(remove(CLASP_LOG_FILE) == 0);
-
-
-
-	return	CLASP_OKAY;
+    char line[4096];
+    clasp.status = CLASP_STATUS_ERROR;
+    rewind(log);
+    while (fgets(line, sizeof(line), log) != NULL) {
+        if (strncmp(line, "s UNSATISFIABLE", 15) == 0) {
+            clasp.status = CLASP_UNSAT;
+        } else if (strncmp(line, "s SATISFIABLE", 13) == 0 ||
+                   strncmp(line, "s OPTIMUM FOUND", 15) == 0) {
+            clasp.status = CLASP_STATUS_OPTIMAL;
+        } else if (strncmp(line, "s UNKNOWN", 9) == 0) {
+            clasp.status = CLASP_STATUS_UNKNOWN;
+        }
+    }
 }
 
-//*************************************************************************************************************
-//	@name		ÅFÅ@CLASPgetObjVal
-//	@function	ÅF	get the object value
-//	@return		ÅF	(void)
-//*************************************************************************************************************
-void CLASPgetObjVal(
-	FILE* fileptr			  /**< pointer to file */
-)
+/* Read the last model by variable ID, not by token position. */
+void CLASPgetSol(FILE* log)
 {
-	char* buffer = (char*)NULL;
-	char* tmptok = (char*)NULL;
-	char* context = (char*)NULL;
-
-	buffer = (char*)allocMemory(MAXSIZE_BUFFER, sizeof(char));
-
-	clasp.status = CLASP_OBJVAL_ERROR;
-
-	while (COMP_EOF(fgets(buffer, MAXSIZE_BUFFER, fileptr)))
-	{
-		if (strstr(buffer, "Answer:") != NULL)
-		{
-			for (int i = 0; i < strlen(buffer); i++)
-			{
-				if (isdigit(buffer[i]) != 0)
-				{
-					clasp.status = atoi(strtok_s(&buffer[i], "\n", &context));
-					break;
-				}
-			}
-			break;
-		}
-		if (strstr(buffer, "UNSATISFIABLE") != NULL)
-		{
-			clasp.status = CLASP_UNSAT;
-			break;
-		}
-		if (strstr(buffer, "UNKNOWN") != NULL)
-		{
-			clasp.status = CLASP_STATUS_UNKNOWN;
-			break;
-		}
-	}
-
-	free(buffer);
-
-	return;
+    char line[500000];
+    int required_count = readdata.lfsrnet.num + n_pi + n_dff;
+    unsigned char* seen = (unsigned char*)calloc(required_count + 1, 1);
+    int assigned_count = 0;
+    int in_model = 0;
+    int invalid_model = 0;
+    if (seen == NULL) {
+        clasp.status = CLASP_STATUS_ERROR;
+        return;
+    }
+    rewind(log);
+    while (fgets(line, sizeof(line), log) != NULL) {
+        char* context = NULL;
+        char* token;
+        if (line[0] != 'v' || line[1] != ' ') {
+            in_model = 0;
+            continue;
+        }
+        if (!in_model) {
+            memset(seen, 0, required_count + 1);
+            memset(clasp.sol[SOL_SEED], '0', readdata.lfsrnet.num);
+            memset(clasp.sol[SOL_TP], '0', n_pi + n_dff);
+            assigned_count = 0;
+            invalid_model = 0;
+            in_model = 1;
+        }
+        token = strtok_s(line + 2, " \t\r\n", &context);
+        while (token != NULL) {
+            char value = '1';
+            char* end;
+            long variable_id;
+            if (*token == '-') {
+                value = '0';
+                token++;
+            }
+            if (*token == 'x') {
+                token++;
+            }
+            errno = 0;
+            variable_id = strtol(token, &end, 10);
+            if (*token == '\0' || *end != '\0' || errno == ERANGE ||
+                variable_id < 0 || variable_id > INT_MAX) {
+                invalid_model = 1;
+                break;
+            }
+            if (variable_id > 0 && variable_id <= required_count) {
+                int index = (int)variable_id;
+                char* destination = index <= readdata.lfsrnet.num
+                    ? &clasp.sol[SOL_SEED][index - 1]
+                    : &clasp.sol[SOL_TP][index - readdata.lfsrnet.num - 1];
+                if (seen[index] && *destination != value) {
+                    invalid_model = 1;
+                }
+                if (!seen[index]) {
+                    seen[index] = 1;
+                    assigned_count++;
+                }
+                *destination = value;
+            }
+            token = strtok_s(NULL, " \t\r\n", &context);
+        }
+    }
+    if (invalid_model || assigned_count != required_count) {
+        clasp.status = CLASP_STATUS_ERROR;
+    }
+    free(seen);
 }
 
-//*************************************************************************************************************
-//	@name		ÅFÅ@CLASPgetSol
-//	@function	ÅF	get the solution
-//	@return		ÅF	(void)
-//*************************************************************************************************************
-void CLASPgetSol(
-	FILE* fileptr			  /**< pointer to file */
-)
+bool CLASP(void)
 {
-	char* buffer = (char*)NULL;
-	char* tmptok = (char*)NULL;
-	char* context = (char*)NULL;
-	int	  count = 0;
-
-	buffer = (char*)allocMemory(MAXSIZE_BUFFER, sizeof(char));
-
-	/** initialize the solution to all-zeros */
-	memset(clasp.sol[SOL_SEED], '0', readdata.lfsrnet.num);
-	memset(clasp.sol[SOL_TP], '0', n_dff + n_pi);
-
-	/** get the solution */
-	while (COMP_EOF(fgets(buffer, MAXSIZE_BUFFER, fileptr)))
-	{
-		if (COMP_NEWLINE(buffer))
-		{
-			/** get the variable number */
-			if (buffer[0] == 'v') {
-				tmptok = strtok_s(buffer, " \n",&context);//vÇçÌèúÇ∑ÇÈ
-				while ((tmptok = strtok_s(NULL, " \n",&context)) != NULL) {
-					if (count >= 0 && count < readdata.lfsrnet.num) {
-						if (tmptok[0] == '-') {
-						clasp.sol[SOL_SEED][count] = '0';
-						}
-						else {
-						clasp.sol[SOL_SEED][count] = '1';
-						}
-						count++;
-					}
-					else if (count >= readdata.lfsrnet.num && count < readdata.lfsrnet.num + n_dff + n_pi) {
-						if (tmptok[0] == '-') {
-							clasp.sol[SOL_TP][count-readdata.lfsrnet.num] = '0';
-						}
-						else {
-							clasp.sol[SOL_TP][count-readdata.lfsrnet.num] = '1';
-						}
-						count++;
-					}
-					if (count == readdata.lfsrnet.num + n_dff + n_pi) {
-						return;
-					}
-				}
-			}
-
-		}
-		else
-		{
-			break;
-		}
-	}
-
-	free(buffer);
-
-	return;
+    int attempt_count = strcmp(fi[RESOLVING_MODE].name, "ON") == 0 ? 3 : 1;
+    char log_path[1024];
+    sprintf_s(log_path, sizeof(log_path), "%sclasp_log_mttg.txt", folder_out);
+    for (int attempt = 0; attempt < attempt_count; attempt++) {
+        FILE* log = NULL;
+        if (clasp_call(attempt) != SUCCESS || fopen_s(&log, log_path, "r") != 0) {
+            return CLASP_ERROR;
+        }
+        CLASPgetObjVal(log);
+        if (clasp.status == CLASP_STATUS_OPTIMAL) {
+            CLASPgetSol(log);
+        }
+        fclose(log);
+        if (clasp.status == CLASP_STATUS_ERROR) {
+            return CLASP_ERROR;
+        }
+        if (clasp.status != CLASP_STATUS_UNKNOWN) {
+            break;
+        }
+    }
+    return CLASP_OKAY;
 }
 
 

@@ -1,15 +1,16 @@
-//-------------------------------------------------------------------------------------------------------------
+ï»¿//-------------------------------------------------------------------------------------------------------------
 //	include
 //-------------------------------------------------------------------------------------------------------------
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
 #include <assert.h>
+#include <errno.h>
 
 #include "read.h"
 #include "../lib/lib.h"
 #include "../header/Netlist.h"
-//’Ç‰Á
+//è¿½åŠ 
 #include"../header/Fault.h"
 #include"../header/Define.h"
 #include"target.h"
@@ -17,20 +18,23 @@
 
 
 //*************************************************************************************************************
-//	@name		F@ReadFile
-//	@function	F	read the file
-//	@return		F	(bool) okay, error
+//	@name		ï¼šã€€ReadFile
+//	@function	ï¼š	read the file
+//	@return		ï¼š	(bool) okay, error
 //*************************************************************************************************************
 bool ReadFile(
 	void
 )
 {
-	//’Ç‰Á
+	//è¿½åŠ 
     /** create the detection infomation list */
 	detflag = (BIT_INT*)allocMemory(1, sizeof(BIT_INT));
 	detflag->int_num = all_num / MAXSIZE_BITINT + 1;
 	detflag->flag = (unsigned int*)allocMemory(detflag->int_num, sizeof(unsigned int));
-	bitintSetAll_One(detflag);
+	bitintSetAll_Zero(detflag);
+	for (int fault_id = 0; fault_id < all_num; fault_id++) {
+		bitintSetNbit_One(detflag, fault_id);
+	}
 
 	/** read the xor-tap */
 	if (CreateLFSRList() != READ_OKAY) return READ_ERROR;
@@ -50,299 +54,241 @@ bool ReadFile(
 }
 
 //*************************************************************************************************************
-//	@name		F@ReadXORtap
-//	@function	F	read the xor-tap
-//	@return		F	(bool) okay, error
+//	@name		ï¼šã€€ReadXORtap
+//	@function	ï¼š	read the xor-tap
+//	@return		ï¼š	(bool) okay, error
 //*************************************************************************************************************
-bool ReadXORtap(
-	void
-)
+static int blank_line(const char* line)
 {
-	READER_XOR_TAP_ON
-	{
-		FILE * fileptr = (FILE*)NULL;
-		char* buffer = (char*)NULL;
-		char* context = (char*)NULL;
-		int     index = 0;
-
-		/** open the "xor-tap file" in read-mode */
-		fileOpen(&fileptr, opt.file.input.xortap, "r");
-
-		buffer = (char*)allocMemory(MAXSIZE_BUFFER, sizeof(char));
-
-		/** get the number of bits */
-		readdata.psnet.num = getNumPhaseShifter(fileptr, buffer);
-
-		/** alloc the memory for phase-shifter netlist */
-		readdata.psnet.nlist = (PS_NLIST*)allocMemory(readdata.psnet.num, sizeof(PS_NLIST));
-
-		/** read the xor-tap list */
-		for (int i = 0; COMP_EOF(fgets(buffer, MAXSIZE_BUFFER, fileptr)); i++)
-		{
-			if (COMP_NEWLINE(buffer))
-			{
-				/** get the index of phase-shifter */
-				index = getPhaseShifterIndex(strtok_s(buffer, ":", &context));
-
-				/** create the xor-tap list */
-				if (createXORtapList(index, strtok_s(NULL, "\n\0", &context)) != READ_OKAY) return READ_ERROR;
-			}
-		}
-
-		free(buffer);
-
-		/** close the "xor-tap file" in read-mode */
-		fclose(fileptr);
-
-
-#ifdef __DEBUG_READ_XOR_TAP__
-		_CALL_DEBUG_READ_XOR_TAP_
-#endif  // __DEBUG_READ_XOR_TAP__
-	}
-
-	return READ_OKAY;
+    return strspn(line, " \t\r\n") == strlen(line);
 }
 
-//*************************************************************************************************************
-//	@name		F@getNumPhaseShifter
-//	@function	F	get the number of phase-shifters
-//	@return		F	(int) number of phase-shifters
-//*************************************************************************************************************
-int getNumPhaseShifter(
-	FILE* fileptr,		      /**< pointer to file */
-	char* buffer		      /**< buffer */
-)
+int getNumPhaseShifter(FILE* input, char* line)
 {
-	int     numps = 0;
-
-	while (COMP_EOF(fgets(buffer, MAXSIZE_BUFFER, fileptr)))
-	{
-		if (COMP_NEWLINE(buffer))
-		{
-			numps++;
-		}
-	}
-	rewind(fileptr);
-
-	return numps;
+    int count = 0;
+    while (fgets(line, MAXSIZE_BUFFER, input) != NULL) {
+        if (strchr(line, '\n') == NULL && !feof(input)) {
+            count = -1;
+            break;
+        }
+        if (!blank_line(line)) {
+            count++;
+        }
+    }
+    rewind(input);
+    return count;
 }
 
-//*************************************************************************************************************
-//	@name		F  getPhaseShifterIndex
-//	@function	F	get the index of pahase-shifter
-//	@return		F	(int) index of pahase-shifter
-//*************************************************************************************************************
-int getPhaseShifterIndex(
-	char* buffer		      /**< buffer */
-)
+int getPhaseShifterIndex(char* label)
 {
-	int		index = -1;
-
-	for (int i = 0; i < strlen(buffer); i++)
-	{
-		if (isSingleByte(buffer[i]) == true)
-		{
-			if (isdigit(buffer[i]) != false)
-			{
-				index = atoi(&buffer[i]);
-				break;
-			}
-		}
-	}
-
-#ifdef NDEBUG
-	assert(index != -1);
-#endif
-
-	return index;
+    char* end;
+    long index;
+    if (label == NULL) {
+        return -1;
+    }
+    while (*label != '\0' && !isdigit((unsigned char)*label)) {
+        if (*label == '-') {
+            return -1;
+        }
+        label++;
+    }
+    if (*label == '\0') {
+        return -1;
+    }
+    errno = 0;
+    index = strtol(label, &end, 10);
+    if (errno == ERANGE || index < 0 || index >= readdata.psnet.num) {
+        return -1;
+    }
+    return (int)index;
 }
 
-//*************************************************************************************************************
-//	@name		F  createXORtapList
-//	@function	F	create the xor-tap list
-//	@return		F	(bool) okay, error
-//*************************************************************************************************************
-bool createXORtapList(
-	int 				  index,		      /**< index */
-	char* buffer		      /**< buffer */
-)
+bool createXORtapList(int channel_index, char* tap_text)
 {
-	char* context = (char*)NULL;
-	int		k = 0;
-
-	/** initialize */
-	readdata.psnet.nlist[index].id = index + 1;								/** id */
-	readdata.psnet.nlist[index].vars = index + 1;								/** variable */
-	readdata.psnet.nlist[index].nin = 0;										/** number of inputs */
-	readdata.psnet.nlist[index].nout_slength = 0;										/** number of outputs */
-	readdata.psnet.nlist[index].name = (char*)allocMemory(30, sizeof(char));		/** name */
-	sprintf_s(readdata.psnet.nlist[index].name, 30, "ps_out_%d", readdata.psnet.nlist[index].id);
-
-	/** get the number of xor-taps */
-	for (int i = 0; i < strlen(buffer); i++)
-	{
-		if (buffer[i] == '_')
-		{
-			readdata.psnet.nlist[index].nin++;
-		}
-	}
-	readdata.psnet.nlist[index].in = (int*)allocMemory(readdata.psnet.nlist[index].nin, sizeof(int));
-
-	/** store the xor-tap number */
-	readdata.psnet.nlist[index].in[k++] = atoi(strtok_s(buffer, "_\n\0", &context));
-	while ((buffer = strtok_s(NULL, "_\n\0", &context)) != NULL)
-	{
-		readdata.psnet.nlist[index].in[k++] = atoi(buffer);
-	}
-
-	return READ_OKAY;
+    PS_NLIST* channel;
+    int* taps;
+    int tap_count = 0;
+    char* context = NULL;
+    char* token;
+    if (channel_index < 0 || channel_index >= readdata.psnet.num || tap_text == NULL) {
+        return READ_ERROR;
+    }
+    channel = &readdata.psnet.nlist[channel_index];
+    if (channel->name != NULL) {
+        return READ_ERROR;
+    }
+    taps = (int*)allocMemory(readdata.lfsrnet.num, sizeof(*taps));
+    token = strtok_s(tap_text, "_ \t\r\n", &context);
+    while (token != NULL) {
+        char* end;
+        long tap;
+        errno = 0;
+        tap = strtol(token, &end, 10);
+        if (*end != '\0' || errno == ERANGE || tap < 1 ||
+            tap > readdata.lfsrnet.num || tap_count >= readdata.lfsrnet.num) {
+            free(taps);
+            return READ_ERROR;
+        }
+        for (int index = 0; index < tap_count; index++) {
+            if (taps[index] == tap) {
+                free(taps);
+                return READ_ERROR;
+            }
+        }
+        taps[tap_count++] = (int)tap;
+        token = strtok_s(NULL, "_ \t\r\n", &context);
+    }
+    if (tap_count == 0) {
+        free(taps);
+        return READ_ERROR;
+    }
+    channel->id = channel_index + 1;
+    channel->vars = channel_index + 1;
+    channel->nin = tap_count;
+    channel->in = taps;
+    channel->name = (char*)allocMemory(30, 1);
+    sprintf_s(channel->name, 30, "ps_out_%d", channel->id);
+    return READ_OKAY;
 }
 
-//*************************************************************************************************************
-//	@name		F@ReadScanChain
-//	@function	F	read the scan-chain
-//	@return		F	(bool) okay, error
-//*************************************************************************************************************
-bool ReadScanChain(
-	void
-)
+bool ReadXORtap(void)
 {
-	READER_SCAN_CHAIN_ON
-	{
-		FILE * fileptr = (FILE*)NULL;
-		char* buffer = (char*)NULL;
-		char* context = (char*)NULL;
-		char* token = (char*)NULL;
-		int     index = 0;
-		int     j = 0;
-
-		/** open the "scan-chain file" in read-mode */
-		fileOpen(&fileptr, opt.file.input.scanchain, "r");
-
-		buffer = (char*)allocMemory(MAXSIZE_BUFFER, sizeof(char));
-
-		/** get the maximum scan-length */
-		readdata.psnet.maxslength = getMaxScanLength(fileptr, buffer);
-
-		/** alloc the memory for output of phase-shifter */
-		for (int i = 0; i < readdata.psnet.num; i++)
-		{
-			if (readdata.psnet.nlist[i].nout_slength >= 1)
-				readdata.psnet.nlist[i].out_schain = (NLIST**)allocMemory(readdata.psnet.nlist[i].nout_slength, sizeof(NLIST*));
-		}
-
-		//readdata.psnet.nlist[i].out_schain
-		//‚±‚±‚ÉƒXƒLƒƒƒ“ƒ`ƒF[ƒ“‚ÆPI,PPI‚ğŒq‚°‚é
-
-		/** read the scan-chain */
-		for (int i = 0; i < readdata.psnet.maxslength; i++)
-		{
-			index = 0;
-			j = 0;
-
-			fgets(buffer, MAXSIZE_BUFFER, fileptr);
-
-			if (COMP_NEWLINE(buffer))
-			{
-				while (j < strlen(buffer))
-				{
-					if (buffer[j] != ' ' && buffer[j] != ',' && buffer[j] != '\n' && buffer[j] != '\0')
-					{
-						token = strtok_s(&buffer[j], ", \n\0", &context);
-
-						/** store the pointer to netlist */
-						for (int k = 0; k < n_net; k++)
-						{
-							if (!strcmp(token, nl[k].name))//–¼‘O‚ªˆê’v‚µ‚½‚çŒq‚°‚é
-							{
-								readdata.psnet.nlist[index++].out_schain[i] = &nl[k];
-								break;
-							}
-						}
-
-						/** error */
-						if (readdata.psnet.nlist[index - 1].out_schain[i] == NULL)
-						{
-							printf("\n	FILE ERROR: scan-chain file reading failed. ");
-							printf("%s was passed through. \n", token);
-							return READ_ERROR;
-						}
-
-						if ((token = strtok_s(NULL, "\n\0", &context)) == NULL) break;
-						strcpy_s(buffer, MAXSIZE_BUFFER, token);
-						j = 0;
-					}
-					else
-					{
-						j++;
-					}
-				}
-			}
-			else
-			{
-				i--;
-			}
-		}
-
-		free(buffer);
-
-		/** close the "scan-chain file" in read-mode */
-		fclose(fileptr);
-
-
-#ifdef __DEBUG_READ_SCAN_CHAIN__
-		_CALL_DEBUG_READ_SCAN_CHAIN_
-#endif  // __DEBUG_READ_SCAN_CHAIN__
-	}
-
-	return READ_OKAY;
+    FILE* input = NULL;
+    char* line;
+    int valid = 1;
+    if (opt.file.input.xortap == FILE_NOSET ||
+        fopen_s(&input, opt.file.input.xortap, "r") != 0) {
+        return READ_ERROR;
+    }
+    line = (char*)allocMemory(MAXSIZE_BUFFER, 1);
+    readdata.psnet.num = getNumPhaseShifter(input, line);
+    if (readdata.psnet.num <= 0) {
+        free(line);
+        fclose(input);
+        return READ_ERROR;
+    }
+    readdata.psnet.nlist = (PS_NLIST*)allocMemory(readdata.psnet.num, sizeof(PS_NLIST));
+    while (fgets(line, MAXSIZE_BUFFER, input) != NULL) {
+        char* separator;
+        int channel_index;
+        if (blank_line(line)) {
+            continue;
+        }
+        separator = strchr(line, ':');
+        if (separator == NULL) {
+            valid = 0;
+            break;
+        }
+        *separator = '\0';
+        channel_index = getPhaseShifterIndex(line);
+        if (!createXORtapList(channel_index, separator + 1)) {
+            valid = 0;
+            break;
+        }
+    }
+    free(line);
+    fclose(input);
+    if (!valid) {
+        printf("[ERROR] Invalid channel index, duplicate channel or invalid XOR tap.\n");
+    }
+    return valid ? READ_OKAY : READ_ERROR;
 }
 
-//*************************************************************************************************************
-//	@name		F@getMaxScanLength
-//	@function	F	get the maximum scan-length
-//	@return		F	(int) maximum scan-length
-//*************************************************************************************************************
-int getMaxScanLength(
-	FILE* fileptr,		      /**< pointer to file */
-	char* buffer		      /**< buffer */
-)
+bool ReadScanChain(void)
 {
-	int     index = 0;
-	int     maxscanlength = 0;
+    FILE* input = NULL;
+    char* line;
+    unsigned char* mapped;
+    int row = 0;
+    int mapped_input_count = 0;
+    int valid = 1;
+    if (opt.file.input.scanchain == FILE_NOSET ||
+        fopen_s(&input, opt.file.input.scanchain, "r") != 0) {
+        return READ_ERROR;
+    }
+    line = (char*)allocMemory(MAXSIZE_BUFFER, 1);
+    mapped = (unsigned char*)allocMemory(n_net, 1);
+    /* First count rows; every channel can then safely store at most that many entries. */
+    readdata.psnet.maxslength = getNumPhaseShifter(input, line);
+    if (readdata.psnet.maxslength <= 0) {
+        valid = 0;
+    }
+    if (valid) {
+        for (int channel = 0; channel < readdata.psnet.num; channel++) {
+            readdata.psnet.nlist[channel].nout_slength = 0;
+            readdata.psnet.nlist[channel].out_schain = (NLIST**)allocMemory(
+                readdata.psnet.maxslength, sizeof(NLIST*));
+        }
+    }
+    while (valid && fgets(line, MAXSIZE_BUFFER, input) != NULL) {
+        char* context = NULL;
+        char* name;
+        int column = 0;
+        if (blank_line(line)) {
+            continue;
+        }
+        name = strtok_s(line, ", \t\r\n", &context);
+        while (name != NULL) {
+            int net_index;
+            NLIST* net;
+            PS_NLIST* channel;
+            if (column >= readdata.psnet.num) {
+                valid = 0;
+                break;
+            }
+            for (net_index = 0; net_index < n_net; net_index++) {
+                if (strcmp(name, nl[net_index].name) == 0) {
+                    break;
+                }
+            }
+            if (net_index == n_net) {
+                valid = 0;
+                break;
+            }
+            net = &nl[net_index];
+            /* Existing scan files pad the last row with unused terminal outputs. */
+            if (net->type == IN || net->type == DFF) {
+                if (mapped[net_index]) {
+                    valid = 0;
+                    break;
+                }
+                mapped[net_index] = 1;
+                mapped_input_count++;
+            } else if (net->n_out != 0) {
+                valid = 0;
+                break;
+            }
+            channel = &readdata.psnet.nlist[column++];
+            channel->out_schain[row] = net;
+            channel->nout_slength = row + 1;
+            name = strtok_s(NULL, ", \t\r\n", &context);
+        }
+        row++;
+    }
+    if (mapped_input_count != n_pi + n_ppi) {
+        valid = 0;
+    }
+    free(mapped);
+    free(line);
+    fclose(input);
+    if (!valid) {
+        printf("[ERROR] Invalid scan-chain signal, duplicate input, missing input or excess column.\n");
+    }
+    return valid ? READ_OKAY : READ_ERROR;
+}
 
-	/** get the maximum scan-length */
-	while (COMP_EOF(fgets(buffer, MAXSIZE_BUFFER, fileptr)))
-	{
-		if (COMP_NEWLINE(buffer)) maxscanlength++;
-	}
-	rewind(fileptr);
-
-	/** get the scan-length of each scan-chain */
-	while (COMP_EOF(fgets(buffer, MAXSIZE_BUFFER, fileptr)))
-	{
-		if (COMP_NEWLINE(buffer))
-		{
-			for (int i = 0; i < strlen(buffer); i++)
-			{
-				if (buffer[i] == ',') readdata.psnet.nlist[index++].nout_slength++;
-			}
-			readdata.psnet.nlist[index].nout_slength++;
-		}
-		index = 0;
-	}
-
-	rewind(fileptr);
-
-	return maxscanlength;
+/* Retained for source compatibility; scan lengths are now checked by ReadScanChain. */
+int getMaxScanLength(FILE* input, char* line)
+{
+    return getNumPhaseShifter(input, line);
 }
 
 
 /* add create source code since 2023/10/09 */
 //*************************************************************************************************************
-//	@name		F  CreateLFSRList
-//	@function	F	Create the LFSR list
-//	@return		F	(bool) okay, error
+//	@name		ï¼š  CreateLFSRList
+//	@function	ï¼š	Create the LFSR list
+//	@return		ï¼š	(bool) okay, error
 //*************************************************************************************************************
 bool CreateLFSRList(
 	void
@@ -375,9 +321,9 @@ bool CreateLFSRList(
 	return READ_OKAY;
 }
 //*************************************************************************************************************
-//	@name		F  CreateCompatibleInfo
-//	@function	F	Create Compatible Infomation
-//	@return		F	(bool) okay, error
+//	@name		ï¼š  CreateCompatibleInfo
+//	@function	ï¼š	Create Compatible Infomation
+//	@return		ï¼š	(bool) okay, error
 //*************************************************************************************************************
 void CreateCompatibleInfo(
 	void
@@ -393,7 +339,7 @@ void CreateCompatibleInfo(
 	for (int i = 0; i < ufl_num; i++)
 	{
 		for (j = 0; j < readdata.necenet.num; j++) {
-			//–¢ŒŸoŒÌáƒŠƒXƒg‚Ì“Ç‚İ‚ñ‚¾•K{Š„“–‚Äî•ñ‚ÌM†ü–¼‚ÆŒÌáƒ^ƒCƒv‚ªˆê’v‚·‚ê‚Î–¢ŒŸoŒÌáƒŠƒXƒg‚Ì•K{Š„“–î•ñ‚ğƒRƒs[‚·‚é
+			//æœªæ¤œå‡ºæ•…éšœãƒªã‚¹ãƒˆã®èª­ã¿è¾¼ã‚“ã å¿…é ˆå‰²å½“ã¦æƒ…å ±ã®ä¿¡å·ç·šåã¨æ•…éšœã‚¿ã‚¤ãƒ—ãŒä¸€è‡´ã™ã‚Œã°æœªæ¤œå‡ºæ•…éšœãƒªã‚¹ãƒˆã®å¿…é ˆå‰²å½“æƒ…å ±ã‚’ã‚³ãƒ”ãƒ¼ã™ã‚‹
 			if (!strcmp(current->string, readdata.necenet.necelist[j].string))
 			{
 				sprintf_s(current->nece, MAXSIZE_BUFFER, "%s", readdata.necenet.necelist[j].nece);
@@ -406,9 +352,9 @@ void CreateCompatibleInfo(
 }
 
 //*************************************************************************************************************
-//	@name		F@COMPinit
-//	@function	F	initialize the compatible sets infomation
-//	@return		F	(void)
+//	@name		ï¼šã€€COMPinit
+//	@function	ï¼š	initialize the compatible sets infomation
+//	@return		ï¼š	(void)
 //*************************************************************************************************************
 void COMPinti(
 	void
@@ -416,7 +362,7 @@ void COMPinti(
 {
 	/* variable initializion */
 
-	UNDET_FAULT_LIST* head = ufl;//’Ç‰Á//æ“ª‚ğ•Û‘¶
+	UNDET_FAULT_LIST* head = ufl;//è¿½åŠ //å…ˆé ­ã‚’ä¿å­˜
 
 	for (int i = 0; i < ufl_num; i++)
 	{
@@ -427,123 +373,105 @@ void COMPinti(
 		ufl->necenet->p_buf = (unsigned int*)allocMemory(
 			ufl->necenet->int_num, sizeof(unsigned int));
 		All_Bit_X_XP(ufl->necenet);
-		ufl->nece = (char*)allocMemory(MAXSIZE_BUFFER, sizeof(char));//•K{Š„‚è“–‚Äî•ñƒtƒ@ƒCƒ‹‚ğ1s‚¸‚ÂŠi”[
+		ufl->nece = (char*)allocMemory(MAXSIZE_BUFFER, sizeof(char));//å¿…é ˆå‰²ã‚Šå½“ã¦æƒ…å ±ãƒ•ã‚¡ã‚¤ãƒ«ã‚’1è¡Œãšã¤æ ¼ç´
 		ufl->edge = (BIT_INT*)allocMemory(1, sizeof(BIT_INT));
 		ufl->edge->int_num = ufl_num / MAXSIZE_BITINT + 1;
 		ufl->edge->flag = (unsigned int*)allocMemory(ufl->edge->int_num, sizeof(unsigned int));
-		bitintSetAll_Zero(ufl->edge);//ƒI[ƒ‹0F‚·‚×‚Ä–¢ŒŸo
+		bitintSetAll_Zero(ufl->edge);//ã‚ªãƒ¼ãƒ«0ï¼šã™ã¹ã¦æœªæ¤œå‡º
 		for (int j = 0; j < ufl_num; j++)
 		{
-			bitintSetNbit_One(ufl->edge, j);//w’èˆÊ’u(j”Ô–Ú‚ğ1‚ÉƒZƒbƒg)‚±‚ê‚Í©•ª‚ÌˆÊ’u‚ğ1‚É‚µ‚Ä‚¨‚­‚½‚ß‚¾‚Æv‚¤
+			bitintSetNbit_One(ufl->edge, j);//æŒ‡å®šä½ç½®(jç•ªç›®ã‚’1ã«ã‚»ãƒƒãƒˆ)ã“ã‚Œã¯è‡ªåˆ†ã®ä½ç½®ã‚’1ã«ã—ã¦ãŠããŸã‚ã ã¨æ€ã†
 		}
 		ufl->n_edge = ufl_num;
-		ufl = ufl->next;//Œã‘±ƒAƒhƒŒƒX‚Ö‚Ìƒ|ƒCƒ“ƒ^
+		ufl = ufl->next;//å¾Œç¶šã‚¢ãƒ‰ãƒ¬ã‚¹ã¸ã®ãƒã‚¤ãƒ³ã‚¿
 	}
-	//’Ç‰Á
-	//ƒŠƒXƒg‚Ìæ“ª‚É–ß‚·
+	//è¿½åŠ 
+	//ãƒªã‚¹ãƒˆã®å…ˆé ­ã«æˆ»ã™
 	ufl = head;
 	return;
 }
 
 //*************************************************************************************************************
-//	@name		F  ReadNeessary
-//	@function	F	Reading File Necessary
-//	@return		F	(bool) okay, error
+//	@name		ï¼š  ReadNeessary
+//	@function	ï¼š	Reading File Necessary
+//	@return		ï¼š	(bool) okay, error
 //*************************************************************************************************************
-bool ReadNecessary(
-	void
-)
+bool ReadNecessary(void)
 {
-	READER_NECESSARY_ON
-	{
-	/* variable declaration */
-	FILE* fileptr = (FILE*)NULL;
-	char* buffer = (char*)NULL;
-	char* context = (char*)NULL;
-	char* string = (char*)NULL;
-	char* token = (char*)NULL;
-	char* token2 = (char*)NULL;
-	int cnt = 0;
-	int f_length = 0;
-	int hash = 0;
-	int type = 0;
-	int i = 0;
-	int nece_line_cnt = 0;
-
-	/* partitioning allocation */
-	buffer = (char*)allocMemory(MAXSIZE_BUFFER, sizeof(char));
-	string = (char*)allocMemory(MAXSIZE_BUFFER, sizeof(char));
-
-	readdata.necenet.necelist = (NECE_NLIST*)allocMemory(all_num, sizeof(NECE_NLIST));
-
-	//•K{Š„‚è“–‚Äî•ñƒtƒ@ƒCƒ‹ƒI[ƒvƒ“
-	fileOpen(&fileptr, opt.file.input.necessary, "r");
-
-	/** create the fault list */
-	while (COMP_EOF(fgets(buffer, MAXSIZE_BUFFER, fileptr)))
-	{
-		if (COMP_NEWLINE(buffer))
-		{
-			nece_line_cnt++;
-			token = strtok_s(buffer, ", \n\0", &context);//token:M†ü–¼
-			sprintf_s(string, MAXSIZE_BUFFER, "%s",token);//string:M†ü–¼
-			token2 = strtok_s(NULL, ", \n\0", &context);//token2:ŒÌáƒ^ƒCƒv(ex:SF1,SF0)
-			if (!strcmp(token2, "SF0"))
-			{
-				sprintf_s(string, MAXSIZE_BUFFER, "%s\tsa0\n", string);
-				//string:G16\tsa0\n
-			}
-			else if (!strcmp(token2, "SF1"))
-			{
-				sprintf_s(string, MAXSIZE_BUFFER, "%s\tsa1\n", string);
-				//string:G16\tsa1\n
-			}
-			/** calcurate the hash */
-			//üŒ`ƒŠƒXƒg‚©‚ç’Tõ‚É‰ü•Ï‚µ‚½‚Ì‚ÅƒnƒbƒVƒ…’lŒvZ‚¢‚ç‚È‚¢
-			//hash = calcHash(string);
-
-			/** create Necessary node */
-			//–¢ŒŸoŒÌáƒŠƒXƒg(üŒ`)‚©‚çˆê’v‚·‚é•¶š—ñ‚ğ’Tõ
-			if (searchNnode(string/*readdata.fault.list[hash]*/ , cnt) != NOT_FOUND)
-			{
-				//•K{Š„‚è“–‚Äî•ñæ“¾(ex:G16=0 G15=1......‚È‚Ç)
-				token2 = strtok_s(NULL, "\n\0", &context);
-				readdata.necenet.necelist[cnt].nece = (char*)allocMemory(MAXSIZE_BUFFER, sizeof(char));
-				//readdata.necenet.necelist[cnt].nece‚É‚ÍG16=0‚È‚Ç‚ªŠi”[
-				sprintf_s(readdata.necenet.necelist[cnt].nece, MAXSIZE_BUFFER, "%s", token2);
-				cnt++;
-			}
-		}
-	}
-	free(buffer);
-	free(string);
-	if (cnt != ufl_num)
-	{
-		printf("\n	SYSTEM ERROR: Reading necessary file error. ");
-		printf("	Not enough necessary information. ");
-		printf("\n	num of necessary info = %d", cnt);
-		printf("		num of target fault   = %d\n", ufl_num);
-
-		return READ_ERROR;
-	}
-	else if(cnt==0){
-		printf("ERROR:ŒÌáƒŠƒXƒg‚Æˆê’v‚·‚é•K{Š„“–î•ñ‚ª‘¶İ‚µ‚Ü‚¹‚ñ\n");
-
-	    return READ_ERROR;
-	}
-	else {
-		readdata.necenet.num = cnt;
-	}
-	fclose(fileptr);
-	}
-
-	return READ_OKAY;
+    FILE* input = NULL;
+    char* line;
+    unsigned char* found;
+    int matched_count = 0;
+    int valid = 1;
+    if (opt.file.input.necessary == FILE_NOSET) {
+        return READ_OKAY;
+    }
+    if (fopen_s(&input, opt.file.input.necessary, "r") != 0) {
+        return READ_ERROR;
+    }
+    line = (char*)allocMemory(MAXSIZE_BUFFER, 1);
+    found = (unsigned char*)allocMemory(all_num, 1);
+    readdata.necenet.necelist = (NECE_NLIST*)allocMemory(all_num, sizeof(NECE_NLIST));
+    while (fgets(line, MAXSIZE_BUFFER, input) != NULL) {
+        char* context = NULL;
+        char* name = strtok_s(line, ", \t\r\n", &context);
+        char* type_name;
+        char* assignments;
+        int type;
+        UNDET_FAULT_LIST* fault;
+        if (name == NULL) {
+            continue;
+        }
+        type_name = strtok_s(NULL, ", \t\r\n", &context);
+        assignments = strtok_s(NULL, "\r\n", &context);
+        if (type_name == NULL || assignments == NULL) {
+            valid = 0;
+            break;
+        }
+        if (strcmp(type_name, "SF0") == 0) {
+            type = STR;
+        } else if (strcmp(type_name, "SF1") == 0) {
+            type = STF;
+        } else {
+            valid = 0;
+            break;
+        }
+        for (fault = ufl; fault != NULL; fault = fault->next) {
+            if (fault->type == type && strcmp(fault->name, name) == 0) {
+                NECE_NLIST* entry;
+                if (found[fault->node_id]) {
+                    valid = 0;
+                    break;
+                }
+                found[fault->node_id] = 1;
+                entry = &readdata.necenet.necelist[matched_count++];
+                entry->string = _strdup(fault->string);
+                entry->name = _strdup(fault->name);
+                entry->type = type;
+                entry->id = fault->node_id;
+                entry->nece = _strdup(assignments);
+                break;
+            }
+        }
+        if (!valid) {
+            break;
+        }
+    }
+    readdata.necenet.num = matched_count;
+    free(found);
+    free(line);
+    fclose(input);
+    if (!valid || matched_count != all_num) {
+        printf("[ERROR] Missing, duplicate or malformed necessary assignments.\n");
+        return READ_ERROR;
+    }
+    return READ_OKAY;
 }
 
 //*************************************************************************************************************
-//	@name		F@searchNnode
-//	@function	F	search for necessary node
-//	@return		F	(bool) found, not found
+//	@name		ï¼šã€€searchNnode
+//	@function	ï¼š	search for necessary node
+//	@return		ï¼š	(bool) found, not found
 //*************************************************************************************************************
 bool searchNnode(
 	char* buffer,			  /**< buffer (key) */
@@ -556,7 +484,7 @@ bool searchNnode(
 		//buffer:G16\tsa1\n
 		if (!strcmp(current->string, buffer))
 		{
-			//searchNnode‚Ìcurrent->string(–¢ŒŸoŒÌá‚Ìstring)‚Æbuffer(G16_sa1)
+			//searchNnodeã®current->string(æœªæ¤œå‡ºæ•…éšœã®string)ã¨buffer(G16_sa1)
 			readdata.necenet.necelist[no].string = (char*)allocMemory(MAXSIZE_BUFFER, sizeof(char));
 			sprintf_s(readdata.necenet.necelist[no].string, 200, "%s", current->string);
 			readdata.necenet.necelist[no].id = no;
@@ -574,75 +502,55 @@ bool searchNnode(
 
 
 
-//’Ç‰Á ASG‚Ìtarget.c‚É‹LÚ‚³‚ê‚Ä‚¢‚½ŠÖ”‚ğ‚Á‚Ä‚«‚½
+//è¿½åŠ  ASGã®target.cã«è¨˜è¼‰ã•ã‚Œã¦ã„ãŸé–¢æ•°ã‚’æŒã£ã¦ããŸ
 
 //*************************************************************************************************************
-//	@name		F@CreateNecessaryNet
-//	@function	F	making graph for compatible
-//	@return		F	(bool) okay, error
+//	@name		ï¼šã€€CreateNecessaryNet
+//	@function	ï¼š	making graph for compatible
+//	@return		ï¼š	(bool) okay, error
 //*************************************************************************************************************
-bool CreateNecessaryNet(
-	void
-)
+bool CreateNecessaryNet(void)
 {
-	char* buffer = (char*)NULL;
-	char* context = (char*)NULL;
-	char* token = (char*)NULL;
-	char* token2 = (char*)NULL;
-
-
-	buffer = (char*)allocMemory(MAXSIZE_BUFFER, sizeof(char));
-
-	//’Ç‰Á
-	//ƒŠƒXƒg‚Ìæ“ª‚ğ•Û‚·‚éhead
-	UNDET_FAULT_LIST* head = ufl;
-	for (int i = 0; i < ufl_num; i++)
-	{
-		//buffer:G16=0 G15=1...‚ ‚éM†ü‚É‘Î‚·‚é•K{Š„‚è“–‚Äî•ñ
-		sprintf_s(buffer, MAXSIZE_BUFFER, "%s", ufl->nece);
-		//token:G16‚È‚Ç‚ÌM†ü–¼
-		token = strtok_s(buffer, "=, ,\n", &context);
-		while (token != NULL) {
-			//token2:•K{Š„‚è“–‚Ä‚ÌM†ü‚Ì’l(ex:G16=0‚Ì0)
-			token2 = strtok_s(NULL, "=, ,\n", &context);
-			for (int j = 0; j < n_net; j++)
-			{
-				if (!strcmp(token, nl[j].name))
-				{
-					if (!strcmp(token2, "0"))
-					{
-						Set_NINT_Zero_XP(ufl->necenet, (unsigned int)j);
-					}
-					else if (!strcmp(token2, "1"))
-					{
-						Set_NINT_One_XP(ufl->necenet, (unsigned int)j);
-					}
-					else
-					{
-						return TARGET_ERROR;
-					}
-					break;
-				}
-			}
-			token = strtok_s(NULL, "=, ,\n", &context);
-		}
-		ufl = ufl->next;
-		printf("\r	Reading necessary infomation progress  >> %.2f%%", ((float)(i + 1) / (float)ufl_num) * 100);
-	}
-	//’Ç‰Á
-	//ƒŠƒXƒg‚ğæ“ª‚É–ß‚·
-	ufl = head;
-#ifdef __DEBUG_SET_TARGET_NECESSARY__
-	_CALL_DEBUG_SET_TARGET_NECESSARY_(remain);
-#endif // __DEBUG_SET_TARGET_NECESSARY__
-
-	return TARGET_OKAY;
+    char* buffer = (char*)allocMemory(MAXSIZE_BUFFER, 1);
+    UNDET_FAULT_LIST* fault;
+    int valid = 1;
+    for (fault = ufl; fault != NULL && valid; fault = fault->next) {
+        char* context = NULL;
+        char* name;
+        strcpy_s(buffer, MAXSIZE_BUFFER, fault->nece);
+        name = strtok_s(buffer, "=, \t\r\n", &context);
+        while (name != NULL) {
+            char* value = strtok_s(NULL, "=, \t\r\n", &context);
+            int net_index;
+            if (value == NULL || (strcmp(value, "0") != 0 && strcmp(value, "1") != 0)) {
+                valid = 0;
+                break;
+            }
+            for (net_index = 0; net_index < n_net; net_index++) {
+                if (strcmp(name, nl[net_index].name) == 0) {
+                    break;
+                }
+            }
+            if (net_index == n_net) {
+                valid = 0;
+                break;
+            }
+            if (*value == '0') {
+                Set_NINT_Zero_XP(fault->necenet, (unsigned int)net_index);
+            } else {
+                Set_NINT_One_XP(fault->necenet, (unsigned int)net_index);
+            }
+            name = strtok_s(NULL, "=, \t\r\n", &context);
+        }
+    }
+    free(buffer);
+    return valid ? TARGET_OKAY : TARGET_ERROR;
 }
 
 //*************************************************************************************************************
-//	@name		F@CreateCompatibleEdge
-//	@function	F	making graph for compatible fault sets
-//	@return		F	(bool) okay, error
+//	@name		ï¼šã€€CreateCompatibleEdge
+//	@function	ï¼š	making graph for compatible fault sets
+//	@return		ï¼š	(bool) okay, error
 //*************************************************************************************************************
 bool CreateCompatibleEdge(
 	void
@@ -653,7 +561,7 @@ bool CreateCompatibleEdge(
 	int int_num = ufl->necenet->int_num;
 
 
-	// ƒm[ƒh‚ğ”z—ñ‚ÉƒRƒs[
+	// ãƒãƒ¼ãƒ‰ã‚’é…åˆ—ã«ã‚³ãƒ”ãƒ¼
 	UNDET_FAULT_LIST** nodes = malloc(sizeof(*nodes) * ufl_num);
 	UNDET_FAULT_LIST* p = ufl;
 	for (int i = 0; i < ufl_num; i++, p = p->next) nodes[i] = p;
@@ -671,11 +579,11 @@ bool CreateCompatibleEdge(
 				unsigned x = ufl_i->necenet->x_buf[k] & ufl_j->necenet->x_buf[k];
 				unsigned p = ufl_i->necenet->p_buf[k] & ufl_j ->necenet->p_buf[k];
 				/* search crash */
-				if ((x | p) != 0xFFFFFFFF)//0‚ª‚ ‚éê‡˜_—’l‚ªÕ“ËB‚Â‚Ü‚èˆ³k‚ª‚Å‚«‚È‚¢A‚Â‚Ü‚è—¼—§•s‰Â”\
+				if ((x | p) != 0xFFFFFFFF)//0ãŒã‚ã‚‹å ´åˆè«–ç†å€¤ãŒè¡çªã€‚ã¤ã¾ã‚Šåœ§ç¸®ãŒã§ããªã„ã€ã¤ã¾ã‚Šä¸¡ç«‹ä¸å¯èƒ½
 				{
-					bitintSetNbit_Zero(ufl_i->edge, j);
+					bitintSetNbit_Zero(ufl_i->edge, ufl_j->node_id);
 					ufl_i->n_edge--;
-					bitintSetNbit_Zero(ufl_j->edge, i);
+					bitintSetNbit_Zero(ufl_j->edge, ufl_i->node_id);
 					ufl_j->n_edge--;
 					break;
 				}
@@ -688,7 +596,7 @@ bool CreateCompatibleEdge(
 #endif // __DEBUG_SET_TARGET_COMP__
 	half_end = clock();
 	time_graph = half_end - half_start;
-	printf("\n	Making Graph CPU timeF	%.3f[s]\n", (float)time_graph / CLOCKS_PER_SEC);
+	printf("\n	Making Graph CPU timeï¼š	%.3f[s]\n", (float)time_graph / CLOCKS_PER_SEC);
 	free(nodes);
 
 
@@ -696,318 +604,100 @@ bool CreateCompatibleEdge(
 }
 
 //*************************************************************************************************************
-//	@name		F@CompatibleFaultSet
-//	@function	F	set the Compatible Fault list
-//	@return		F	(bool) okay, error
+//	@name		ï¼šã€€CompatibleFaultSet
+//	@function	ï¼š	set the Compatible Fault list
+//	@return		ï¼š	(bool) okay, error
 //*************************************************************************************************************
-bool CompatibleFaultSet(
-	SORTED* sorted,			  /**< sorted list */
-	int loop				  /**< loop variable */
-)
+static int compare_fault_degree(const void* left, const void* right)
 {
-	CNODE** clique = (CNODE**)NULL;
-	CNODE* cnodeptr = (CNODE*)NULL;
-	CNODE* head = (CNODE*)NULL;
-	CNODE* p = (CNODE*)NULL;
-	int depth = 0;				/* depth */
-	int select;				/* select no. */
-	int j = 0;
-	int flag = 0, select_flag = 0, end_flag = 0, d_flag = 0;
-	int count = 0;
+    const UNDET_FAULT_LIST* a = *(const UNDET_FAULT_LIST* const*)left;
+    const UNDET_FAULT_LIST* b = *(const UNDET_FAULT_LIST* const*)right;
+    if (a->n_edge != b->n_edge) {
+        return a->n_edge > b->n_edge ? -1 : 1;
+    }
+    return (a->node_id > b->node_id) - (a->node_id < b->node_id);
+}
 
-	int* select_id;
-	select_id = (int*)calloc(ufl_num + 1, sizeof(int));//select_id‚Íƒ\[ƒg‚³‚ê‚½W‡‚Ì”‚Æˆê’v‚·‚é‚Ì‚Åufl‚Å‚¢‚¢
-	if (select_id == NULL) {
-		printf("yERRORz: Memory allocation failed.\n");
-		return ERROR;
-	}
+bool CompatibleFaultSet(SORTED* sorted, int loop)
+{
+    UNDET_FAULT_LIST** candidates;
+    UNDET_FAULT_LIST* current;
+    UNDET_FAULT_LIST* tail = NULL;
+    BIT_INT remaining;
+    int candidate_count = 0;
+    int target_limit = fi[TARGET_LIMIT].value;
+    int all_fault_cutoff = 300;
+    int select_all;
 
-	for (int i = 0; i < ufl_num; i++) select_id[i] = -1;
-
-	//—¼—§‰Â”\ŒÌá‚É‚¨‚¯‚é–Ú•WŒÌá‘I‘ğ
-
-	//–¢ŒŸoŒÌá”‚ª300ˆÈ‰º‚Ìê‡‚Ìˆ—
-	if (ufl_num < 300)
-	{
-		//if (num_clique_flag == false)
-		//{
-		//	num_clique = loop + 1;
-		//	num_clique_flag = true;
-		//}
-		
-		 // --- deep copy ufl ¨ tfl ŠJn ---
-		tfl = NULL;
-		UNDET_FAULT_LIST* tfl_tail = NULL;
-		UNDET_FAULT_LIST* curr = ufl;
-		while (curr != NULL) {
-			// V‹Kƒm[ƒhŠm•Û
-			UNDET_FAULT_LIST* node = (UNDET_FAULT_LIST*)malloc(sizeof(UNDET_FAULT_LIST));
-			if (node == NULL) {
-				printf("yERRORz: Memory allocation failed.\n");
-				exit(1);
-			}
-			// î•ñƒRƒs[
-			node->type = curr->type;
-			strcpy(node->name, curr->name);
-			node->netlist = curr->netlist;
-			node->node_id = curr->node_id;
-			// –Ú•WŒÌáƒtƒ‰ƒOİ’è
-			if (node->netlist != NULL) {
-				node->netlist->tf_flag = FLAG_UP;
-			}
-			node->next = NULL;
-
-			// tfl ƒŠƒXƒg‚Ö‚Ì˜AŒ‹
-			if (tfl == NULL) {
-				tfl = node;
-				tfl_tail = node;
-			}
-			else {
-				tfl_tail->next = node;
-				tfl_tail = node;
-			}
-
-			curr = curr->next;
-		}
-
-		tfl_num = ufl_num;
-		return TARGET_OKAY;
-	}
-	else
-	{
-		//ƒV[ƒh¶¬‚ÌÅ‰‚ÍŒÌá‚ªŒq‚ª‚é•Ó‚Ì”‚ğŠî€‚É~‡ƒ\[ƒh‚·‚é
-		//Œq‚ª‚Á‚½•Ó‚Ì”‚ª‘½‚¢‚â‚Â‚©‚çƒOƒ‰ƒt‚ğì¬‚µ‚Ä‚¢‚­‚½‚ß
-		//•Ó‚Ì”‚ª‘½‚¢‚â‚Â‚©‚ç‘I‘ğ‚·‚é‚±‚Æ‚ÅŒø—¦“I‚ÉƒOƒ‰ƒt‚ğì¬
-		if (loop == 0) {
-			SortEdgeDescend(sorted);
-		}
-	}
-
-	//—¼—§‰Â”\ŒÌáW‡‚©‚çÅ‘åƒNƒŠ[ƒN‚ğ’Šo
-
-	//—¼—§‰Â”\ŒÌáƒOƒ‰ƒt‚Ì’¸“_‚Ì\‘¢‘Ì‚ğì¬A‰Šú‰»
-	//‘SŒÌá”•ªƒNƒŠ[ƒNì¬
-	head = CreateCliqueNode(depth++, -1, all_num);//üŒ`ƒŠƒXƒg@depth==0
-
-	//detflag‚Í‚·‚×‚Ä1‚Å‰Šú‰»‚³‚ê‚Ä‚¢‚é‚Ì‚ÅA
-	//‚»‚ê‚Æ“¯‚¶ƒAƒ‹ƒSƒŠƒYƒ€‚ğ—p‚¢‚éedge_flag‚É‚àƒI[ƒ‹1‚ğ‘ã“ü‚µ‚Ä‚¢‚é
-	for (int k = 0; k <head->edge->int_num; k++)//cnodeptr->edge->int_num = ufl_num / 32 + 1;
-	{
-		head->edge->flag[k] = detflag->flag[k];//detflag[]‚Å32ŒÌá•ªB‚±‚ê‚ğk•ªŒJ‚è•Ô‚·‚Æ‘SŒÌáQÆ‚Å‚«‚é
-	}
-
-	//—×Ú‚·‚é’¸“_‚Ì”‚ğ”‚¦‚é
-	for (int k = 0; k < head->edge->int_num; k++)
-	{
-		count += CountBits(head->edge->flag[k]);//1‚Ì”(—×Ú‚·‚é’¸“_‚ª1)‚ğƒJƒEƒ“ƒg
-	}
-	head->num_r = count;//—×Ú‚·‚é’¸“_‚Ì”
-
-	//depth:[‚³@[‚³—Dæ’Tõ‚Ì[‚³@[‚­‚È‚¢‚â‚Â’ö‘½‚­‚Ì•Ó‚ğ‚ÂŒÌá
-	//depth-1‚Ì”‚ª—¼—§‰Â”\ŒÌáW‡”‚Æˆê’v
-	//‚±‚±‚©‚çƒNƒŠ[ƒN’Šo
-	//head->num_r==count‚Åcount‚ª0‚É‚È‚Á‚½‚çƒ‹[ƒv”²‚¯‚éB0‚É‚È‚é‚ÆŒq‚ª‚é•Ó‚ª‚È‚­‚È‚Á‚½‚Æ‚¢‚¤‚±‚Æ
-	while ((depth < ufl_num) && (head->num_r != 0))//head->num_rF—×Ú‚·‚é’¸“_”
-	{
-		j = 0;
-		select_flag = 0;
-		while (j < all_num) {
-			if (select_flag == 1)break;
-			select = sorted->sort[j].id;//ex;sorted->sort[0].id ˆê”Ô‚Â‚È‚ª‚Á‚Ä‚¢‚é•Ó‚Ì”‚ª‘½‚¢ß‚ÌŒÌáidD‚±‚ê‚Íufl(–¢ŒŸoŒÌáW‡)‚É‘Î‚µ‚Äloop‰ñ”1‰ñ–Ú‚É’è‹`
-			//•Ó‚ªŒq‚ª‚Á‚Ä‚¢‚é‚©(edge==1)‚©‚ğæ“¾‚µ‚Ä,‚»‚ê‚ª‰½ƒrƒbƒg–Ú‚©‚ğselect‚Éæ“¾
-			if (bitintGetNbit(head->edge, select) == 1) {//select”Ô–Ú‚Ìbit‚ª1‚©0‚©‚ğ•Ô‚·ŠÖ”@‚Â‚Ü‚èselect”Ô–Ú‚ÌŒÌá‚ª—×Ú‚·‚é’¸“_”‚ªˆê”Ô‘½‚¢‚Ì‚ÅA‚»‚ÌŒÌá‚Ì”Ô†‚ğ‘I‘ğ‚µ‚Ä‚¢‚é
-				select_id[depth] = select;//select_id[depth];[‚³‚ªdepth‚Ì‚ÌŒÌá‚Ì”Ô†‚ğ‹L‰¯
-				select_flag = 1;
-				bitintSetNbit_Zero(head->edge, select);//ŒÌá‚ğ‘I‘ğ‚µ‚½‚Ì‚Å‚»‚ÌŒÌá”Ô†‚ğ0‚Éİ’è
-
-				//printf("\n‘I‘ğ‚µ‚½ŒÌá‚ğ0‚Éİ’è(select:ŒÌáID)F%d\n", select);
-
-				/* debug bitint */
-				//unsigned int decimalNumber;
-				//unsigned int binaryNumber[32]; // 32ƒrƒbƒg‚Ì2i”‚ğ‰¼’è
-				//int k = 0;
-				//int l = 0;
-				//for (int m = 0;m < head->edge->int_num;m++)
-				//{
-				//	k = 0;
-				//	decimalNumber = head->edge->flag[m];
-				//	while (decimalNumber > 0)
-				//	{
-				//		binaryNumber[k] = decimalNumber % 2;
-				//		decimalNumber /= 2;
-				//		k++;
-				//	}
-				//	printf("depth:[%d]\thead  ->  edge[%d]     \t:  ", depth, m);
-				//	for (l = k - 1;l >= 0;l--)
-				//	{
-				//		printf("%d", binaryNumber[l]);
-				//	}
-				//}
-
-				/* create next depth node */
-				if ((cnodeptr = CreateCliqueNode(depth, select, all_num)) != NULL)//‘SŒÌá”•ªƒNƒŠ[ƒN‚ğì¬ depth‚Í1‚©‚çƒXƒ^[ƒg
-				{
-					cnodeptr->nextptr = head;//ˆê‚ÂŒã‚ë‚ÌƒNƒŠ[ƒNƒm[ƒh‚Ìƒ|ƒCƒ“ƒ^
-					head = cnodeptr;
-
-					depth++;
-
-					//edge->int_num:32bit_flagŠm•Û”
-					UNDET_FAULT_LIST* current = ufl;
-					while (current != NULL) {
-						if (current->node_id == select) {
-							break;
-						}
-					    current = current->next;
-					}
-					if (current == NULL) {
-						printf("–Ú“I‚ÌŒÌá‚ª‚İ‚Â‚©‚è‚Ü‚¹‚ñ‚Å‚µ‚½\n");
-						exit(1);
-					}
-					for (int k = 0; k < cnodeptr->edge->int_num; k++)
-					{
-						//flag[k]‚ÍŠe—v‘f‚ª32bit‚Ìƒf[ƒ^‚ğ‚Â
-						//flag[k] ‚Íuk ”Ô–Ú‚Ì 32 bitv‚ğw‚µ‚Ä‚¨‚èAƒrƒbƒgƒtƒ‰ƒO‚ğ‚Ü‚Æ‚ß‚Ä 32 bit ’PˆÊ‚ÅŠÇ—‚µ‚Ä‚¢‚é
-						//‚½‚Æ‚¦‚ÎAŒÌá(ƒm[ƒh)”‚ª 300 ŒÂ‚­‚ç‚¢‚ ‚é‚Æ‚·‚é‚ÆA300 ƒrƒbƒg‚ğ‚Ğ‚Æ‚Â‚Ì•Ï”‚É‚Íû‚ß‚ç‚ê‚Ü‚¹‚ñB
-						//300 / 32  –ñ 9.3 c
-						//‚æ‚Á‚Ä 10 ŒÂ‘OŒã‚Ì 32 bit •Ï”‚É•ªŠ„‚µ‚Äuƒrƒbƒg ANDv‚ğ‚µ‚È‚¢‚Æ‚¢‚¯‚Ü‚¹‚ñB
-						head->edge->flag[k]= (head->nextptr->edge->flag[k])	& (current->edge->flag[k]);//•ÏX //Œã‚ë‚Ìcnode‚Ìflag
-						//Œã‚ë‚Ìedge_flag‚Æ¡‚Ìedge_flag‚ÌÏ‚ğ‚Æ‚é‚ÆAŸ‚Ì[‚³‚Ìedge
-					}
-					count = 0;
-					for (int k = 0; k < head->edge->int_num; k++)
-					{
-						count += CountBits(head->edge->flag[k]);//1‚Ì”‚ğƒJƒEƒ“ƒg
-					}
-					head->num_r = count;
-
-					/* debug bitint */
-					//unsigned int decimalNumber_c;
-					//unsigned int binaryNumber_c[32]; // 32ƒrƒbƒg‚Ì2i”‚ğ‰¼’è
-					//int p = 0;
-					//int q = 0;
-					//for (int m = 0; m < current->edge->int_num; m++)
-					//{
-					//	p = 0;
-					//	decimalNumber_c = current->edge->flag[m];
-					//	while (decimalNumber_c > 0)
-					//	{
-					//		binaryNumber_c[p] = decimalNumber_c % 2;
-					//		decimalNumber_c /= 2;
-					//		p++;
-					//	}
-					//	printf("\ndepth:[%d]\tcurrent  ->  edge[%d]    :  ", depth, m);
-					//	for (q = p - 1; q >= 0; q--)
-					//	{
-					//		printf("%d", binaryNumber_c[q]);
-					//	}
-					//}
-
-				}
-				else return TARGET_ERROR;
-
-				/* debug bitint */
-				//unsigned int decimalNumber_;
-				//unsigned int binaryNumber_[32]; // 32ƒrƒbƒg‚Ì2i”‚ğ‰¼’è
-				//int p = 0;
-				//int q = 0;
-				//for (int m = 0;m < head->edge->int_num;m++)
-				//{
-				//	p = 0;
-				//	decimalNumber_ = head->edge->flag[m];
-				//	while (decimalNumber_ > 0)
-				//	{
-				//		binaryNumber_[p] = decimalNumber_ % 2;
-				//		decimalNumber_ /= 2;
-				//		p++;
-				//	}
-				//	printf("\ndepth:[%d]\thead  ->  edge[%d]     \t:  ", depth, m);
-				//	for (q = p - 1;q >= 0;q--)
-				//	{
-				//		printf("%d", binaryNumber_[q]);
-				//	}
-				//}
-			}
-			j++;
-		}
-	}
-	//‚±‚±‚Ü‚ÅƒNƒŠ[ƒN’Šo
-
-	//•ÏX
-	//–Ú•WŒÌáW‡ì¬
-	UNDET_FAULT_LIST* tfl_head = NULL;
-	UNDET_FAULT_LIST* new_node = NULL;
-
-	// tfl_num ‚ğ depth - 1 ‚Éİ’è
-	tfl_num = depth-1;
-	tfl = NULL;
-
-	for (int i = 0; i < tfl_num; i++)
-	{
-		UNDET_FAULT_LIST* current = ufl;
-		while (current != NULL) {
-			if (current->node_id == select_id[i + 1])
-				break;
-			current = current->next;
-		}
-		if (current == NULL) {
-			printf("—¼—§‰Â”\ŒÌáW‡_–Ú•WŒÌáİ’èƒ~ƒX\n");
-			exit(1);
-		}
-
-		// V‚½‚È tfl —pƒm[ƒh‚ğŠm•Û‚µ‚Äî•ñ‚ğƒRƒs[ideep copyj
-		new_node = (UNDET_FAULT_LIST*)malloc(sizeof(UNDET_FAULT_LIST));
-		if (new_node == NULL) {
-			printf("yERRORz: Memory allocation failed.\n");
-			exit(1);
-		}
-		// ŠeƒtƒB[ƒ‹ƒh‚ÌƒRƒs[
-		new_node->type = current->type;
-		strcpy(new_node->name, current->name);
-		new_node->netlist = current->netlist;
-		new_node->node_id = current->node_id;
-		//ŒÌá‘I‘ğÏ‚İƒtƒ‰ƒO‚ğİ’è
-		if (new_node->netlist != NULL) {
-			new_node->netlist->tf_flag = FLAG_UP;
-		}
-		new_node->next = NULL;  // V‹KŠm•Û‚Í next ‚Í NULL ‚É‚µ‚Ä‚¨‚­
-
-		// tfl ƒŠƒXƒg‚Ö‚Ì˜AŒ‹
-		if (tfl == NULL) {
-			tfl = new_node;
-			tfl_head = new_node;
-		}
-		else {
-			tfl->next = new_node;
-			tfl = new_node;
-		}
-	}
-
-	// tfl_head ‚ªV‚½‚È tfl ƒŠƒXƒg‚Ìæ“ªƒm[ƒh‚Æ‚È‚é
-	tfl = tfl_head;
-	if (tfl == NULL) {
-		printf("—¼—§‰Â”\ŒÌáW‡İ’èƒGƒ‰[\n");
-		exit(1);
-	}
-
-	/* ˆÈ~A•s—v‚É‚È‚Á‚½\‘¢‘Ì‚Ì‰ğ•ú */
-	while (head)
-	{
-		p = head;
-		head = head->nextptr;
-		free(p);
-	}
-#ifdef __DEBUG_SET_TARGET__
-	_CALL_DEBUG_SET_TARGET_(target);
-#endif // __DEBUG_SET_TARGET__
-
-	return TARGET_OKAY;
+    (void)sorted;
+    (void)loop;
+    if (ufl == NULL || ufl_num <= 0) {
+        return TARGET_ERROR;
+    }
+    if (strcmp(fi[CPS_MODE].name, "ON") == 0 &&
+        strcmp(fi[FP_MODE].name, "ON") != 0) {
+        all_fault_cutoff = 10;
+    }
+    /* Preserve the small-list fallback; this path does not promise a clique. */
+    select_all = ufl_num < all_fault_cutoff;
+    if (target_limit <= 0 || target_limit > ufl_num) {
+        target_limit = ufl_num;
+    }
+    candidates = (UNDET_FAULT_LIST**)allocMemory(ufl_num, sizeof(*candidates));
+    for (current = ufl; current != NULL; current = current->next) {
+        if (candidate_count >= ufl_num) {
+            free(candidates);
+            return TARGET_ERROR;
+        }
+        candidates[candidate_count++] = current;
+        current->netlist->tf_flag = FLAG_DOWN;
+    }
+    if (candidate_count != ufl_num) {
+        free(candidates);
+        return TARGET_ERROR;
+    }
+    if (!select_all) {
+        qsort(candidates, candidate_count, sizeof(*candidates), compare_fault_degree);
+    }
+    remaining.int_num = detflag->int_num;
+    remaining.flag = (unsigned int*)allocMemory(remaining.int_num, sizeof(*remaining.flag));
+    memcpy(remaining.flag, detflag->flag, remaining.int_num * sizeof(*remaining.flag));
+    tfl = NULL;
+    tfl_num = 0;
+    for (int index = 0; index < candidate_count && tfl_num < target_limit; index++) {
+        UNDET_FAULT_LIST* candidate = candidates[index];
+        UNDET_FAULT_LIST* copy;
+        if (!select_all && !bitintGetNbit(&remaining, candidate->node_id)) {
+            continue;
+        }
+        copy = (UNDET_FAULT_LIST*)allocMemory(1, sizeof(*copy));
+        *copy = *candidate; /* Metadata is shared; only the copied list node is owned. */
+        copy->next = NULL;
+        if (tail == NULL) {
+            tfl = copy;
+        } else {
+            tail->next = copy;
+        }
+        tail = copy;
+        tfl_num++;
+        candidate->netlist->tf_flag = FLAG_UP;
+        if (!select_all) {
+            /* Intersect neighbors: each choice must agree with ALL earlier choices. */
+            for (unsigned int word = 0; word < remaining.int_num; word++) {
+                remaining.flag[word] &= candidate->edge->flag[word];
+            }
+            bitintSetNbit_Zero(&remaining, candidate->node_id);
+        }
+    }
+    free(remaining.flag);
+    free(candidates);
+    return tfl_num > 0 ? TARGET_OKAY : TARGET_ERROR;
 }
 
 //*************************************************************************************************************
-//	@name		F@SortEdgeDescend
-//	@function	F	sort edge Descend
-//	@return		F	null
+//	@name		ï¼šã€€SortEdgeDescend
+//	@function	ï¼š	sort edge Descend
+//	@return		ï¼š	null
 //*************************************************************************************************************
 void SortEdgeDescend(
 	SORTED* sorted 			  /**< sorted list */
@@ -1021,7 +711,7 @@ void SortEdgeDescend(
 	for (int i = 0; i < sorted->num; i++)
 	{
 		sorted->sort[i].id = i;
-		sorted->sort[i].n_edge = current->n_edge;//Œq‚ª‚Á‚Ä‚¢‚é•Ó‚Ì”@CreateCompatibleEdge‚Å•Ó‚ª‚Â‚È‚ª‚Á‚Ä‚¢‚é”‚ğƒJƒEƒ“ƒg‚µ‚Ä‚¢‚é
+		sorted->sort[i].n_edge = current->n_edge;//ç¹‹ãŒã£ã¦ã„ã‚‹è¾ºã®æ•°ã€€CreateCompatibleEdgeã§è¾ºãŒã¤ãªãŒã£ã¦ã„ã‚‹æ•°ã‚’ã‚«ã‚¦ãƒ³ãƒˆã—ã¦ã„ã‚‹
 		current = current->next;
 	}
 	qsort(sorted->sort, all_num, sizeof(EDGE), FuncSortDescend);
@@ -1034,9 +724,9 @@ void SortEdgeDescend(
 	return;
 }
 //*************************************************************************************************************
-//	@name		F@sort_ascend
-//	@function	F	sort_ascend
-//	@return		F	
+//	@name		ï¼šã€€sort_ascend
+//	@function	ï¼š	sort_ascend
+//	@return		ï¼š	
 //*************************************************************************************************************
 //int FuncSortAscend(
 //	const void* n1, const void* n2
@@ -1053,14 +743,14 @@ void SortEdgeDescend(
 //	}
 //}
 //*************************************************************************************************************
-//	@name		F@CreateCliqueNode
-//	@function	F	create the clique node
-//	@return		F	(CNODE*) pointer to clique node
+//	@name		ï¼šã€€CreateCliqueNode
+//	@function	ï¼š	create the clique node
+//	@return		ï¼š	(CNODE*) pointer to clique node
 //*************************************************************************************************************
 CNODE* CreateCliqueNode(
 	int depth,				/* depth */
 	int select,				/* select no. */
-	int num					//‰ŠúŒÌáW‡”
+	int num					//åˆæœŸæ•…éšœé›†åˆæ•°
 )
 {
 	/* variable declaration */
@@ -1091,32 +781,32 @@ CNODE* CreateCliqueNode(
 	return cnodeptr;
 }
 //*************************************************************************************************************
-//	@name		F@CountBits
-//	@function	F	bits counter
-//	@return		F	num bits (int)
+//	@name		ï¼šã€€CountBits
+//	@function	ï¼š	bits counter
+//	@return		ï¼š	num bits (int)
 //*************************************************************************************************************
 int CountBits(
 	unsigned int n
 )
 {
-	//“®ì—á
-	//‚½‚Æ‚¦‚ÎAn = 13 (1101 in binary) ‚Ìê‡:
-	//‰Šúó‘Ô: n = 1101B
-	//ƒXƒeƒbƒv 1 : Še 2 ƒrƒbƒg‚ÅƒJƒEƒ“ƒg ¨ n = 101B
-	//ƒXƒeƒbƒv 2 : Še 4 ƒrƒbƒg‚ÅƒJƒEƒ“ƒg ¨ n = 11B
-	//ƒXƒeƒbƒv 3 : Še 8 ƒrƒbƒg‚ÅƒJƒEƒ“ƒg ¨ n = 3B
-	//Œ‹‰Ê : u1v‚ÌŒÂ”‚Í 3B
-	n = (n & 0x55555555) + (n >> 1 & 0x55555555);//0x55555555 == 0101010.....i‹ô”ƒrƒbƒg‚ª 1jB
-	n = (n & 0x33333333) + (n >> 2 & 0x33333333);//0x33333333 == 00110011... i4ƒrƒbƒg‚²‚Æ‚É‰ºˆÊ2ƒrƒbƒg‚ª 1jB
+	//å‹•ä½œä¾‹
+	//ãŸã¨ãˆã°ã€n = 13 (1101 in binary) ã®å ´åˆ:
+	//åˆæœŸçŠ¶æ…‹: n = 1101ã€‚
+	//ã‚¹ãƒ†ãƒƒãƒ— 1 : å„ 2 ãƒ“ãƒƒãƒˆã§ã‚«ã‚¦ãƒ³ãƒˆ â†’ n = 101ã€‚
+	//ã‚¹ãƒ†ãƒƒãƒ— 2 : å„ 4 ãƒ“ãƒƒãƒˆã§ã‚«ã‚¦ãƒ³ãƒˆ â†’ n = 11ã€‚
+	//ã‚¹ãƒ†ãƒƒãƒ— 3 : å„ 8 ãƒ“ãƒƒãƒˆã§ã‚«ã‚¦ãƒ³ãƒˆ â†’ n = 3ã€‚
+	//çµæœ : ã€Œ1ã€ã®å€‹æ•°ã¯ 3ã€‚
+	n = (n & 0x55555555) + (n >> 1 & 0x55555555);//0x55555555 == 0101010.....ï¼ˆå¶æ•°ãƒ“ãƒƒãƒˆãŒ 1ï¼‰ã€‚
+	n = (n & 0x33333333) + (n >> 2 & 0x33333333);//0x33333333 == 00110011... ï¼ˆ4ãƒ“ãƒƒãƒˆã”ã¨ã«ä¸‹ä½2ãƒ“ãƒƒãƒˆãŒ 1ï¼‰ã€‚
 	n = (n & 0x0f0f0f0f) + (n >> 4 & 0x0f0f0f0f);
 	n = (n & 0x00ff00ff) + (n >> 8 & 0x00ff00ff);
 	n = (n & 0x0000ffff) + (n >> 16 & 0x0000ffff);
 	return n;
 }
 //*************************************************************************************************************
-//	@name		F@sort_descend
-//	@function	F	sort_descend
-//	@return		F	
+//	@name		ï¼šã€€sort_descend
+//	@function	ï¼š	sort_descend
+//	@return		ï¼š	
 //*************************************************************************************************************
 int FuncSortDescend(
 	const void* n1, const void* n2
@@ -1134,62 +824,42 @@ int FuncSortDescend(
 }
 
 //*************************************************************************************************************
-//	@name		F@OutGraphLogfile
-//	@function	F	output the log
-//	@return		F	null
+//	@name		ï¼šã€€OutGraphLogfile
+//	@function	ï¼š	output the log
+//	@return		ï¼š	null
 //*************************************************************************************************************
-void OutGraphLogfile(
-	void
-)
+void OutGraphLogfile(void)
 {
-	/* variable declaration */
-	int min = 0;
-	int max = 0;
-	int sum = 0;
-
-	/* calulate */
-	min = ufl->n_edge;
-	for (int i = 0; i < ufl_num; i++)
-	{
-		if (min > ufl->n_edge)
-		{
-			min = ufl->n_edge;
-		}
-		if (max < ufl->n_edge)
-		{
-			max = ufl->n_edge;
-		}
-		sum += ufl->n_edge;
-		ufl = ufl->next;
-	}
-
-	/** output graph log file */
-	FILE* fileptr = (FILE*)NULL;
-	fileOpen(&fileptr, opt.file.output.graphlog, "w");
-	fprintf(fileptr, "//-------------------------------------------------------\n");
-	fprintf(fileptr, "//          Compatible Fault Graph infomation\n");
-	fprintf(fileptr, "//-------------------------------------------------------\n");
-	fprintf(fileptr, "//  Number of vertex                : %d\n", all_num);
-	fprintf(fileptr, "//  Number of edges                 : %d\n", sum / 2);
-	fprintf(fileptr, "//  Number of minimum degree        : %d\n", min);
-	fprintf(fileptr, "//  Number of maximum degree        : %d\n", max);
-	fprintf(fileptr, "//  Number of average degree        : %d\n", sum / ufl_num);
-	fprintf(fileptr, "//  Percentage of branch density    : %.2f%%\n", ((float)sum / (float)(ufl_num * (ufl_num - 1)) * 100));
-	fprintf(fileptr, "//-------------------------------------------------------\n\n");
-
-	/** output number of adjacent vertices in graph */
-	for (int i = 0; i < ufl_num; i++)
-	{
-		if (ufl->type == SF1)
-		{
-			fprintf(fileptr, "%30s\tsa1    %3d\n", ufl->name, ufl->n_edge);
-		}
-		else
-		{
-			fprintf(fileptr, "%30s\tsa0    %3d\n", ufl->name, ufl->n_edge);
-		}
-	}
-
-	fclose(fileptr);
-	return;
+    FILE* output = NULL;
+    UNDET_FAULT_LIST* fault;
+    long long degree_sum = 0;
+    int count = 0;
+    int minimum = 0;
+    int maximum = 0;
+    if (opt.file.output.graphlog == FILE_NOSET) {
+        return;
+    }
+    for (fault = ufl; fault != NULL; fault = fault->next) {
+        int degree = 0;
+        for (UNDET_FAULT_LIST* neighbor = ufl; neighbor != NULL; neighbor = neighbor->next) {
+            if (fault != neighbor && bitintGetNbit(fault->edge, neighbor->node_id)) {
+                degree++;
+            }
+        }
+        if (count == 0 || degree < minimum) {
+            minimum = degree;
+        }
+        if (degree > maximum) {
+            maximum = degree;
+        }
+        degree_sum += degree;
+        count++;
+    }
+    fileOpen(&output, opt.file.output.graphlog, "w");
+    fprintf(output, "vertices=%d edges=%lld min_degree=%d max_degree=%d\n",
+        count, degree_sum / 2, minimum, maximum);
+    fprintf(output, "average_degree=%.2f density=%.2f%%\n",
+        count ? (double)degree_sum / count : 0.0,
+        count > 1 ? 100.0 * degree_sum / count / (count - 1) : 0.0);
+    fclose(output);
 }
