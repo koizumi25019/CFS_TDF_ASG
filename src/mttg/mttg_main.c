@@ -101,6 +101,25 @@ static int write_problem_file(FILE* body, const char* path, unsigned int relaxat
     }
 }
 
+static int is_option_on(int option_index) {
+	return strcmp(fi[option_index].name, "ON") == 0;
+}
+
+// 今回のシード生成で使うWSA閾値[%]
+static int current_wsa_threshold(int regen_stage, int change_wsath_25, int change_wsath_30) {
+	if (is_option_on(STTG_WSATH_MODE)) { // [STTG/WSATH INTEGRATION] 既存の実験モード(変更なし)
+		return change_wsath_30 == ON ? 30 : (change_wsath_25 == ON ? 25 : 29);
+	}
+	return fi[WSATH].value + REGEN_WSA_STEP * regen_stage; // -regen 無効時は regen_stage == 0
+}
+
+// 論文 step10: さらにWSA閾値を緩和して再生成できるか
+static int can_relax_wsa(int regen_stage) {
+	return is_option_on(REGEN_MODE) && is_option_on(LOW_POWER) &&
+		regen_stage < REGEN_WSA_MAX_STAGE &&
+		fi[WSATH].value + REGEN_WSA_STEP * (regen_stage + 1) <= 100;
+}
+
 int mttg_main(void) {
 	unsigned int relaxation_start;
 	int i = 0;
@@ -114,6 +133,9 @@ int mttg_main(void) {
 	int change_wsath_30 = OFF; // [STTG/WSATH INTEGRATION]
 	int sttg_flag = OFF;
 	int retry_single_fault = OFF; // [CPS INTEGRATION]
+	int regen_stage = 0;          // -regen: WSA閾値の緩和段階(0:指定値, 1:+5%, 2:+10%)
+	int reuse_targets = OFF;      // -regen: 前回と同じ目標故障集合で再生成する
+	int wsa_threshold;
 
 	//シードファイルオープン
 	sprintf_s(output_path, sizeof(output_path), "%sseed.txt", folder_out);
@@ -169,14 +191,17 @@ int mttg_main(void) {
 			return ERROR;
 		}
 
-		//目標故障選択
+		//目標故障選択(-regen の再生成時は前回の目標故障集合をそのまま使う)
 		int single_fault_flag = (sttg_flag == ON || retry_single_fault == ON) ? ON : OFF;
-		if (fault_select(single_fault_flag,&sorted,generation_attempt_count++) != SUCCESS) {
-			printf("【ERROR】:Fault Select(mttg_main.c)\n");
-			return ERROR;
+		if (reuse_targets == OFF) {
+			if (fault_select(single_fault_flag, &sorted, generation_attempt_count++) != SUCCESS) {
+				printf("【ERROR】:Fault Select(mttg_main.c)\n");
+				return ERROR;
+			}
+			file_output(0, 3);
 		}
-
-		file_output(0, 3);
+		reuse_targets = OFF;
+		wsa_threshold = current_wsa_threshold(regen_stage, change_wsath_25, change_wsath_30);
 
 		//PBOサイズ記述
 
@@ -221,7 +246,7 @@ int mttg_main(void) {
 
 		//低消費電力制約
 		if (strcmp(fi[LOW_POWER].name, "ON") == 0) {
-			pbo_generate_power_mttg(change_wsath_25, change_wsath_30, fout_mttg_pbo);
+			pbo_generate_power_mttg(wsa_threshold, fout_mttg_pbo);
 		}
 
 		if (write_problem_file(fout_mttg_pbo, output_path, relaxation_start) != SUCCESS) {
@@ -254,7 +279,7 @@ int mttg_main(void) {
 
 			//低消費テストパターンか確認(消費電力指向時のみ)
 			if (strcmp(fi[LOW_POWER].name, "ON") == 0 &&
-				mttg_check_wsa(change_wsath_25, change_wsath_30) != SAT) {
+				mttg_check_wsa(wsa_threshold) != SAT) {
 				printf("【ERROR】:MTTG TEST NG PATTERN(mttg_main.c)\n");
 				return ERROR;
 			}
@@ -285,6 +310,9 @@ int mttg_main(void) {
 			}
 			if (detected_fault_count > 0) {
 				fprintf(fout_seed, "%s\n", clasp.sol[SOL_SEED]);
+				if (regen_stage > 0) {
+					printf("[REGEN] Seed generated with WSA threshold %d%%.\n", wsa_threshold);
+				}
 			}
 			if (detected_fault_count == 0 && (single_fault_flag == ON || strcmp(fi[CPS_MODE].name, "ON") != 0)) {
 				printf("[ERROR] Solver/simulator mismatch: no remaining fault was detected.\n");
@@ -295,6 +323,7 @@ int mttg_main(void) {
 			sttg_flag = OFF;
 			change_wsath_25 = OFF;
 			change_wsath_30 = OFF;
+			regen_stage = 0;
 			if (strcmp(fi[CPS_MODE].name, "ON") == 0) {
 				retry_single_fault = (detected_fault_count == 0) ? ON : OFF;
 				if (retry_single_fault == ON) {
@@ -304,6 +333,25 @@ int mttg_main(void) {
 		}
 		//打ち切り故障と判定
 		else {
+			// 論文 step10: 打ち切り時間を延ばしても(CLASP内で60/180/300秒)求まらない、
+			// または充足不能なら、同じ目標故障集合でWSA閾値を緩和して再生成する。
+			if (is_option_on(REGEN_MODE)) {
+				if (can_relax_wsa(regen_stage)) {
+					regen_stage++;
+					reuse_targets = ON;
+					printf("[REGEN] Retry with WSA threshold %d%%.\n",
+						current_wsa_threshold(regen_stage, OFF, OFF));
+					continue;
+				}
+				if (discard_target_as_unseed() != SUCCESS) {
+					printf("[ERROR] Failed to discard the current target fault.\n");
+					return ERROR;
+				}
+				regen_stage = 0;
+				printf("[REGEN] Regeneration exhausted; primary target moved to the unseed list.\n");
+				continue;
+			}
+
 			// [STTG/WSATH INTEGRATION] Bounded state machine for solver UNKNOWN.
 			if (clasp.status == CLASP_UNSAT || strcmp(fi[STTG_WSATH_MODE].name, "ON") != 0) {
 				if (discard_target_as_unseed() != SUCCESS) {

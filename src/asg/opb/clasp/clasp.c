@@ -97,7 +97,7 @@ void CLASPgetSol(FILE* log)
 
 bool CLASP(void)
 {
-    int attempt_count = strcmp(fi[RESOLVING_MODE].name, "ON") == 0 ? 3 : 1;
+    int attempt_count = clasp_retry_enabled() ? CLASP_RETRY_COUNT : 1;
     char log_path[1024];
     sprintf_s(log_path, sizeof(log_path), "%sclasp_log_mttg.txt", folder_out);
     for (int attempt = 0; attempt < attempt_count; attempt++) {

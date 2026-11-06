@@ -181,6 +181,7 @@ int file_output(clock_t time,int mode) {
 		fprintf(fout_log, "// FP Experimental Mode        :%s\n", fi[FP_MODE].name); // [FP INTEGRATION]
 		fprintf(fout_log, "// Resolving Experimental Mode :%s\n", fi[RESOLVING_MODE].name); // [RESOLVING INTEGRATION]
 		fprintf(fout_log, "// STTG/WSATH Experimental Mode:%s\n", fi[STTG_WSATH_MODE].name); // [STTG/WSATH INTEGRATION]
+		fprintf(fout_log, "// Regeneration Mode (paper)   :%s\n", fi[REGEN_MODE].name);
 		if (fi[PARALLEL].flag == 0) {
 		fprintf(fout_log, "// Parallel Mode Option        :OFF\n");
 		}

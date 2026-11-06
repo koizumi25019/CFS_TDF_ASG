@@ -47,6 +47,7 @@ void standard_output(void) {
 	printf("// FP Experimental Mode        :%s\n", fi[FP_MODE].name); // [FP INTEGRATION]
 	printf("// Resolving Experimental Mode :%s\n", fi[RESOLVING_MODE].name); // [RESOLVING INTEGRATION]
 	printf("// STTG/WSATH Experimental Mode:%s\n", fi[STTG_WSATH_MODE].name); // [STTG/WSATH INTEGRATION]
+	printf("// Regeneration Mode (paper)   :%s\n", fi[REGEN_MODE].name);
 	if (fi[PARALLEL].flag == 0) {
 	printf("// Parallel Mode Option        :OFF\n");
 	}

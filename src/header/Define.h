@@ -45,6 +45,14 @@
 #define     FP_MODE        12  // [FP INTEGRATION] fault-propagation constraints (default: OFF)
 #define     RESOLVING_MODE 13  // [RESOLVING INTEGRATION] retry clasp UNKNOWN (default: OFF)
 #define     STTG_WSATH_MODE 14 // [STTG/WSATH INTEGRATION] staged fallback (default: OFF)
+#define     REGEN_MODE     15  // 論文の再シード生成フロー(step8-10) (default: OFF)
+
+//------------------------------------------------------------------------
+// 再シード生成(論文 5-2節 step8-10)
+//------------------------------------------------------------------------
+#define     CLASP_RETRY_COUNT    3  // 打ち切り時間 60/180/300秒 で最大3回
+#define     REGEN_WSA_STEP       5  // WSA閾値の緩和幅[%]
+#define     REGEN_WSA_MAX_STAGE  2  // 緩和回数(既定20% -> 25% -> 30%)
 
 //------------------------------------------------------------------------
 //all0 all1
@@ -227,18 +235,19 @@ PBO mttg_calc_pbo_size(void);
 PBO mttg_calc_hard_constraint(void);
 int mttg_calc_soft_constraint(void);
 //mttg_check_wsa.c
-int mttg_check_wsa(int change_wsath_25, int change_wsath_30);
+int mttg_check_wsa(int wsa_threshold);
 //mttg_main.c
 int mttg_main(void);
 //mttg_pbo_generate.c
 void mttg_pbo_generate_min(FILE* fp);
 void pbo_generate_fdetect_c_mttg(FILE *fp, UNDET_FAULT_LIST* node);
 void pbo_generate_fault_ex(FILE *fp, UNDET_FAULT_LIST* node, int mode);
-void pbo_generate_power_mttg(int change_wsath_25, int change_wsath_30, FILE *fp);
+void pbo_generate_power_mttg(int wsa_threshold, FILE *fp);
 //specific_fault_range.c
 int specific_fault_range(char* name,int idx);
 //undet_fault_delete.c
 int undet_fault_delete(UNDET_FAULT_LIST* node);
 void ufl_free(UNDET_FAULT_LIST* node, UNDET_FAULT_LIST* pre_node,int mode);
-//clasp_call.c
+//clasp_mode.c
 int clasp_call(int retry_index);
+int clasp_retry_enabled(void);

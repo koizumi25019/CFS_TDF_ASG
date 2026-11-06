@@ -4,16 +4,12 @@
 #include <string.h>
 #include "../header/Define.h"
 
-int mttg_check_wsa(int changed_to_25, int changed_to_30)
+int mttg_check_wsa(int threshold)
 {
     char command[4096];
     char path[1024];
     FILE* result = NULL;
-    int threshold = fi[WSATH].value;
     int accepted;
-    if (strcmp(fi[STTG_WSATH_MODE].name, "ON") == 0) {
-        threshold = changed_to_30 ? 30 : (changed_to_25 ? 25 : 29);
-    }
     sprintf_s(command, sizeof(command),
         "WSA.exe -sc \"%s\" -tptx \"%stp.txt\" -mode 1 -rate %d -high \"%shigh_mttg.txt\" -low \"%slow_mttg.txt\" -rep \"%s%s_wsa_rep.txt\"",
         fi[CIRCUIT].name, folder_out, threshold, folder_out, folder_out, folder_out, module_name);

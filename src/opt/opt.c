@@ -19,7 +19,19 @@ static int integrated_mode_index(const char* option)
     if (strcmp(option, "-fp") == 0) return FP_MODE;
     if (strcmp(option, "-resolving") == 0) return RESOLVING_MODE;
     if (strcmp(option, "-sttg_wsath") == 0) return STTG_WSATH_MODE;
+    if (strcmp(option, "-regen") == 0) return REGEN_MODE;
     return -1;
+}
+
+/* Integrated ON/OFF modes that were not given default to OFF. */
+static void set_integrated_mode_defaults(void)
+{
+    const int modes[] = { CPS_MODE, FP_MODE, RESOLVING_MODE, STTG_WSATH_MODE, REGEN_MODE };
+    for (size_t i = 0; i < sizeof(modes) / sizeof(modes[0]); i++) {
+        if (fi[modes[i]].flag == OFF) {
+            fi[modes[i]].name = "OFF";
+        }
+    }
 }
 
 static bool set_integrated_mode(int argc, char** argv, int* index, int mode_index)
@@ -322,18 +334,7 @@ bool OPTset(
 	if (fi[WSATH].flag == OFF) {
 		fi[WSATH].value = 30;
 	}
-	if (fi[CPS_MODE].flag == OFF) {
-		fi[CPS_MODE].name = "OFF";
-	}
-	if (fi[FP_MODE].flag == OFF) {
-		fi[FP_MODE].name = "OFF";
-	}
-	if (fi[RESOLVING_MODE].flag == OFF) {
-		fi[RESOLVING_MODE].name = "OFF";
-	}
-	if (fi[STTG_WSATH_MODE].flag == OFF) {
-		fi[STTG_WSATH_MODE].name = "OFF";
-	}
+	set_integrated_mode_defaults();
 
 	return OPT_OKAY;
 }
@@ -696,6 +697,20 @@ bool OPTread(
 					}
 				}
 			}
+			// 論文の再シード生成フロー(step8-10) (default: OFF)
+			else if (!strcmp(token1, "-regen"))
+			{
+				char* regen_value = strtok_s(NULL, " \t\r\n", &context);
+				if (regen_value == NULL ||
+					(strcmp(regen_value, "ON") != 0 && strcmp(regen_value, "OFF") != 0))
+				{
+					printf("\n\tCOMMAND ERROR: option setup is failed. ");
+					printf("-regen requires ON or OFF.\n\n");
+					return OPT_ERROR;
+				}
+				fi[REGEN_MODE].name = _strdup(regen_value);
+				fi[REGEN_MODE].flag = ON;
+			}
 			else
 			{
 				printf("\n	COMMAND ERROR: option setup is failed. ");
@@ -717,18 +732,7 @@ bool OPTread(
 	if (fi[WSATH].flag == OFF) {
 		fi[WSATH].value = 20;
 	}
-	if (fi[CPS_MODE].flag == OFF) {
-		fi[CPS_MODE].name = "OFF";
-	}
-	if (fi[FP_MODE].flag == OFF) {
-		fi[FP_MODE].name = "OFF";
-	}
-	if (fi[RESOLVING_MODE].flag == OFF) {
-		fi[RESOLVING_MODE].name = "OFF";
-	}
-	if (fi[STTG_WSATH_MODE].flag == OFF) {
-		fi[STTG_WSATH_MODE].name = "OFF";
-	}
+	set_integrated_mode_defaults();
 
 	free(buffer);
 
@@ -770,6 +774,11 @@ bool OPTcheckMode(
 		fi[TARGET_LIMIT].value < 0 || fi[FAULT].flag != ON ||
 		(strcmp(fi[LOW_POWER].name, "ON") != 0 && strcmp(fi[LOW_POWER].name, "OFF") != 0)) {
 		printf("[ERROR] Invalid time, threshold, target limit, power mode or fault file.\n");
+		return OPT_ERROR;
+	}
+	if (strcmp(fi[REGEN_MODE].name, "ON") == 0 &&
+		(strcmp(fi[RESOLVING_MODE].name, "ON") == 0 || strcmp(fi[STTG_WSATH_MODE].name, "ON") == 0)) {
+		printf("[ERROR] -regen cannot be combined with -resolving or -sttg_wsath.\n");
 		return OPT_ERROR;
 	}
 #ifdef NDEBUG
@@ -855,6 +864,7 @@ void OPTdispHelp(
 	PrintHelpMessage("\t\t   -fp             :   fault-propagation constraints [ON/OFF]. OFF is default. \n");
 	PrintHelpMessage("\t\t   -resolving      :   retry clasp UNKNOWN with 60/180/300 sec [ON/OFF]. OFF is default. \n");
 	PrintHelpMessage("\t\t   -sttg_wsath     :   STTG and WSA 25/30 fallback [ON/OFF]. OFF is default. \n");
+	PrintHelpMessage("\t\t   -regen          :   paper regeneration flow: clasp 60/180/300 sec, then WSA threshold +5%%/+10%% [ON/OFF]. OFF is default. \n");
 	PrintHelpMessage("\n		>> help \n");
 	PrintHelpMessage("		   -help           :   print the help. \n");
 

@@ -165,16 +165,11 @@ void pbo_generate_fault_ex(FILE *fp, UNDET_FAULT_LIST* node,int mode) {
 //  関数名 : pbo_generate_power_mttg
 //  機  能 : 消費電力制約(MTTG)(ソフト)
 //  戻り値 : なし
-//  引  数 : ファイルポインタ
+//  引  数 : WSA閾値[%], ファイルポインタ
 //=========================================================================
-void pbo_generate_power_mttg(int change_wsath_25, int change_wsath_30, FILE* fp) {
+void pbo_generate_power_mttg(int wsath, FILE* fp) {
 	int i;
 	unsigned int wsa_bool_id = bool_id;
-	int wsath = fi[WSATH].value;
-	if (strcmp(fi[STTG_WSATH_MODE].name, "ON") == 0) { // [STTG/WSATH INTEGRATION]
-		wsath = (change_wsath_30 == ON) ? 30 : ((change_wsath_25 == ON) ? 25 : 29);
-	}
-
 
 	//信号線遷移制約
 	for (i = 0; i < n_net; i++) {

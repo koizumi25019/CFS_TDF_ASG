@@ -6,6 +6,7 @@ $cases = @(
     @{ name='off'; options=@('-power','OFF','-nece','./input/necessary/s27_nece.txt') },
     @{ name='on'; options=@('-power','ON','-nece','./input/necessary/s27_nece.txt') },
     @{ name='all'; options=@('-power','ON','-nece','./input/necessary/s27_nece.txt','-cps','ON','-fp','ON','-resolving','ON','-sttg_wsath','ON') },
+    @{ name='regen'; options=@('-power','ON','-nece','./input/necessary/s27_nece.txt','-regen','ON','-wsath','20') },
     @{ name='parallel'; options=@('-power','OFF','-mode_1','ON','-parallel','2') }
 )
 foreach ($case in $cases) {
@@ -27,3 +28,7 @@ foreach ($case in $cases) {
 }
 & .\audit_build\TDF_ASG.exe -net *> audit_build\missing_option.log
 if ($LASTEXITCODE -eq 0) { throw 'Missing option value was accepted.' }
+& .\audit_build\TDF_ASG.exe -net ./input/circuit/s27.v -fault ./input/rprf/s27_rpr_1.txt -seed seed.txt `
+    -xor_tap ./input/xor_tap/tap_4.txt -scan_chain ./input/scan_chain/s27_sc_4.txt -power ON `
+    -folder "./audit_conflict_$suffix/" -regen ON -resolving ON *> audit_build\regen_conflict.log
+if ($LASTEXITCODE -eq 0) { throw '-regen with -resolving was accepted.' }
