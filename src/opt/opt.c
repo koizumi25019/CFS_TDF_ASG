@@ -332,7 +332,7 @@ bool OPTset(
 		fi[MODE_1].name = "OFF";
 	}
 	if (fi[WSATH].flag == OFF) {
-		fi[WSATH].value = 30;
+		fi[WSATH].value = DEFAULT_WSA_THRESHOLD;
 	}
 	set_integrated_mode_defaults();
 
@@ -730,7 +730,7 @@ bool OPTread(
 		fi[TIME].value = 10;
 	}
 	if (fi[WSATH].flag == OFF) {
-		fi[WSATH].value = 20;
+		fi[WSATH].value = DEFAULT_WSA_THRESHOLD;
 	}
 	set_integrated_mode_defaults();
 
