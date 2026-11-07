@@ -1,3 +1,0 @@
-G11	str	1
-G5	stf	1
-G11_G6_A	str	1

@@ -1,5 +1,0 @@
-tp0
-STR G11
-STF G5
-STR G11_G6_A
-

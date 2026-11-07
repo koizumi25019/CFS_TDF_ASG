@@ -361,3 +361,12 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+# --- TDF_ASG: generated files (not tracked) ---
+# 検証・テストの実行結果とビルド成果物
+audit_*/
+verify_*/
+verify_*_console.txt
+# プログラムの出力フォルダー(-folder で指定する ./xxx_output/ など)
+*_output/
+# バックアップ
+*.bak

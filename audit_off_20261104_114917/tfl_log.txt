@@ -1,6 +1,0 @@
-G17
- STR
-G11
- STR
-G11
- STR
