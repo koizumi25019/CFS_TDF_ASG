@@ -231,7 +231,7 @@ int untest_check_wsa(UNDET_FAULT_LIST* node, UNDET_FAULT_LIST* pre_node);
 //untest_pbo_generation.c
 void untest_pbo_generate_min(FILE* fp, UNDET_FAULT_LIST* node);
 void pbo_generate_normal_c(FILE *fp);
-void pbo_generate_fault_c(FILE *fp, UNDET_FAULT_LIST* node,int i);
+void pbo_generate_fault_c(FILE *fp, UNDET_FAULT_LIST* node);
 void pbo_generate_fdetect_c(FILE *fp, UNDET_FAULT_LIST* node);
 void pbo_generate_power(FILE *fp);
 //mttg_calc_pbo_size.c
@@ -246,6 +246,7 @@ int mttg_main(void);
 void mttg_pbo_generate_min(FILE* fp);
 void pbo_generate_fdetect_c_mttg(FILE *fp, UNDET_FAULT_LIST* node);
 void pbo_generate_fault_ex(FILE *fp, UNDET_FAULT_LIST* node, int mode);
+void pbo_generate_fault_propagation(FILE *fp, UNDET_FAULT_LIST* node);
 void pbo_generate_power_mttg(int wsa_threshold, FILE *fp);
 //specific_fault_range.c
 int specific_fault_range(char* name,int idx);

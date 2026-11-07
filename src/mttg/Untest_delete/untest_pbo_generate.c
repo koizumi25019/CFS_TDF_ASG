@@ -123,7 +123,7 @@ void pbo_generate_normal_c(FILE *fp) {
 //  戻り値 : なし
 //  引  数 : ファイルポインタ,対象故障
 //=========================================================================
-void pbo_generate_fault_c(FILE* fp, UNDET_FAULT_LIST* node, int idx) {
+void pbo_generate_fault_c(FILE* fp, UNDET_FAULT_LIST* node) {
 
 	int i, j;
 
@@ -176,41 +176,6 @@ void pbo_generate_fault_c(FILE* fp, UNDET_FAULT_LIST* node, int idx) {
 				fprintf(fp, "1 x%d +1 ~x%d +1 x%d >=1;\n", sort_nl[i]->in[0]->suf_fc, sort_nl[i]->in[1]->suf_fc, sort_nl[i]->suf_fc);
 				fprintf(fp, "1 ~x%d +1 x%d +1 x%d >=1;\n", sort_nl[i]->in[0]->suf_fc, sort_nl[i]->in[1]->suf_fc, sort_nl[i]->suf_fc);
 				break;
-			}
-			if (strcmp(fi[FP_MODE].name, "ON") == 0) { // [FP INTEGRATION]
-			if (idx == 0) {//fは何個目の目標故障かを示している　1次故障に対して故障伝搬変数を導入 //CONS_SIZEはとりあえず50000にしてる
-				//故障伝搬変数に関する制約作成
-				if (0 != sort_nl[i]->n_out) {
-
-					//~ACT(X)
-					fprintf(fp, "1 ~x%d", sort_nl[i]->prop);
-
-					for (int m = 0; m < sort_nl[i]->n_out; m++)
-					{
-						if (sort_nl[i]->out[m]->fault_pass != YES || sort_nl[i]->out[m]->prop == 0) continue; // [FP INTEGRATION]
-						//+ ACT(Y)
-						fprintf(fp, " +1 x%d", sort_nl[i]->out[m]->prop); // [FP INTEGRATION] ACT(Y)
-					}
-					fprintf(fp, " >=1;\n");
-
-					//OPBcalcSize(&opb.total, 0, 1, 0, 0);
-				}
-				//~ACT(X) + X' + X >=1
-				fprintf(fp,
-					"1 ~x%d +1 x%d +1 x%d >=1;\n",
-					sort_nl[i]->prop,
-					sort_nl[i]->suf_2t,
-					sort_nl[i]->suf_fc);
-
-				//~ACT(X) + ~X' + ~X >=1
-				fprintf(fp,
-					"1 ~x%d +1 ~x%d +1 ~x%d >=1;\n",
-					sort_nl[i]->prop,
-					sort_nl[i]->suf_2t,
-					sort_nl[i]->suf_fc);
-
-				//OPBcalcSize(&opb.total, 0, 1, 0, 0);
-			}
 			}
 		}
 	}

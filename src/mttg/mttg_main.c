@@ -234,9 +234,13 @@ int mttg_main(void) {
 			//故障範囲の特定
 			specific_fault_range(target_fault->name,i);
 			//故障回路の記述
-			pbo_generate_fault_c(fout_mttg_pbo, target_fault,i);//変更
+			pbo_generate_fault_c(fout_mttg_pbo, target_fault);
 			//故障検出回路の記述
 			pbo_generate_fdetect_c_mttg(fout_mttg_pbo, target_fault);
+			//故障伝搬変数の制約(一次故障のみ)
+			if (i == 0 && is_option_on(FP_MODE)) {
+				pbo_generate_fault_propagation(fout_mttg_pbo, target_fault);
+			}
 			//次の故障
 			target_fault = target_fault->next;
 			i++;
