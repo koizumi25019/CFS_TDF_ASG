@@ -46,10 +46,6 @@ typedef struct _Netlist_Format_ {
 
 	int flag;					    //フラグ
 	int ppo_flag;				    //擬似外部出力フラグ
-	int tf_flag;					//目標故障フラグ
-
-	int val_1t;						//1時刻目の論理値
-	int val_2t;						//2時刻目の論理値
 
 	unsigned int suf_1t;			//1時刻目のブール変数
 	unsigned int suf_2t;			//2時刻目のブール変数
@@ -66,49 +62,25 @@ typedef struct _Netlist_Format_ {
 } NLIST;
 
 //------------------------------------------------------------------------
-// 外部変数
-//------------------------------------------------------------------------
-//ネットリスト
-NLIST *nl;
-
-//モジュール名
-char *module_name;
-
-//信号数
-int n_net;
-
-//外部入力数, 外部入力
-NLIST **pi;
-int n_pi;
-
-//疑似外部出力数, 疑似外部出力
-NLIST **ppi;
-int n_ppi;
-
-//外部出力数, 外部出力
-NLIST **po;
-int n_po;
-
-//疑似外部出力数, 疑似外部出力
-NLIST **ppo;
-int n_ppo;
-
-//DFF, DFF数
-NLIST **dff;
-int n_dff;
-
-//RDFF, RDFF数
-NLIST **rdff;
-int n_rdff;
-
-//DFFS, DFFS数
-NLIST **dffs;
-int n_dffs;
-
-//RDFFS, RDFFS数
-NLIST **rdffs;
-int n_rdffs;
-
-//assign
-NLIST **assign;
-int n_assign;
+// 外部変数(実体は globals.c)
+extern NLIST *nl;					//ネットリスト(信号線の配列)
+extern char *module_name;			//モジュール名
+extern int n_net;					//信号線数
+extern NLIST **pi;					//外部入力
+extern int n_pi;
+extern NLIST **ppi;					//疑似外部入力(FFの出力)
+extern int n_ppi;
+extern NLIST **po;					//外部出力
+extern int n_po;
+extern NLIST **ppo;					//疑似外部出力(FFの入力)
+extern int n_ppo;
+extern NLIST **dff;					//DFF
+extern int n_dff;
+extern NLIST **rdff;				//RDFF
+extern int n_rdff;
+extern NLIST **dffs;				//DFFS
+extern int n_dffs;
+extern NLIST **rdffs;				//RDFFS
+extern int n_rdffs;
+extern NLIST **assign;				//assign
+extern int n_assign;

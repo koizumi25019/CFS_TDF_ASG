@@ -14,57 +14,12 @@
 #include "../asg/opb/opb.h"
 
 //=========================================================================
-//  関数名 : mttg_pbo_generate_min
-//  機  能 : MTTG用PBOファイル記述【最適化関数・サイズ(variable・constraint・その他)】
-//  戻り値 : なし
-//  引  数 : ファイルポインタ
-//=========================================================================
-void mttg_pbo_generate_min(FILE* fp) {
-
-	PBO size_pbo;
-	int i;
-
-
-	//---------------------------------------------
-	//PBOサイズ計算
-	//---------------------------------------------
-	size_pbo = mttg_calc_pbo_size();
-
-	//-----------------------------------------------------------------------------
-	//PBOファイル記述
-	//-----------------------------------------------------------------------------
-	if (strcmp(fi[LOW_POWER].name, "OFF") == 0) {
-		fprintf(fp, "* #variable= %d ", size_pbo.val + 1);
-		fprintf(fp, "#constraint= %d\n", size_pbo.h_constraint);
-		fprintf(fp, "#product= %d sizeproduct= %d\n", 2 * size_pbo.s_constraint, 4 * size_pbo.s_constraint);
-		fprintf(fp, "*\n");
-		fprintf(fp, "*  this is a dummy instance\n");
-		fprintf(fp, "*\n");
-	}
-	else if (strcmp(fi[LOW_POWER].name, "ON") == 0) {
-		fprintf(fp, "* #variable= %d ", size_pbo.val);
-		fprintf(fp, "#constraint= %d ", size_pbo.h_constraint + opb.total.cons);//追加 + opb.total.cons
-		fprintf(fp, "#product= %d sizeproduct= %d\n", 2 * size_pbo.s_constraint, 4 * size_pbo.s_constraint);
-		fprintf(fp, "*\n");
-		fprintf(fp, "*  this is a dummy instance\n");
-		fprintf(fp, "*\n");
-	}
-
-	fprintf(fp, "min: 1 x%d", size_pbo.val - size_pbo.s_constraint);
-	for (i = 2; i <= tfl_num; i++) {
-		fprintf(fp, " +1 x%d", size_pbo.val - size_pbo.s_constraint + i - 1);
-	}
-	fprintf(fp, ";\n");
-
-}
-
-//=========================================================================
-//  関数名 : pbo_generate_fdetect_c_mttg
+//  関数名 : pbo_generate_fault_detection
 //  機  能 : 故障検出回路記述(MTTG限定)
 //  戻り値 : なし
 //  引  数 : ファイルポインタ，対象故障
 //=========================================================================
-void pbo_generate_fdetect_c_mttg(FILE *fp, UNDET_FAULT_LIST* node) {
+void pbo_generate_fault_detection(FILE *fp, UNDET_FAULT_LIST* node) {
 
 	int i, j/*, k*/;
 	unsigned int *fdetct_in;
@@ -123,7 +78,7 @@ void pbo_generate_fdetect_c_mttg(FILE *fp, UNDET_FAULT_LIST* node) {
 //  戻り値 : なし
 //  引  数 : ファイルポインタ，一次故障(specific_fault_range 実行直後であること)
 //=========================================================================
-void pbo_generate_fault_propagation(FILE* fp, UNDET_FAULT_LIST* node) {
+void pbo_generate_fault_propagation(FILE* fp, const UNDET_FAULT_LIST* node) {
 
 	int i, m, changed;
 	int site = -1;
@@ -157,7 +112,7 @@ void pbo_generate_fault_propagation(FILE* fp, UNDET_FAULT_LIST* node) {
 
 	for (i = 0; i < n_net; i++) {
 		if (nl[i].fault_pass != YES || nl[i].prop == 0) continue;
-		if (strcmp(nl[i].name, node->name) == 0) site = i;
+		if (&nl[i] == node->netlist) site = i;
 
 		//観測点へ到達できない信号線は故障の影響を伝えられない
 		if (!reach[i]) {
@@ -191,18 +146,18 @@ void pbo_generate_fault_propagation(FILE* fp, UNDET_FAULT_LIST* node) {
 }
 
 //=========================================================================
-//  関数名 : pbo_generate_fault_ex
+//  関数名 : pbo_generate_fault_excitation
 //  機  能 : 故障励起記述(MTTG限定)
 //  戻り値 : なし
-//  引  数 : ファイルポインタ，対象故障,ハード(mode=0),ソフト(mode=1)
+//  引  数 : ファイルポインタ，対象故障，一次故障か(1: 必ず励起する(ハード), 0: 緩和変数つき(ソフト))
 //=========================================================================
-void pbo_generate_fault_ex(FILE *fp, UNDET_FAULT_LIST* node,int mode) {
+void pbo_generate_fault_excitation(FILE *fp, const UNDET_FAULT_LIST* node, int primary) {
 
 	//int i;
 
 
 	//目標故障1個目(ハード)
-	if(mode == 0) {
+	if (primary) {
 		fprintf(fp, "1 x%d >=1;\n", node->tfl_det_suffix);
 		//故障検出回路における最終出力先を一意に判断するための変数
 		//故障が検出される回路上での位置を示す
@@ -222,7 +177,7 @@ void pbo_generate_fault_ex(FILE *fp, UNDET_FAULT_LIST* node,int mode) {
 	}
 
 	//目標故障1個目以外(ソフト)
-	else if (mode == 1) {
+	else {
 		fprintf(fp, "1 x%d +1 x%d >=1;\n", bool_id, node->tfl_det_suffix);
 
 		switch (node->type) {
@@ -244,12 +199,12 @@ void pbo_generate_fault_ex(FILE *fp, UNDET_FAULT_LIST* node,int mode) {
 
 
 //=========================================================================
-//  関数名 : pbo_generate_power_mttg
+//  関数名 : pbo_generate_power
 //  機  能 : 消費電力制約(MTTG)(ソフト)
 //  戻り値 : なし
 //  引  数 : WSA閾値[%], ファイルポインタ
 //=========================================================================
-void pbo_generate_power_mttg(int wsath, FILE* fp) {
+void pbo_generate_power(int wsath, FILE* fp) {
 	int i;
 	unsigned int wsa_bool_id = bool_id;
 
@@ -270,4 +225,19 @@ void pbo_generate_power_mttg(int wsath, FILE* fp) {
 	fprintf(fp, ">=-%d;\n", n_net * wsath / 100);
 	bool_id++;
 
+}
+
+//=========================================================================
+//  関数名 : pbo_count_transition_nets
+//  機  能 : 低消費電力の制約で遷移を数える信号線(FFから到達できる信号線)の数
+//  戻り値 : 信号線数
+//  引  数 : なし
+//=========================================================================
+int pbo_count_transition_nets(void) {
+	int count = 0;
+
+	for (int i = 0; i < n_net; i++) {
+		if (nl[i].open_pass == NO) count++;
+	}
+	return count;
 }

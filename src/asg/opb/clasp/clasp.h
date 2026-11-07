@@ -1,73 +1,42 @@
-﻿#pragma once
-//-------------------------------------------------------------------------------------------------------------
-//	include
-//-------------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------
+//  clasp の出力(解)の読み取り
+//------------------------------------------------------------------------
+#pragma once
 #include <stdbool.h>
-#include <assert.h>
-#include <stdlib.h>
 #include <stdio.h>
 
-//-------------------------------------------------------------------------------------------------------------
-//	define
-//-------------------------------------------------------------------------------------------------------------
 #define N_SOL             2
-#define SOL_SEED          0
-#define SOL_TP            1
+#define SOL_SEED          0				//解のうち、LFSRのシード
+#define SOL_TP            1				//解のうち、テストパターン(外部入力と疑似外部入力)
+
+#define CLASP_RETRY_COUNT 3			//-regen: 打ち切り時間 60/180/300秒 で最大3回
 
 #define CLASP_OKAY		  true
 #define CLASP_ERROR		  false
-#define CLASP_STATUS_ERROR -1
-#define CLASP_OBJVAL_ERROR -1
-#define CLASP_UNSAT -2
-#define	CLASP_STATUS_UNKNOWN		-8
-#define CLASP_STATUS_USERINTERRUPT	2
-#define CLASP_STATUS_NODELIMIT		3
-#define CLASP_STATUS_TIMELIMIT		4
-#define CLASP_STATUS_MEMLIMIT		5
-#define CLASP_STATUS_GAPLIMIT		6
-#define CLASP_STATUS_OPTIMAL		7	
-#define CLASP_STATUS_INFEASIBLE		8
-#define CLASP_STATUS_UNBOUNDED		9
-#define CLASP_STATUS_TOTALNODELIMIT	10	
-#define CLASP_STATUS_STALLNODELIMIT	11
-#define CLASP_STATUS_SOLLIMIT		12
-#define CLASP_STATUS_BESTSOLLIMIT	13
-#define CLASP_STATUS_RESTARTLIMIT	14
-#define CLASP_STATUS_INFORUNBD		15
 
+/** clasp の結果 */
+#define CLASP_STATUS_ERROR	-1			//出力を読めない・解が不完全
+#define CLASP_STATUS_UNSAT	-2			//解なし(制約を満たす割当てが存在しない)
+#define CLASP_STATUS_UNKNOWN -8			//打ち切り時間までに解が見つからなかった
+#define CLASP_STATUS_SAT	7			//解が見つかった(打ち切りで最適性が未確認のものを含む)
 
-//-------------------------------------------------------------------------------------------------------------
-//	structre
-//-------------------------------------------------------------------------------------------------------------
-/** problem size */
 typedef struct CLASP_LOG_
 {
-	int					  status;			  /**< status */
-	int					  objval;			  /**< objective value */
-	char** sol;				  /**< solution */
+	int					  status;			  /**< CLASP_STATUS_* */
+	char** sol;				  /**< solution: sol[SOL_SEED], sol[SOL_TP] (0/1 の文字列) */
 }
 CLASPLOG;
 
+extern CLASPLOG			  clasp;			  /**< 直近の clasp の結果 */
 
-//-------------------------------------------------------------------------------------------------------------
-//	global variable
-//-------------------------------------------------------------------------------------------------------------
-CLASPLOG					   clasp;			   /**< clasp log */
+/** clasp.exe を1回実行する(attempt_index: 0,1,2 = 打ち切り時間の延長の段階。-regen のとき 60/180/300秒) */
+int clasp_call(int attempt_index);
 
+/** clasp を実行して結果を clasp に読む(-regen のときは打ち切り時間を延ばして再試行) */
+bool CLASP(void);
 
-//-------------------------------------------------------------------------------------------------------------
-//	prototype declaration
-//-------------------------------------------------------------------------------------------------------------
-/** clasp */
-bool CLASP(
-	void
-);
-/** get the objective value */
-void CLASPgetObjVal(
-	FILE* fileptr			  /**< pointer to file */
-);
+/** ログから状態 clasp.status を読む */
+void CLASPgetStatus(FILE* fileptr);
 
-/** get the solution */
-void CLASPgetSol(
-	FILE* fileptr			  /**< pointer to file */
-);
+/** ログから最後の解を読み、clasp.sol に格納する */
+void CLASPgetSol(FILE* fileptr);

@@ -1,161 +1,81 @@
-﻿/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*																											 */
-/*	program		:	urashima																				 */
-/*	file		:	./src/opt/opt.h																	         */
-/*	deginer		:	R.miura																			  		 */
-/*	date		:	2022.10.01																  				 */
-/*																											 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-
+﻿//------------------------------------------------------------------------
+//  オプション(コマンドライン引数と設定ファイル .set)
+//------------------------------------------------------------------------
 #pragma once
-//-------------------------------------------------------------------------------------------------------------
-//	include
-//-------------------------------------------------------------------------------------------------------------
 #include <stdio.h>
 #include <stdbool.h>
 
-//-------------------------------------------------------------------------------------------------------------
-//	define
-//-------------------------------------------------------------------------------------------------------------
 #define	OPT_OKAY				  true		  /**< return code   = okay */
 #define	OPT_ERROR				  false		  /**< return code   = error */
 
-#define	MAXSIZE_FILENAME		  100		  /**< maximum size of filename */
+//------------------------------------------------------------------------
+//  既定値・制限値
+//------------------------------------------------------------------------
+#define DEFAULT_WSA_THRESHOLD	  20		  /**< WSA閾値の既定値[%]。論文 5章の設定値 */
+#define DEFAULT_SOLVER_TIME		  10		  /**< ソルバの打ち切り時間の既定値[s] */
+#define LFSR_BITS				  100		  /**< LFSRのビット数。回路モデルの変数番号がこの値を前提にしている */
 
-#define FILE_NOSET			      (char*)NULL /**< initial filename */
-#define MODE_NOSET			      -1          /**< initial mode */
-
-#define DROP_YES				  true
-#define DROP_NO				      false
-#define DROP_ERROR			      -1
-
-#define	PrintHelpMessage		  /*colorNo4*/ printf	  /**< help message */
-
-
-//-------------------------------------------------------------------------------------------------------------
-//	structre
-//-------------------------------------------------------------------------------------------------------------
-/** input file structre */
-typedef struct Input_File
-{
-	char* net;				  /**< netlist file */
-	char* fault;			  /**< fault list file */
-	char* xortap;			  /**< xor-tap file */
-	char* scanchain;		  /**< scan-chain file */
-	char* necessary;		  /**< necessary file */
-	int lfsr;				  /**< num lfsr */
-	int loop;				  /**< num of selection compatible group  */
-}
-INPUT;
-
-/** output file structre */
-typedef struct Output_File
-{
-	char* pin;			      /**< pin file */
-	char* seed;		          /**< seed file */
-	char* test;		          /**< test pattern file */
-	char* graphlog;			  /**< graph log file */
-	char* log;			      /**< log file */
-	char* untestable;         /**< untestable fault file */
-}
-OUTPUT;
-
-/** file structre */
-typedef struct File
-{
-	INPUT				  input;			  /**< input files */
-	OUTPUT				  output;			  /**< output files */
-}
-FILES;
-
-/** mode structre */
-typedef struct Mode
-{
-	int					  drop;		          /**< mode   = method */
-}
-MODES;
-
-/** option structre */
+//------------------------------------------------------------------------
+//  オプションの値
+//------------------------------------------------------------------------
 typedef struct Option
 {
-	FILES			      file;			      /**< files */
-	MODES				  mode;	   			  /**< modes */
+	/* 入力ファイル */
+	char* circuit;			  /**< -net          ネットリスト(.v) */
+	char* fault_file;		  /**< -fault        RPR故障集合 */
+	char* xor_tap_file;		  /**< -xor_tap      フェーズシフタのXORタップ */
+	char* scan_chain_file;	  /**< -scan_chain   スキャンチェーン */
+	char* necessary_file;	  /**< -nece         必須割当て(未指定なら目標故障をランダムに選ぶ) */
+
+	/* 出力先 */
+	char* folder;			  /**< -folder       出力フォルダー(存在しないこと) */
+
+	/* 低消費電力 */
+	bool  low_power;		  /**< -power        ON: キャプチャ時消費電力(WSA)を閾値以下にする */
+	int   wsa_threshold;	  /**< -wsath        WSA閾値[%] */
+
+	/* ソルバ(clasp) */
+	int   solver_time;		  /**< -time         打ち切り時間[s] */
+	int   parallel_threads;	  /**< -parallel     並列スレッド数(0: 並列なし) */
+	bool  first_model_only;	  /**< -mode_1       最初の解で探索を打ち切る */
+
+	/* 目標故障選択 */
+	int   target_limit;		  /**< -target_limit 目標故障数の上限(0: 制限なし) */
+
+	/* 再生成(打ち切り・解なしになった一次故障への対処) */
+	bool  regen;			  /**< -regen        論文のフロー: 打ち切り時間を延ばし(60/180/300s)，WSA閾値を緩める(+5%/+10%) */
+	bool  sttg;				  /**< -sttg         MTTGで求まらない一次故障を，単一目標(STTG)で再生成する */
+
+	/* 実験的な機能 */
+	bool  fault_propagation;  /**< -fp           一次故障に故障伝搬変数の制約を加える */
+	bool  cps;				  /**< -cps          故障シミュレーションで1件も検出できなかったら，次は単一目標にする */
+
+	int   lfsr_bits;		  /**< -b            LFSRのビット数(LFSR_BITS のみ対応) */
 }
 OPTION;
 
+//------------------------------------------------------------------------
+//  グローバル変数
+//------------------------------------------------------------------------
+extern OPTION opt;
 
-//-------------------------------------------------------------------------------------------------------------
-//	global variable
-//-------------------------------------------------------------------------------------------------------------
-OPTION					   opt;				  /**< option */
+//------------------------------------------------------------------------
+//  関数
+//------------------------------------------------------------------------
+/** コマンドライン引数を解析する。失敗時はヘルプを表示して OPT_ERROR */
+bool OPT(int argc, char** argv);
 
+/** 引数を解析する(-set でその位置に設定ファイルを読み込む) */
+bool OPTset(int argc, char** argv);
 
-//-------------------------------------------------------------------------------------------------------------
-//	prototype declaration
-//-------------------------------------------------------------------------------------------------------------
-/** set the options */
-bool OPT(
-	int					  argc,			      /**< number of command-arguments */
-	char** argv			      /**< arguments */
-);
+/** 設定ファイルを読む */
+bool OPTread(char* filename);
 
-/** initialize the options */
-void OPTinit(
-	void
-);
+/** 必須オプションの有無・値の範囲・入力ファイルを検査する */
+bool OPTcheck(void);
 
-/** initialize the files */
-void OPTinitFile(
-	void
-);
+/** ON/OFF を文字列にする(ログ出力用) */
+const char* OPTonoff(bool value);
 
-/** initialize the modes */
-void OPTinitMode(
-	void
-);
-
-/** initialize the parameters */
-//void OPTinitParam(
-//	void
-//);
-
-/** set the options */
-bool OPTset(
-	int				      argc,				  /**< number of command-arguments */
-	char** argv				  /**< command-arguments */
-);
-
-/** read the setting file */
-bool OPTread(
-	char* filename			  /**< filename */
-);
-
-/** check for essential options */
-bool OPTcheck(
-	void
-);
-
-/** check for modes */
-bool OPTcheckMode(
-	void
-);
-
-/** check for files */
-bool OPTcheckFile(
-	void
-);
-
-/** display the help */
-void OPTdispHelp(
-	void
-);
-
-
-
-
-
-
-
-
-
+/** ヘルプを表示する */
+void OPTdispHelp(void);

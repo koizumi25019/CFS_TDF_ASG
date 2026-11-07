@@ -29,7 +29,7 @@ int main(int argc, char *argv[]) {
 	if (OPT(argc, argv) != true) return ERROR;
 
 	//ネットリスト起動
-	read_nl(fi[CIRCUIT].name);
+	read_nl(opt.circuit);
 	if (validate_circuit_gates() != SUCCESS) {
 		return ERROR;
 	}
@@ -46,7 +46,7 @@ int main(int argc, char *argv[]) {
 	if (InitGlobalVars() != true) return ERROR;
 
 	//消費電力考慮の場合
-	if ((strcmp(fi[LOW_POWER].name, "ON")) == 0) {
+	if (opt.low_power) {
 		if (check_open_pass() != SUCCESS) {
 			printf("【ERROR】:open pass(main.c)\n");
 			return ERROR;
@@ -62,7 +62,7 @@ int main(int argc, char *argv[]) {
 		printf("【ERROR】:MTTG(main.c)\n");
 		return ERROR;
 	}
-	if (fi[TARGET_LIMIT].value == 1) {
+	if (opt.target_limit == 1) {
 		printf("【SUCCESS】:STTG\n");
 	}
 	else {

@@ -12,12 +12,12 @@
 #include"../../header/Define.h"
 
 //=========================================================================
-//  関数名 : pbo_generate_normal_c
-//  機  能 : 正常回路記述
+//  関数名 : pbo_generate_good_circuit
+//  機  能 : 正常回路(2時刻分)の制約式を書く
 //  戻り値 : なし
 //  引  数 : ファイルポインタ
 //=========================================================================
-void pbo_generate_normal_c(FILE *fp) {
+void pbo_generate_good_circuit(FILE *fp) {
 
 	int i, j;
 
@@ -118,12 +118,12 @@ void pbo_generate_normal_c(FILE *fp) {
 }
 
 //=========================================================================
-//  関数名 : pbo_generate_fault_c
-//  機  能 : 故障回路記述
+//  関数名 : pbo_generate_faulty_circuit
+//  機  能 : 故障回路(故障箇所のTFO)の制約式を書く
 //  戻り値 : なし
 //  引  数 : ファイルポインタ,対象故障
 //=========================================================================
-void pbo_generate_fault_c(FILE* fp, UNDET_FAULT_LIST* node) {
+void pbo_generate_faulty_circuit(FILE* fp, const UNDET_FAULT_LIST* node) {
 
 	int i, j;
 
@@ -131,7 +131,7 @@ void pbo_generate_fault_c(FILE* fp, UNDET_FAULT_LIST* node) {
 	//■PBOファイル記述
 	//-----------------------------------------------------------------------------
 	for (i = 0; i < n_net; i++) {
-		if (sort_nl[i]->fault_pass == YES && strcmp(sort_nl[i]->name, node->name) != 0) {
+		if (sort_nl[i]->fault_pass == YES && sort_nl[i] != node->netlist) {
 			switch (sort_nl[i]->type) {
 				//●AND-------------------------------------------------------------------------------------------------------------------------------
 			case AND:
@@ -179,102 +179,4 @@ void pbo_generate_fault_c(FILE* fp, UNDET_FAULT_LIST* node) {
 			}
 		}
 	}
-}
-
-
-//=========================================================================
-//  関数名 : pbo_generate_fdetect_c
-//  機  能 : 故障検出回路記述
-//  戻り値 : なし
-//  引  数 : ファイルポインタ，対象故障
-//=========================================================================
-void pbo_generate_fdetect_c(FILE *fp, UNDET_FAULT_LIST* node) {
-
-	int i, j/*,k*/;
-	unsigned int *fdetct_in;
-
-	if ((fdetct_in = (unsigned int*)calloc(fc_ppo, sizeof(unsigned int))) == NULL) {
-		printf("【ERROR】:No calloc Fault Det Circuit(sttg_pbo_generate.c)\n"); //故障検出回路の入力配列領域確保失敗
-		exit(1);
-	}
-
-	j = 0;
-	for (i = 0; i < n_net; i++) {
-		if (nl[i].fault_pass == YES && nl[i].ppo_flag ==1)  {
-			//●EXOR
-			fprintf(fp, "1 ~x%d +1 ~x%d +1 ~x%d >=1;\n", nl[i].suf_2t, nl[i].suf_fc, bool_id);
-			fprintf(fp, "1 x%d +1 x%d +1 ~x%d >=1;\n", nl[i].suf_2t, nl[i].suf_fc, bool_id);
-			fprintf(fp, "1 x%d +1 ~x%d +1 x%d >=1;\n", nl[i].suf_2t, nl[i].suf_fc, bool_id);
-			fprintf(fp, "1 ~x%d +1 x%d +1 x%d >=1;\n", nl[i].suf_2t, nl[i].suf_fc, bool_id);
-			fdetct_in[j] = bool_id;
-			bool_id++;
-			j++;
-		}
-	}
-
-	if (fc_ppo != 1) {
-		for (i = 0; (unsigned int)i < fc_ppo; i++) { fprintf(fp, "1 ~x%d +1 x%d >=1;\n", fdetct_in[i], bool_id); }
-		for (i = 0; (unsigned int)i < fc_ppo; i++) { fprintf(fp, "1 x%d +", fdetct_in[i]); }
-		fprintf(fp, "1 ~x%d >=1;\n", bool_id);
-		fprintf(fp, "1 x%d >=1;\n", bool_id);
-		bool_id++;
-	}
-	else if (fc_ppo == 1) {
-		fprintf(fp, "1 x%d >=1;\n", bool_id - 1);
-	}
-
-	//ここから故障励起関連だと思う
-
-	for (i = 0; i < n_net; i++) {
-		if (strcmp(nl[i].name, node->name) == 0) {
-
-			switch (node->type) {
-			case STF:
-				fprintf(fp, "1 x%d >=1;\n", nl[i].suf_1t);
-				fprintf(fp, "1 ~x%d >=1;\n", nl[i].suf_2t);
-				fprintf(fp, "1 x%d >=1;\n", nl[i].suf_fc);
-				break;
-			case STR:
-				fprintf(fp, "1 ~x%d >=1;\n", nl[i].suf_1t);
-				fprintf(fp, "1 x%d >=1;\n", nl[i].suf_2t);
-				fprintf(fp, "1 ~x%d >=1;\n", nl[i].suf_fc);
-				break;
-			}
-			break;
-		}
-	}
-
-}
-
-//=========================================================================
-//  関数名 : pbo_generate_power
-//  機  能 : 消費電力制約
-//  戻り値 : なし
-//  引  数 : ファイルポインタ
-//=========================================================================
-void pbo_generate_power(FILE *fp) {
-	int i;
-	char* cons1 = (char*)NULL;
-
-	if ((cons1 = (char*)calloc(500000, sizeof(char))) == NULL) {
-		printf("【ERROR】:No calloc cons1(mttg_pbo_generate.c)\n");
-		exit(1);
-	}
-
-	for (i = 0; i < n_net; i++) {
-		if (nl[i].open_pass == NO) {
-
-			fprintf(fp, "1 x%d +1 x%d x%d +1 ~x%d ~x%d >=1;\n", bool_id, nl[i].suf_1t, nl[i].suf_2t, nl[i].suf_1t, nl[i].suf_2t);
-			 
-			//WSA制約
-			sprintf(cons1, "%s-1 x%d ", cons1, bool_id);
-			bool_id++;
-		}
-	}
-
-	//WSA制約(WSA閾値)
-	sprintf(cons1, "%s>=-%d;\n", cons1, n_net *  fi[WSATH].value / 100);
-	bool_id++;
-
-	fprintf(fp, "%s", cons1);
 }

@@ -14,22 +14,8 @@ typedef struct Undet_fault_list{
 	int tfl_suf_fc;                    //suf_fcは目標故障ごとに変わるので格納
 	int tfl_fc_ppo;					   //故障回路に含まれるPPO数算出
 	struct Undet_fault_list* next;	   //後続アドレス
-	//追加 fromASG_read.h_FNODE構造体
-	char* string;                      //string
-	char* nece;						   //必須割り当て情報ファイルを1行ずつ格納
 	BIT_INT_XP* necenet;			   //bit int necessary
 	BIT_INT* edge;				       //compatible edge
 	int n_edge;                        //繋がっている辺の数
-	//追加
-	//int resolving_count;               //再シード生成回数
 }UNDET_FAULT_LIST;
 
-//------------------------------------------------------------------------
-//PBOのサイズ
-//------------------------------------------------------------------------
-typedef struct Size_Pbo{
-	int val;		  //変数の数
-	int h_constraint; //制約数
-	int s_constraint; //ソフト制約数
-	int lit;		  //リテラル数
-}PBO;

@@ -1,113 +1,49 @@
-﻿//------------------------------------------------------------------------
-//インクルード
+//------------------------------------------------------------------------
+//  信号線のキュー(循環キュー)。故障範囲の探索(fault_cone.c)で使う
 //------------------------------------------------------------------------
 #include <stdio.h>
-#include <time.h>
-#include<stdlib.h>
-#include<string.h>
+#include <stdlib.h>
 
-//------------------------------------------------------------------------
-//自作インクルード
-//------------------------------------------------------------------------
-#include"../header/Define.h"
+#include "../header/Define.h"
 
 //=========================================================================
 //  関数名 : enqueue
-//  機  能 : キューにNLISTを入れる
-//  戻り値 : なし
-//  引  数 : NLIST，タイプ（0：指定された信号線のみ，1:出力線全部，2：入力線全部）
+//  機  能 : キューに信号線を入れる。あふれたら異常終了する(容量は信号線数+1で足りる)
 //=========================================================================
-void enqueue(NLIST *data, int mode) {
-
-	int i;
-
-	switch (mode) {
-
-	case 0:
-		Que.que[Que.rear] = data;
-		Que.num += 1;
-		Que.rear += 1;
-		if (Que.max == Que.rear) {
-			Que.rear = 0;
-		}
-		if (Que.max < Que.num) {
-			printf("Que：Over Flow\n");
-			exit(EXIT_FAILURE);
-		}
-		break;
-
-	case 1:
-		for (i = 0; i < data->n_out; i++) {
-			Que.que[Que.rear] = data->out[i];
-			Que.num += 1;
-			Que.rear += 1;
-			if (Que.max == Que.rear) {
-				Que.rear = 0;
-			}
-			if (Que.max < Que.num) {
-				printf("Que：Over Flow\n");
-				exit(EXIT_FAILURE);
-			}
-		}
-		break;
-
-	case 2:
-		for (i = 0; i < data->n_in; i++) {
-			Que.que[Que.rear] = data->in[i];
-			Que.num += 1;
-			Que.rear += 1;
-			if (Que.max == Que.rear) {
-				Que.rear = 0;
-			}
-			if (Que.max < Que.num) {
-				printf("Que：Over Flow\n");
-				exit(EXIT_FAILURE);
-			}
-		}
-		break;
-
+void enqueue(NLIST *data) {
+	Que.que[Que.rear] = data;
+	Que.num += 1;
+	Que.rear += 1;
+	if (Que.max == Que.rear) {
+		Que.rear = 0;
 	}
-
+	if (Que.max < Que.num) {
+		printf("[ERROR] Queue overflow (capacity %d).\n", Que.max);
+		exit(EXIT_FAILURE);
+	}
 }
 
 //=========================================================================
 //  関数名 : dequeue
-//  機  能 : キューから1つNLISTを取り出す
-//  戻り値 : NLIST
-//  引  数 : なし
+//  機  能 : キューの先頭から信号線を1つ取り出す
 //=========================================================================
-NLIST* dequeue() {
+NLIST* dequeue(void) {
+	NLIST *p = Que.que[Que.front];
 
-	NLIST *p;
-
-	p = *(Que.que + Que.front);
-
-	*(Que.que + Que.front) = NULL;
-
+	Que.que[Que.front] = NULL;
 	Que.num -= 1;
 	Que.front += 1;
-
 	if (Que.max == Que.front) {
 		Que.front = 0;
 	}
-
 	return p;
-
 }
-
 
 //=========================================================================
 //  関数名 : queue_emp
-//  機  能 : スタックが空か判定
-//  戻り値 : 0（無），1（有）
-//  引  数 : なし
+//  機  能 : キューに信号線が残っているか
+//  戻り値 : 1(残っている), 0(空)
 //=========================================================================
-int queue_emp() {
-
-	if (Que.num == 0) {
-		return 0;
-	}
-
-	return 1;
-
+int queue_emp(void) {
+	return Que.num != 0;
 }

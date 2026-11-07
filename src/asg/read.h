@@ -1,69 +1,24 @@
-﻿#pragma once
-//-------------------------------------------------------------------------------------------------------------
-//	include
-//-------------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------
+//  入力ファイル(XORタップ・スキャンチェーン・必須割当て)の読み込みと、読み込んだデータ
+//------------------------------------------------------------------------
+#pragma once
 #include <stdio.h>
+#include <stdbool.h>
 #include <time.h>
-
-#include "target.h"
-//#include "read.h"
 #include "../opt/opt.h"
 #include "../header/Netlist.h"
+#include "../header/Fault.h"
 #include "../lib/lib.h"
 
+#define READ_OKAY		  true		          /**< return code   = ok */
+#define READ_ERROR		  false				  /**< return code   = error */
+#define MAXSIZE_BUFFER	  500000	          /**< maximum size of buffer (1行の最大長) */
+#define MAXSIZE_BITINT	  32		          /**< ビット列の1語のビット数 */
 
-//-------------------------------------------------------------------------------------------------------------
-//	define
-//-------------------------------------------------------------------------------------------------------------
-#define READ_OKAY		  true		          /**< return code   = ture */
-#define READ_ERROR		  false				  /**< return code   = false */
-
-#define MAXSIZE_BUFFER	  500000	          /**< maximum size of buffer */
-#define MAXSIZE_BITINT	  32		          /**< maximum size of bitint */
-
-#define FOUND			  true		          /**< return code   = true */
-#define NOT_FOUND		  false				  /**< return code   = false */
-
-/** fault reader -on */
-#define READER_FAULT_ON			if (opt.file.input.fault != FILE_NOSET)
-
-/** fault reader -on */
-#define READER_NECESSARY_ON		if (opt.file.input.necessary != FILE_NOSET)
-
-/** compare string and "End-Of-File" */
-#define COMP_EOF(string)		string != (char*)NULL
-
-/** compare string and "New-Line" */
-#define COMP_NEWLINE(string)	strcmp(string, "\n")!=0	
-
-#define	MAXSIZE_HASH	  100				  /**< size of fault list */
-#define TFR				  2			          /**< transition fault model   = rise */
-#define	TFF				  4			          /**< transition fault model   = fall */
-#define SF0				  8			          /**< stack-at fault model   = 0 */
-#define	SF1				  16			      /**< stack-at fault model   = 1 */
-
-#define	FP				  1					  /**< flag type   = fault point */
-#define	TFO				  2			          /**< flag type   = transitive fout */
-#define	TPO				  4					  /**< flag type   = transitive priamary-output */
-#define	TFO_TPO			  (TFO|TPO)			  /**< flag type   = TFO & TPO */
-#define	FP_TPO			  (FP|TPO)			  /**< flag type   = FP & TPO */
-
-#define	DETECTED		  7					  /**< fault detected */
-#define	UNDETECTED		  17				  /**< fault undetected */
-#define	REDEUNDANT		  27				  /**< fault redeundant */																						  \
-
-/** xor-tap reader -on */
-#define READER_XOR_TAP_ON		if (opt.file.input.xortap != FILE_NOSET)
-
-/** scan-chain reader -on */
-#define READER_SCAN_CHAIN_ON	if (opt.file.input.scanchain != FILE_NOSET)
-
-
-//-------------------------------------------------------------------------------------------------------------
-//	structre
-//-------------------------------------------------------------------------------------------------------------
-
-/** phase-shifter net structres */
+//------------------------------------------------------------------------
+//  構造体
+//------------------------------------------------------------------------
+/** フェーズシフタの1チャンネル */
 typedef struct PhaseShifterNetList
 {
 	char* name;								  /**< name */
@@ -77,7 +32,7 @@ typedef struct PhaseShifterNetList
 }
 PS_NLIST;
 
-/** phase shifter structres */
+/** フェーズシフタ */
 typedef struct PhaseShitfter
 {
 	int					  num;			      /**< number of phase-shifters */
@@ -86,34 +41,7 @@ typedef struct PhaseShitfter
 }
 PS;
 
-/* add data since 2023/10/09 */
-/** linear feedback shift register */
-typedef struct LinearFeedbackShiftRegister
-{
-	int					  num;			      /**< number of LFSR */
-	//int					  maxslength;		  /**< maximum bits for LFSR */
-	struct LFSRNetList* nlist;				  /**< LFSR list */
-}
-LFSR;
-
-/** necessary structre */
-typedef struct Necessary
-{
-	int					  num;			      /**< number of nece */
-	struct NecessaryNetlist* necelist;					  /**< list */
-}
-NECESSARY;
-
-/** read data structres */
-typedef struct ReadData
-{
-	struct PhaseShitfter  psnet;			  /**< phase-shifter net  */
-	struct LinearFeedbackShiftRegister lfsrnet;/** lfsr net */
-	struct Necessary	necenet;			  /**< necessary net */
-}
-READDATA;
-
-/** lfsr net structres */
+/** LFSRの1ビット */
 typedef struct LFSRNetList
 {
 	char* name;								  /**< name */
@@ -122,96 +50,60 @@ typedef struct LFSRNetList
 }
 LFSR_NLIST;
 
-/** necessary net structre */
-typedef struct NecessaryNetlist
+/** LFSR */
+typedef struct LinearFeedbackShiftRegister
 {
-	char* string;			  /**< string */
-	int					  id;			      /**< id */
-	char* nece;				  /**< Info necessary */
-	char* name;				  /**< Name */
-	int					  type;				  /**< fault type */
+	int					  num;			      /**< number of LFSR */
+	struct LFSRNetList* nlist;				  /**< LFSR list */
 }
-NECE_NLIST;
+LFSR;
 
-/** clique node structre */
-typedef struct CliqueNode
+/** 必須割当て: 故障番号(node_id)で引く。assignments[node_id] は "G11=1 G17=0 ..." の文字列 */
+typedef struct Necessary
 {
-	int					  depth;			  /**< depth */
-	int					  select;			  
-	int					  num_r;			  /**< relaxation varaibales :緩和変数数？*/
-	BIT_INT* edge;			                  //辺が繋がっているかを示す(edge==1なら繋がっている)
-	struct CliqueNode* nextptr;				  /**< pointer to next node */
+	int					  num;			      /**< 故障数(assignments の要素数) */
+	char** assignments;						  /**< 故障ごとの必須割当て */
 }
-CNODE;
+NECESSARY;
 
-//-------------------------------------------------------------------------------------------------------------
-//	global variable
-//-------------------------------------------------------------------------------------------------------------
-READDATA			      readdata;			  /**< reading data */
-int						num_clique;			  /**< num of clique */
-int						num_seed;			  /**< num of seed */
-bool					num_clique_flag;
-clock_t					time_graph;
+/** 読み込んだデータ */
+typedef struct ReadData
+{
+	struct PhaseShitfter  psnet;			  /**< phase-shifter net  */
+	struct LinearFeedbackShiftRegister lfsrnet;/** lfsr net */
+	struct Necessary	necenet;			  /**< necessary net */
+}
+READDATA;
 
-//-------------------------------------------------------------------------------------------------------------
-//	prototype declaration
-//-------------------------------------------------------------------------------------------------------------
-/** read the file */
-bool ReadFile(
-	void
-);
+//------------------------------------------------------------------------
+//  グローバル変数
+//------------------------------------------------------------------------
+extern READDATA			readdata;			  /**< 読み込んだデータ */
+extern clock_t			time_graph;			  /**< 両立可能故障グラフの作成時間 */
+
+//------------------------------------------------------------------------
+//  関数
+//------------------------------------------------------------------------
+/** 全ての入力ファイルを読む */
+bool ReadFile(void);
 
 /** read the xor-tap */
-bool ReadXORtap(
-	void
-);
+bool ReadXORtap(void);
 
 /** get the number of phase-shifters */
-int getNumPhaseShifter(
-	FILE* fileptr,		      /**< pointer to file */
-	char* buffer		      /**< buffer */
-);
+int getNumPhaseShifter(FILE* fileptr, char* buffer);
 
 /** get the index of pahase-shifter */
-int getPhaseShifterIndex(
-	char* buffer		      /**< buffer */
-);
+int getPhaseShifterIndex(char* buffer);
 
 /** create the xor-tap list */
-bool createXORtapList(
-	int 				  index,		      /**< index */
-	char* buffer		      /**< buffer */
-);
+bool createXORtapList(int index, char* buffer);
 
 /** read the scan-chain */
-bool ReadScanChain(
-	void
-);
-
-/** get the maximum scan-length */
-int getMaxScanLength(
-	FILE* fileptr,		      /**< pointer to file */
-	char* buffer		      /**< buffer */
-);
+bool ReadScanChain(void);
 
 /** create the lfsr list */
-bool CreateLFSRList(
-	void
-);
+bool CreateLFSRList(void);
 
 /** reading the necessary */
-bool ReadNecessary(
-	void
-);
-
-/** search for necessary node */
-bool searchNnode(
-	char* buffer,			  /**< buffer (key) */
-	int no					  /**< No. */
-);
-
-CNODE* CreateCliqueNode(
-	int depth,				/* depth */
-	int select,				/* select no. */
-	int num					/* remain->num */
-);
+bool ReadNecessary(void);

@@ -1,27 +1,51 @@
-﻿//------------------------------------------------------------------------
+//------------------------------------------------------------------------
+//  生成したテストパターンのキャプチャ時消費電力(WSA)の確認
+//------------------------------------------------------------------------
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "mttg_check_wsa.h"
 #include "../header/Define.h"
+#include "../main/external_tools.h"
+#include "../else/OUTPUT/report.h"
 
-int mttg_check_wsa(int threshold)
+WsaResult mttg_check_wsa(int threshold)
 {
     char command[4096];
-    char path[1024];
-    FILE* result = NULL;
-    int accepted;
-    sprintf_s(command, sizeof(command),
-        "WSA.exe -sc \"%s\" -tptx \"%stp.txt\" -mode 1 -rate %d -high \"%shigh_mttg.txt\" -low \"%slow_mttg.txt\" -rep \"%s%s_wsa_rep.txt\"",
-        fi[CIRCUIT].name, folder_out, threshold, folder_out, folder_out, folder_out, module_name);
-    if (system(command) != 0) {
-        return ERROR;
+    char tp_path[1024], high_path[1024], low_path[1024], report_path[1024], report_name[512];
+    FILE* low = NULL;
+    int exit_code, within;
+
+    snprintf(report_name, sizeof(report_name), "%s_wsa_rep.txt", module_name);
+    if (output_path(tp_path, sizeof(tp_path), FILE_TEST_PATTERN) != SUCCESS ||
+        output_path(high_path, sizeof(high_path), "high_mttg.txt") != SUCCESS ||
+        output_path(low_path, sizeof(low_path), "low_mttg.txt") != SUCCESS ||
+        output_path(report_path, sizeof(report_path), report_name) != SUCCESS) {
+        return WSA_TOOL_ERROR;
     }
-    sprintf_s(path, sizeof(path), "%slow_mttg.txt", folder_out);
-    if (fopen_s(&result, path, "r") != 0) {
-        return ERROR;
+
+    snprintf(command, sizeof(command),
+        TOOL_WSA " -sc \"%s\" -tptx \"%s\" -mode 1 -rate %d -high \"%s\" -low \"%s\" -rep \"%s\"",
+        opt.circuit, tp_path, threshold, high_path, low_path, report_path);
+    exit_code = run_external(command);
+    if (exit_code != 0) {
+        printf("[ERROR] %s failed (exit code %d).\n        Command: %s\n", TOOL_WSA, exit_code, command);
+        return WSA_TOOL_ERROR;
     }
-    /* Only presence is needed; do not read n_net bytes into a fixed-size buffer. */
-    accepted = fgetc(result) != EOF;
-    fclose(result);
-    return accepted ? SAT : UNSAT;
+
+    if (fopen_s(&low, low_path, "r") != 0 || low == NULL) {
+        printf("[ERROR] %s did not write %s.\n", TOOL_WSA, low_path);
+        return WSA_TOOL_ERROR;
+    }
+    /* 閾値以下のテストパターンが書き出されていれば OK (中身は読まず、有無だけを見る) */
+    within = fgetc(low) != EOF;
+    fclose(low);
+
+    if (!within) {
+        printf("[ERROR] %s judged the solver's test pattern to exceed the WSA threshold %d%%.\n"
+               "        The WSA constraint of the PBO model and %s disagree. See %s and %s.\n",
+               TOOL_WSA, threshold, TOOL_WSA, report_path, high_path);
+        return WSA_EXCEEDS_THRESHOLD;
+    }
+    return WSA_WITHIN_THRESHOLD;
 }

@@ -12,12 +12,12 @@
 #include"../header/Define.h"
 
 //===================================================
-//関数名:specific_fault_range
-//機能:故障範囲特定
+//関数名:build_fault_cone
+//機能:故障範囲特定(故障箇所から到達できる信号線を求め、故障回路の変数番号を割り当てる)
 //戻り値：int 正常終了:SUCCESS(=0) , 異常終了:ERROR(=-1)
-//引数：故障信号線名
+//引数：故障箇所の信号線，目標故障の番号(0: 一次故障)
 //===================================================
-int specific_fault_range(char* name,int idx) {
+int build_fault_cone(NLIST* site, int idx) {
 	int i;
 	NLIST* nlist;
 
@@ -51,13 +51,8 @@ int specific_fault_range(char* name,int idx) {
 	//-----------------------------------------------
 	//故障範囲特定
 	//-----------------------------------------------
-	for (i = 0; i < n_net; i++) {
-		if (strcmp(name, nl[i].name) == 0) {
-			nl[i].fault_pass = YES;
-			enqueue(&nl[i], 0);
-			break;
-		}
-	}
+	site->fault_pass = YES;
+	enqueue(site);
 	//-----------------------------------------------
 	//故障信号線から到達可能な信号線の探索
 	//-----------------------------------------------
@@ -67,7 +62,7 @@ int specific_fault_range(char* name,int idx) {
 		nlist->fault_pass = YES;//故障到達可能な信号線に設定
 		nlist->suf_fc = bool_id;	//故障回路のブール変数IDを設定
 		bool_id++;           	//ブール変数IDを更新
-		if (idx == 0 && strcmp(fi[FP_MODE].name, "ON") == 0) { // [FP INTEGRATION]
+		if (idx == 0 && opt.fault_propagation) { // [FP INTEGRATION]
 			nlist->prop = bool_id;
 			bool_id++;
 		}
@@ -75,7 +70,7 @@ int specific_fault_range(char* name,int idx) {
 			for (i = 0; i < nlist->n_out; i++) {//複数の出力なら、それぞれエンキュー
 				if (nlist->out[i]->fault_pass == NO) {
 					nlist->out[i]->fault_pass = YES;
-					enqueue(nlist->out[i], 0);
+					enqueue(nlist->out[i]);
 				}
 			}
 		}
