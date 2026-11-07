@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 //-------------------------------------------------------------------------------------------------------------
 //	include
 //-------------------------------------------------------------------------------------------------------------
@@ -138,8 +138,8 @@ typedef struct CliqueNode
 {
 	int					  depth;			  /**< depth */
 	int					  select;			  
-	int					  num_r;			  /**< relaxation varaibales :ŠÉ˜a•Ï””H*/
-	BIT_INT* edge;			                  //•Ó‚ªŒq‚ª‚Á‚Ä‚¢‚é‚©‚ðŽ¦‚·(edge==1‚È‚çŒq‚ª‚Á‚Ä‚¢‚é)
+	int					  num_r;			  /**< relaxation varaibales :ç·©å’Œå¤‰æ•°æ•°ï¼Ÿ*/
+	BIT_INT* edge;			                  //è¾ºãŒç¹‹ãŒã£ã¦ã„ã‚‹ã‹ã‚’ç¤ºã™(edge==1ãªã‚‰ç¹‹ãŒã£ã¦ã„ã‚‹)
 	struct CliqueNode* nextptr;				  /**< pointer to next node */
 }
 CNODE;

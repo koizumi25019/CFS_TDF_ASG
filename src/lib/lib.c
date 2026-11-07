@@ -1,4 +1,4 @@
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+Ôªø/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*																											 */
 /*	program		:	urashima																				 */
 /*	file		:	./src/lib/lib.c																	         */
@@ -22,9 +22,9 @@
 
 
 //*************************************************************************************************************
-//	@name		ÅFÅ@fileOpen
-//	@function	ÅF	open the file
-//	@return		ÅF	(void)
+//	@name		Ôºö„ÄÄfileOpen
+//	@function	Ôºö	open the file
+//	@return		Ôºö	(void)
 //*************************************************************************************************************
 void fileOpen(
 	FILE** fileptr,			  /**< pointer to file */
@@ -43,9 +43,9 @@ void fileOpen(
 }
 
 //*************************************************************************************************************
-//	@name		ÅFÅ@allocMemory
-//	@function	ÅF	allocate the memory
-//	@return		ÅF	(void*) pointer to allocated the memory
+//	@name		Ôºö„ÄÄallocMemory
+//	@function	Ôºö	allocate the memory
+//	@return		Ôºö	(void*) pointer to allocated the memory
 //*************************************************************************************************************
 void* allocMemory(
 	size_t			      count,			  /**< number of counts of alloc memory */
@@ -69,9 +69,9 @@ void* allocMemory(
 }
 
 //*************************************************************************************************************
-//	@name		ÅFÅ@calcHash
-//	@function	ÅF	calculate the hash value
-//	@return		ÅF	(int) hash value
+//	@name		Ôºö„ÄÄcalcHash
+//	@function	Ôºö	calculate the hash value
+//	@return		Ôºö	(int) hash value
 //*************************************************************************************************************
 int calcHash(
 	char* buffer			  /** buffer */
@@ -92,9 +92,9 @@ int calcHash(
 }
 
 //*************************************************************************************************************
-//	@name		ÅFÅ@stackPUSH
-//	@function	ÅF	push the netlist in stack
-//	@return		ÅF	(viod)
+//	@name		Ôºö„ÄÄstackPUSH
+//	@function	Ôºö	push the netlist in stack
+//	@return		Ôºö	(viod)
 //*************************************************************************************************************
 //void stackPUSH(
 //	NLIST* netptr			  /** pointer to netlist */
@@ -117,9 +117,9 @@ int calcHash(
 //}
 
 //*************************************************************************************************************
-//	@name		ÅFÅ@stackPOP
-//	@function	ÅF	pop the netlist from stack
-//	@return		ÅF	(NLIST*) pointer to netlist
+//	@name		Ôºö„ÄÄstackPOP
+//	@function	Ôºö	pop the netlist from stack
+//	@return		Ôºö	(NLIST*) pointer to netlist
 //*************************************************************************************************************
 //NLIST* stackPOP(
 //	void
@@ -140,9 +140,9 @@ int calcHash(
 //}
 
 //*************************************************************************************************************
-//	@name		ÅFÅ@queENQ
-//	@function	ÅF	enqueue the netlist to queue
-//	@return		ÅF	(void)
+//	@name		Ôºö„ÄÄqueENQ
+//	@function	Ôºö	enqueue the netlist to queue
+//	@return		Ôºö	(void)
 //*************************************************************************************************************
 //void queENQ(
 //	NLIST* netptr,			  /** pointer to netlist */
@@ -223,9 +223,9 @@ int calcHash(
 //}
 //
 ////*************************************************************************************************************
-////	@name		ÅFÅ@queDEQ
-////	@function	ÅF	dequeue the netlist from queue
-////	@return		ÅF	(NLIST*) pointer to nelist
+////	@name		Ôºö„ÄÄqueDEQ
+////	@function	Ôºö	dequeue the netlist from queue
+////	@return		Ôºö	(NLIST*) pointer to nelist
 ////*************************************************************************************************************
 //NLIST* queDEQ(
 //	void
@@ -256,10 +256,10 @@ int calcHash(
 //}
 //
 ////=========================================================================
-////  ä÷êîñº : queue_emp
-////  ã@  î\ : ÉXÉ^ÉbÉNÇ™ãÛÇ©îªíË
-////  ñﬂÇËíl : 0Åiñ≥ÅjÅC1ÅióLÅj
-////  à¯  êî : Ç»Çµ
+////  Èñ¢Êï∞Âêç : queue_emp
+////  Ê©ü  ËÉΩ : „Çπ„Çø„ÉÉ„ÇØ„ÅåÁ©∫„ÅãÂà§ÂÆö
+////  Êàª„ÇäÂÄ§ : 0ÔºàÁÑ°ÔºâÔºå1ÔºàÊúâÔºâ
+////  Âºï  Êï∞ : „Å™„Åó
 ////=========================================================================
 //int queue_emp() {
 //
@@ -272,9 +272,9 @@ int calcHash(
 //}
 
 //*************************************************************************************************************
-//	@name		ÅFÅ@bitintSetAll_One
-//	@function	ÅF	set the all-bits to one
-//	@return		ÅF	(void)
+//	@name		Ôºö„ÄÄbitintSetAll_One
+//	@function	Ôºö	set the all-bits to one
+//	@return		Ôºö	(void)
 //*************************************************************************************************************
 void bitintSetAll_One(
 	BIT_INT* bitint			  /** bit int */
@@ -290,9 +290,9 @@ void bitintSetAll_One(
 }
 
 //*************************************************************************************************************
-//	@name		ÅFÅ@bitintSetAll_Zero
-//	@function	ÅF	set the all-bits to zero
-//	@return		ÅF	(void)
+//	@name		Ôºö„ÄÄbitintSetAll_Zero
+//	@function	Ôºö	set the all-bits to zero
+//	@return		Ôºö	(void)
 //*************************************************************************************************************
 void bitintSetAll_Zero(
 	BIT_INT* bitint			  /** bit int */
@@ -308,9 +308,9 @@ void bitintSetAll_Zero(
 }
 
 //*************************************************************************************************************
-//	@name		ÅFÅ@bitintSetNbit_One
-//	@function	ÅF	set the n-bits to one
-//	@return		ÅF	(void)
+//	@name		Ôºö„ÄÄbitintSetNbit_One
+//	@function	Ôºö	set the n-bits to one
+//	@return		Ôºö	(void)
 //*************************************************************************************************************
 void bitintSetNbit_One(
 	BIT_INT* bitint,			  /** bit int */
@@ -327,9 +327,9 @@ void bitintSetNbit_One(
 }
 
 //*************************************************************************************************************
-//	@name		ÅFÅ@bitintSetNbit_Zero
-//	@function	ÅF	set the n-bits to zero
-//	@return		ÅF	(void)
+//	@name		Ôºö„ÄÄbitintSetNbit_Zero
+//	@function	Ôºö	set the n-bits to zero
+//	@return		Ôºö	(void)
 //*************************************************************************************************************
 void bitintSetNbit_Zero(
 	BIT_INT* bitint,			  /** bit int */
@@ -346,9 +346,9 @@ void bitintSetNbit_Zero(
 }
 
 //*************************************************************************************************************
-//	@name		ÅFÅ@bitintGetNbit
-//	@function	ÅF	get the n-bit
-//	@return		ÅF	(void)
+//	@name		Ôºö„ÄÄbitintGetNbit
+//	@function	Ôºö	get the n-bit
+//	@return		Ôºö	(void)
 //*************************************************************************************************************
 unsigned int bitintGetNbit(
 	BIT_INT* bitint,			  /** bit int */
@@ -399,9 +399,9 @@ unsigned int bitintGetNbit(
 }
 
 //*************************************************************************************************************
-//	@name		ÅFÅ@isSingleByte
-//	@function	ÅF	determines if single-byte characters are used
-//	@return		ÅF	(bool) true, false
+//	@name		Ôºö„ÄÄisSingleByte
+//	@function	Ôºö	determines if single-byte characters are used
+//	@return		Ôºö	(bool) true, false
 //*************************************************************************************************************
 bool isSingleByte(
 	int					  c					  /** characters */
@@ -416,10 +416,10 @@ bool isSingleByte(
 }
 
 //------------------------------------------------------------------------
-//  ä÷êîñº : All_INT_One_XP
-//  ã@  î\ : ëSÉrÉbÉgÇ1Ç…ÉZÉbÉg( flag=1 )
-//  ñﬂÇËíl : Ç»Çµ
-//  à¯  êî : É|ÉCÉìÉ^îzóÒ(ÉtÉâÉOäiî[êÊ)
+//  Èñ¢Êï∞Âêç : All_INT_One_XP
+//  Ê©ü  ËÉΩ : ÂÖ®„Éì„ÉÉ„Éà„Çí1„Å´„Çª„ÉÉ„Éà( flag=1 )
+//  Êàª„ÇäÂÄ§ : „Å™„Åó
+//  Âºï  Êï∞ : „Éù„Ç§„É≥„ÇøÈÖçÂàó(„Éï„É©„Ç∞Ê†ºÁ¥çÂÖà)
 //------------------------------------------------------------------------
 void All_INT_One_XP(BIT_INT_XP* all_one)
 {
@@ -435,10 +435,10 @@ void All_INT_One_XP(BIT_INT_XP* all_one)
 
 
 //------------------------------------------------------------------------
-//  ä÷êîñº : All_INT_Zero_XP
-//  ã@  î\ : ëSÉrÉbÉgÇ0Ç…ÉZÉbÉg( flag=0 )
-//  ñﬂÇËíl : Ç»Çµ
-//  à¯  êî : É|ÉCÉìÉ^îzóÒ(ÉtÉâÉOäiî[êÊ)
+//  Èñ¢Êï∞Âêç : All_INT_Zero_XP
+//  Ê©ü  ËÉΩ : ÂÖ®„Éì„ÉÉ„Éà„Çí0„Å´„Çª„ÉÉ„Éà( flag=0 )
+//  Êàª„ÇäÂÄ§ : „Å™„Åó
+//  Âºï  Êï∞ : „Éù„Ç§„É≥„ÇøÈÖçÂàó(„Éï„É©„Ç∞Ê†ºÁ¥çÂÖà)
 //------------------------------------------------------------------------
 void All_INT_Zero_XP(BIT_INT_XP* all_zero)
 {
@@ -453,10 +453,10 @@ void All_INT_Zero_XP(BIT_INT_XP* all_zero)
 
 
 //------------------------------------------------------------------------
-//  ä÷êîñº : All_Bit_X_XP
-//  ã@  î\ : ëSÉrÉbÉgÇX(ÉhÉìÉgÉPÉA)Ç…ÉZÉbÉg( XÉoÉbÉtÉ@=0 ,PÉoÉbÉtÉ@=0 )
-//  ñﬂÇËíl : Ç»Çµ
-//  à¯  êî : É|ÉCÉìÉ^îzóÒ(ÉeÉXÉgÉpÉ^Å[Éìäiî[êÊ)
+//  Èñ¢Êï∞Âêç : All_Bit_X_XP
+//  Ê©ü  ËÉΩ : ÂÖ®„Éì„ÉÉ„Éà„ÇíX(„Éâ„É≥„Éà„Ç±„Ç¢)„Å´„Çª„ÉÉ„Éà( X„Éê„ÉÉ„Éï„Ç°=0 ,P„Éê„ÉÉ„Éï„Ç°=0 )
+//  Êàª„ÇäÂÄ§ : „Å™„Åó
+//  Âºï  Êï∞ : „Éù„Ç§„É≥„ÇøÈÖçÂàó(„ÉÜ„Çπ„Éà„Éë„Çø„Éº„É≥Ê†ºÁ¥çÂÖà)
 //------------------------------------------------------------------------
 void All_Bit_X_XP(BIT_INT_XP* all_x)
 {
@@ -471,10 +471,10 @@ void All_Bit_X_XP(BIT_INT_XP* all_x)
 
 
 //------------------------------------------------------------------------
-//  ä÷êîñº : Set_NINT_One_XP
-//  ã@  î\ : éwíËÉrÉbÉgñ⁄Ç…1ÇÉZÉbÉg
-//  ñﬂÇËíl : Ç»Çµ
-//  à¯  êî : É|ÉCÉìÉ^îzóÒ, éwíËÉrÉbÉgêî
+//  Èñ¢Êï∞Âêç : Set_NINT_One_XP
+//  Ê©ü  ËÉΩ : ÊåáÂÆö„Éì„ÉÉ„ÉàÁõÆ„Å´1„Çí„Çª„ÉÉ„Éà
+//  Êàª„ÇäÂÄ§ : „Å™„Åó
+//  Âºï  Êï∞ : „Éù„Ç§„É≥„ÇøÈÖçÂàó, ÊåáÂÆö„Éì„ÉÉ„ÉàÊï∞
 //------------------------------------------------------------------------
 void Set_NINT_One_XP(BIT_INT_XP* one_set, unsigned int pi_num) {
 
@@ -484,10 +484,10 @@ void Set_NINT_One_XP(BIT_INT_XP* one_set, unsigned int pi_num) {
 
 
 //------------------------------------------------------------------------
-//  ä÷êîñº : Set_NINT_Zero_XP
-//  ã@  î\ : éwíËÉrÉbÉgñ⁄Ç…0ÇÉZÉbÉg
-//  ñﬂÇËíl : Ç»Çµ
-//  à¯  êî : É|ÉCÉìÉ^îzóÒ, éwíËÉrÉbÉgêî
+//  Èñ¢Êï∞Âêç : Set_NINT_Zero_XP
+//  Ê©ü  ËÉΩ : ÊåáÂÆö„Éì„ÉÉ„ÉàÁõÆ„Å´0„Çí„Çª„ÉÉ„Éà
+//  Êàª„ÇäÂÄ§ : „Å™„Åó
+//  Âºï  Êï∞ : „Éù„Ç§„É≥„ÇøÈÖçÂàó, ÊåáÂÆö„Éì„ÉÉ„ÉàÊï∞
 //------------------------------------------------------------------------
 void Set_NINT_Zero_XP(BIT_INT_XP* zero_set, unsigned int pi_num) {
 
@@ -497,10 +497,10 @@ void Set_NINT_Zero_XP(BIT_INT_XP* zero_set, unsigned int pi_num) {
 
 
 //------------------------------------------------------------------------
-//  ä÷êîñº : Set_NBit_X_XP
-//  ã@  î\ : éwíËÉrÉbÉgñ⁄Ç…XÇÉZÉbÉg( XÉoÉbÉtÉ@=1 ,PÉoÉbÉtÉ@=1 )
-//  ñﬂÇËíl : Ç»Çµ
-//  à¯  êî : É|ÉCÉìÉ^îzóÒ(ÉeÉXÉgÉpÉ^Å[Éìäiî[êÊ), éwíËÉrÉbÉgêî
+//  Èñ¢Êï∞Âêç : Set_NBit_X_XP
+//  Ê©ü  ËÉΩ : ÊåáÂÆö„Éì„ÉÉ„ÉàÁõÆ„Å´X„Çí„Çª„ÉÉ„Éà( X„Éê„ÉÉ„Éï„Ç°=1 ,P„Éê„ÉÉ„Éï„Ç°=1 )
+//  Êàª„ÇäÂÄ§ : „Å™„Åó
+//  Âºï  Êï∞ : „Éù„Ç§„É≥„ÇøÈÖçÂàó(„ÉÜ„Çπ„Éà„Éë„Çø„Éº„É≥Ê†ºÁ¥çÂÖà), ÊåáÂÆö„Éì„ÉÉ„ÉàÊï∞
 //------------------------------------------------------------------------
 void Set_NBit_X_XP(BIT_INT_XP* x_set, unsigned int pi_num)
 {
@@ -512,19 +512,19 @@ void Set_NBit_X_XP(BIT_INT_XP* x_set, unsigned int pi_num)
 
 
 //------------------------------------------------------------------------
-//  ä÷êîñº : Get_NBit_INT_XP
-//  ã@  î\ : éwíËÉrÉbÉgÇÃílÇìæÇÈ( 0 or 1 or X ?)
-//  ñﬂÇËíl : äiî[íl( 0 or 1 or X )
-//  à¯  êî : É|ÉCÉìÉ^îzóÒ, éwíËÉrÉbÉgêî
+//  Èñ¢Êï∞Âêç : Get_NBit_INT_XP
+//  Ê©ü  ËÉΩ : ÊåáÂÆö„Éì„ÉÉ„Éà„ÅÆÂÄ§„ÇíÂæó„Çã( 0 or 1 or X ?)
+//  Êàª„ÇäÂÄ§ : Ê†ºÁ¥çÂÄ§( 0 or 1 or X )
+//  Âºï  Êï∞ : „Éù„Ç§„É≥„ÇøÈÖçÂàó, ÊåáÂÆö„Éì„ÉÉ„ÉàÊï∞
 //------------------------------------------------------------------------
 unsigned int  Get_NBit_INT_XP(BIT_INT_XP* get_n, unsigned int pi_num) {
 
-	// éwíËÉrÉbÉgÇÃíTçı
+	// ÊåáÂÆö„Éì„ÉÉ„Éà„ÅÆÊé¢Á¥¢
 	//=======================================================================
 	if ((pi_num % (8 * sizeof(unsigned int))) == 0) {
 		//=======================================================================
 		if (pi_num == 0) {
-			// éwíËÉrÉbÉgÇÃíÜêgÇämîF(0, 1)
+			// ÊåáÂÆö„Éì„ÉÉ„Éà„ÅÆ‰∏≠Ë∫´„ÇíÁ¢∫Ë™ç(0, 1)
 			if ((get_n->x_buf[0] & MASK_INT[0]) == 0 && (get_n->p_buf[0] & MASK_INT[0]) != 0)	return 0; // (x_buf=0 , p_buf=1)
 
 			else if ((get_n->x_buf[0] & MASK_INT[0]) != 0 && (get_n->p_buf[0] & MASK_INT[0]) == 0) return 1; // (x_buf=1 , p_buf=0)
@@ -532,13 +532,13 @@ unsigned int  Get_NBit_INT_XP(BIT_INT_XP* get_n, unsigned int pi_num) {
 			else if ((get_n->x_buf[0] & MASK_INT[0]) != 0 && (get_n->p_buf[0] & MASK_INT[0]) != 0)return 3; // (x_buf=1 , p_buf=1)
 
 			else {
-				printf("äiî[ ERROR\n");
+				printf("Ê†ºÁ¥ç ERROR\n");
 				exit(-1);
 			}
 		}
 		//=======================================================================
 		else {
-			// éwíËÉrÉbÉgÇÃíÜêgÇämîF(0, 1)
+			// ÊåáÂÆö„Éì„ÉÉ„Éà„ÅÆ‰∏≠Ë∫´„ÇíÁ¢∫Ë™ç(0, 1)
 			if ((get_n->x_buf[pi_num / (8 * sizeof(unsigned int))] & MASK_INT[0]) == 0 && (get_n->p_buf[pi_num / (8 * sizeof(unsigned int))] & MASK_INT[0]) != 0) return 0; // (x_buf=0 , p_buf=1)
 
 			else if ((get_n->x_buf[pi_num / (8 * sizeof(unsigned int))] & MASK_INT[0]) != 0 && (get_n->p_buf[pi_num / (8 * sizeof(unsigned int))] & MASK_INT[0]) == 0) return 1; // (x_buf=1 , p_buf=0)
@@ -546,7 +546,7 @@ unsigned int  Get_NBit_INT_XP(BIT_INT_XP* get_n, unsigned int pi_num) {
 			else if ((get_n->x_buf[pi_num / (8 * sizeof(unsigned int))] & MASK_INT[0]) != 0 && (get_n->p_buf[pi_num / (8 * sizeof(unsigned int))] & MASK_INT[0]) != 0) return 3; // (x_buf=1 , p_buf=1)
 
 			else {
-				printf("äiî[ ERROR\n");
+				printf("Ê†ºÁ¥ç ERROR\n");
 				exit(-1);
 			}
 		}
@@ -554,7 +554,7 @@ unsigned int  Get_NBit_INT_XP(BIT_INT_XP* get_n, unsigned int pi_num) {
 	}
 	//=======================================================================
 	else {
-		// éwíËÉrÉbÉgÇÃíÜêgÇämîF(0, 1)
+		// ÊåáÂÆö„Éì„ÉÉ„Éà„ÅÆ‰∏≠Ë∫´„ÇíÁ¢∫Ë™ç(0, 1)
 		if ((get_n->x_buf[(pi_num / (8 * sizeof(unsigned int)))] & MASK_INT[pi_num % (8 * sizeof(unsigned long long int))]) == 0 && (get_n->p_buf[(pi_num / (8 * sizeof(unsigned int)))] & MASK_INT[pi_num % (8 * sizeof(unsigned int))]) != 0) return 0; // (x_buf=0 , p_buf=1)
 
 		else if ((get_n->x_buf[(pi_num / (8 * sizeof(unsigned int)))] & MASK_INT[pi_num % (8 * sizeof(unsigned long long int))]) != 0 && (get_n->p_buf[(pi_num / (8 * sizeof(unsigned int)))] & MASK_INT[pi_num % (8 * sizeof(unsigned int))]) == 0) return 1; // (x_buf=1 , p_buf=0)
@@ -562,7 +562,7 @@ unsigned int  Get_NBit_INT_XP(BIT_INT_XP* get_n, unsigned int pi_num) {
 		else if ((get_n->x_buf[(pi_num / (8 * sizeof(unsigned int)))] & MASK_INT[pi_num % (8 * sizeof(unsigned long long int))]) != 0 && (get_n->p_buf[(pi_num / (8 * sizeof(unsigned int)))] & MASK_INT[pi_num % (8 * sizeof(unsigned int))]) != 0) return 3; // (x_buf=1 , p_buf=1)
 
 		else {
-			printf("äiî[ ERROR\n");
+			printf("Ê†ºÁ¥ç ERROR\n");
 			exit(-1);
 		}
 	}
@@ -572,37 +572,37 @@ unsigned int  Get_NBit_INT_XP(BIT_INT_XP* get_n, unsigned int pi_num) {
 
 
 //------------------------------------------------------------------------
-//  ä÷êîñº : Get_NBit_Xbuf
-//  ã@  î\ : XÉoÉbÉtÉ@ÇÃÇ›ÇÃéwíËÉrÉbÉgÇÃílÇìæÇÈ( 0 or 1 ?)
-//  ñﬂÇËíl : äiî[íl( 0 or 1 )
-//  à¯  êî : É|ÉCÉìÉ^îzóÒ(ÉeÉXÉgÉpÉ^Å[Éìäiî[êÊ), éwíËÉrÉbÉgêî
+//  Èñ¢Êï∞Âêç : Get_NBit_Xbuf
+//  Ê©ü  ËÉΩ : X„Éê„ÉÉ„Éï„Ç°„ÅÆ„Åø„ÅÆÊåáÂÆö„Éì„ÉÉ„Éà„ÅÆÂÄ§„ÇíÂæó„Çã( 0 or 1 ?)
+//  Êàª„ÇäÂÄ§ : Ê†ºÁ¥çÂÄ§( 0 or 1 )
+//  Âºï  Êï∞ : „Éù„Ç§„É≥„ÇøÈÖçÂàó(„ÉÜ„Çπ„Éà„Éë„Çø„Éº„É≥Ê†ºÁ¥çÂÖà), ÊåáÂÆö„Éì„ÉÉ„ÉàÊï∞
 //------------------------------------------------------------------------
 unsigned int  Get_NBit_Xbuf(BIT_INT_XP* get_n, unsigned int pi_num)
 {
 
-	// éwíËÉrÉbÉgÇÃíTçı
+	// ÊåáÂÆö„Éì„ÉÉ„Éà„ÅÆÊé¢Á¥¢
 	if ((pi_num % (8 * sizeof(unsigned int))) == 0) {
 		//====================================================================
 		if (pi_num == 0) {
-			// éwíËÉrÉbÉgÇÃíÜêgÇämîF(0, 1)
+			// ÊåáÂÆö„Éì„ÉÉ„Éà„ÅÆ‰∏≠Ë∫´„ÇíÁ¢∫Ë™ç(0, 1)
 			if ((get_n->x_buf[0] & MASK_INT[0]) == 0) return 0; // (x_buf=0)
 
 			else if ((get_n->x_buf[0] & MASK_INT[0]) != 0) return 1; // (x_buf=1)
 
 			else {
-				printf("TPäiî[ ERROR\n");
+				printf("TPÊ†ºÁ¥ç ERROR\n");
 				exit(-1);
 			}
 		}
 		//====================================================================
 		else {
-			// éwíËÉrÉbÉgÇÃíÜêgÇämîF(0, 1)
+			// ÊåáÂÆö„Éì„ÉÉ„Éà„ÅÆ‰∏≠Ë∫´„ÇíÁ¢∫Ë™ç(0, 1)
 			if ((get_n->x_buf[pi_num / (8 * sizeof(unsigned int))] & MASK_INT[0]) == 0) return 0; // (x_buf=0)
 
 			else if ((get_n->x_buf[pi_num / (8 * sizeof(unsigned int))] & MASK_INT[0]) != 0) return 1; // (x_buf=1)
 
 			else {
-				printf("TPäiî[ ERROR\n");
+				printf("TPÊ†ºÁ¥ç ERROR\n");
 				exit(-1);
 			}
 		}
@@ -610,31 +610,31 @@ unsigned int  Get_NBit_Xbuf(BIT_INT_XP* get_n, unsigned int pi_num)
 	}
 	//====================================================================
 	else {
-		// éwíËÉrÉbÉgÇÃíÜêgÇämîF(0, 1)
+		// ÊåáÂÆö„Éì„ÉÉ„Éà„ÅÆ‰∏≠Ë∫´„ÇíÁ¢∫Ë™ç(0, 1)
 		if ((get_n->x_buf[(pi_num / (8 * sizeof(unsigned int)))] & MASK_INT[pi_num % (8 * sizeof(unsigned int))]) == 0) return 0; // (x_buf=0)
 
 		else if ((get_n->x_buf[(pi_num / (8 * sizeof(unsigned int)))] & MASK_INT[pi_num % (8 * sizeof(unsigned int))]) != 0) return 1; // (x_buf=1)
 
 		else {
-			printf("TPäiî[ ERROR\n");
+			printf("TPÊ†ºÁ¥ç ERROR\n");
 			exit(-1);
 		}
 	}
 }
 //------------------------------------------------------------------------
-//  ä÷êîñº : Get_NBit_XP
-//  ã@  î\ : éwíËÉrÉbÉgÇÃílÇìæÇÈ(xbuf,pbuf)
-//  ñﬂÇËíl : äiî[íl( 0 or 1 or 2 or 3 )
-//  à¯  êî : É|ÉCÉìÉ^îzóÒ, éwíËÉrÉbÉgêî
+//  Èñ¢Êï∞Âêç : Get_NBit_XP
+//  Ê©ü  ËÉΩ : ÊåáÂÆö„Éì„ÉÉ„Éà„ÅÆÂÄ§„ÇíÂæó„Çã(xbuf,pbuf)
+//  Êàª„ÇäÂÄ§ : Ê†ºÁ¥çÂÄ§( 0 or 1 or 2 or 3 )
+//  Âºï  Êï∞ : „Éù„Ç§„É≥„ÇøÈÖçÂàó, ÊåáÂÆö„Éì„ÉÉ„ÉàÊï∞
 //------------------------------------------------------------------------
 unsigned int  Get_NBit_XP(BIT_INT_XP* get_n, unsigned int pi_num) {
 
-	// éwíËÉrÉbÉgÇÃíTçı
+	// ÊåáÂÆö„Éì„ÉÉ„Éà„ÅÆÊé¢Á¥¢
 	//=======================================================================
 	if ((pi_num % (8 * sizeof(unsigned int))) == 0) {
 		//=======================================================================
 		if (pi_num == 0) {
-			// éwíËÉrÉbÉgÇÃíÜêgÇämîF(0, 1)
+			// ÊåáÂÆö„Éì„ÉÉ„Éà„ÅÆ‰∏≠Ë∫´„ÇíÁ¢∫Ë™ç(0, 1)
 			if ((get_n->x_buf[0] & MASK_INT[0]) == 0 && (get_n->p_buf[0] & MASK_INT[0]) == 0)	return 0; // (x_buf=0 , p_buf=0)
 
 			else if ((get_n->x_buf[0] & MASK_INT[0]) == 0 && (get_n->p_buf[0] & MASK_INT[0]) != 0)	return 1; // (x_buf=0 , p_buf=1)
@@ -644,13 +644,13 @@ unsigned int  Get_NBit_XP(BIT_INT_XP* get_n, unsigned int pi_num) {
 			else if ((get_n->x_buf[0] & MASK_INT[0]) != 0 && (get_n->p_buf[0] & MASK_INT[0]) != 0)return 3; // (x_buf=1 , p_buf=1)
 
 			else {
-				printf("äiî[ ERROR\n");
+				printf("Ê†ºÁ¥ç ERROR\n");
 				exit(-1);
 			}
 		}
 		//=======================================================================
 		else {
-			// éwíËÉrÉbÉgÇÃíÜêgÇämîF(0, 1)
+			// ÊåáÂÆö„Éì„ÉÉ„Éà„ÅÆ‰∏≠Ë∫´„ÇíÁ¢∫Ë™ç(0, 1)
 			if ((get_n->x_buf[pi_num / (8 * sizeof(unsigned int))] & MASK_INT[0]) == 0 && (get_n->p_buf[pi_num / (8 * sizeof(unsigned int))] & MASK_INT[0]) == 0) return 0; // (x_buf=0 , p_buf=0)
 
 			else if ((get_n->x_buf[pi_num / (8 * sizeof(unsigned int))] & MASK_INT[0]) == 0 && (get_n->p_buf[pi_num / (8 * sizeof(unsigned int))] & MASK_INT[0]) != 0) return 1; // (x_buf=0 , p_buf=1)
@@ -660,7 +660,7 @@ unsigned int  Get_NBit_XP(BIT_INT_XP* get_n, unsigned int pi_num) {
 			else if ((get_n->x_buf[pi_num / (8 * sizeof(unsigned int))] & MASK_INT[0]) != 0 && (get_n->p_buf[pi_num / (8 * sizeof(unsigned int))] & MASK_INT[0]) != 0) return 3; // (x_buf=1 , p_buf=1)
 
 			else {
-				printf("äiî[ ERROR\n");
+				printf("Ê†ºÁ¥ç ERROR\n");
 				exit(-1);
 			}
 		}
@@ -668,7 +668,7 @@ unsigned int  Get_NBit_XP(BIT_INT_XP* get_n, unsigned int pi_num) {
 	}
 	//=======================================================================
 	else {
-		// éwíËÉrÉbÉgÇÃíÜêgÇämîF(0, 1)
+		// ÊåáÂÆö„Éì„ÉÉ„Éà„ÅÆ‰∏≠Ë∫´„ÇíÁ¢∫Ë™ç(0, 1)
 		if ((get_n->x_buf[(pi_num / (8 * sizeof(unsigned int)))] & MASK_INT[pi_num % (8 * sizeof(unsigned int))]) == 0 && (get_n->p_buf[(pi_num / (8 * sizeof(unsigned int)))] & MASK_INT[pi_num % (8 * sizeof(unsigned int))]) == 0) return 0; // (x_buf=0 , p_buf=0)
 
 		else if ((get_n->x_buf[(pi_num / (8 * sizeof(unsigned int)))] & MASK_INT[pi_num % (8 * sizeof(unsigned int))]) == 0 && (get_n->p_buf[(pi_num / (8 * sizeof(unsigned int)))] & MASK_INT[pi_num % (8 * sizeof(unsigned int))]) != 0) return 1; // (x_buf=0 , p_buf=1)
@@ -678,7 +678,7 @@ unsigned int  Get_NBit_XP(BIT_INT_XP* get_n, unsigned int pi_num) {
 		else if ((get_n->x_buf[(pi_num / (8 * sizeof(unsigned int)))] & MASK_INT[pi_num % (8 * sizeof(unsigned int))]) != 0 && (get_n->p_buf[(pi_num / (8 * sizeof(unsigned int)))] & MASK_INT[pi_num % (8 * sizeof(unsigned int))]) != 0) return 3; // (x_buf=1 , p_buf=1)
 
 		else {
-			printf("äiî[ ERROR\n");
+			printf("Ê†ºÁ¥ç ERROR\n");
 			exit(-1);
 		}
 	}

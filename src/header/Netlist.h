@@ -1,16 +1,16 @@
-//------------------------------------------------------------------------
-//Netlist ’è‹`, ŠO•”•Ï”, ƒvƒƒgƒ^ƒCƒvéŒ¾
+ï»¿//------------------------------------------------------------------------
+//Netlist å®šç¾©, å¤–éƒ¨å¤‰æ•°, ãƒ—ãƒ­ãƒˆã‚¿ã‚¤ãƒ—å®£è¨€
 //File name : Nelist.h
 //Date : 2006/03/26
 //Designer : R.Inoue
-//Ver : 3.00i”z•zVerj
+//Ver : 3.00ï¼ˆé…å¸ƒVerï¼‰
 //------------------------------------------------------------------------
 #pragma once
 #include<stdbool.h>
 //------------------------------------------------------------------------
-// ’è‹`
+// å®šç¾©
 //------------------------------------------------------------------------
-//ƒQ[ƒgƒ^ƒCƒv
+//ã‚²ãƒ¼ãƒˆã‚¿ã‚¤ãƒ—
 #define  IN		0
 #define  BUF    10
 #define  INV	11
@@ -18,46 +18,46 @@
 #define  NAND	13
 #define  OR		14
 #define  NOR	15
-#define  EXOR	16 //2“ü—Í‚Ì‚İ‰Â
-#define  EXNOR	17 //2“ü—Í‚Ì‚İ‰Â
+#define  EXOR	16 //2å…¥åŠ›ã®ã¿å¯
+#define  EXNOR	17 //2å…¥åŠ›ã®ã¿å¯
 #define  FOUT	18
-#define  DFF	19 //D-ƒtƒŠƒbƒvƒtƒƒbƒv
-#define  RDFF	21 //D-ƒtƒŠƒbƒvƒtƒƒbƒviƒŠƒZƒbƒg—Lj
-#define  DFFS	23 //D-ƒXƒLƒƒƒ“ƒtƒŠƒbƒvƒtƒƒbƒv
-#define  RDFFS	24 //D-ƒXƒLƒƒƒ“ƒtƒŠƒbƒvƒtƒƒbƒviƒŠƒZƒbƒg—Lj
-#define  GND	25 //ƒOƒ‰ƒ“ƒh
-#define  ACC	26 //“dŒ¹
+#define  DFF	19 //D-ãƒ•ãƒªãƒƒãƒ—ãƒ•ãƒ­ãƒƒãƒ—
+#define  RDFF	21 //D-ãƒ•ãƒªãƒƒãƒ—ãƒ•ãƒ­ãƒƒãƒ—ï¼ˆãƒªã‚»ãƒƒãƒˆæœ‰ï¼‰
+#define  DFFS	23 //D-ã‚¹ã‚­ãƒ£ãƒ³ãƒ•ãƒªãƒƒãƒ—ãƒ•ãƒ­ãƒƒãƒ—
+#define  RDFFS	24 //D-ã‚¹ã‚­ãƒ£ãƒ³ãƒ•ãƒªãƒƒãƒ—ãƒ•ãƒ­ãƒƒãƒ—ï¼ˆãƒªã‚»ãƒƒãƒˆæœ‰ï¼‰
+#define  GND	25 //ã‚°ãƒ©ãƒ³ãƒ‰
+#define  ACC	26 //é›»æº
 
-//ƒlƒbƒgƒŠƒXƒg\‘¢‘Ì’è‹`
+//ãƒãƒƒãƒˆãƒªã‚¹ãƒˆæ§‹é€ ä½“å®šç¾©
 typedef struct _Netlist_Format_ {
-	char *name;						//–¼‘O
-	int n;							//IDiƒ†ƒj[ƒNj
-	int type;						//ƒ^ƒCƒv
-	int n_in;						//“ü—Í”
-	struct _Netlist_Format_ **in;	//“ü—Íƒ|ƒCƒ“ƒ^”z—ñ
-	int n_out;						//o—Í”
-	struct _Netlist_Format_ **out;	//o—Íƒ|ƒCƒ“ƒ^”z—ñ
-	char *name_port;				//’[q–¼ pin–¼
-	char *name_ins;					//ƒCƒ“ƒXƒ^ƒ“ƒX–¼
-	int level;						//ƒŒƒxƒ‹•t‚¯
+	char *name;						//åå‰
+	int n;							//IDï¼ˆãƒ¦ãƒ‹ãƒ¼ã‚¯ï¼‰
+	int type;						//ã‚¿ã‚¤ãƒ—
+	int n_in;						//å…¥åŠ›æ•°
+	struct _Netlist_Format_ **in;	//å…¥åŠ›ãƒã‚¤ãƒ³ã‚¿é…åˆ—
+	int n_out;						//å‡ºåŠ›æ•°
+	struct _Netlist_Format_ **out;	//å‡ºåŠ›ãƒã‚¤ãƒ³ã‚¿é…åˆ—
+	char *name_port;				//ç«¯å­å pinå
+	char *name_ins;					//ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹å
+	int level;						//ãƒ¬ãƒ™ãƒ«ä»˜ã‘
 
-	int open_pass;					//ƒI[ƒvƒ“ƒpƒX
-	int fault_pass;					//ŒÌá“’B‰Â”\ƒpƒX
+	int open_pass;					//ã‚ªãƒ¼ãƒ—ãƒ³ãƒ‘ã‚¹
+	int fault_pass;					//æ•…éšœåˆ°é”å¯èƒ½ãƒ‘ã‚¹
 
-	int flag;					    //ƒtƒ‰ƒO
-	int ppo_flag;				    //‹[—ŠO•”o—Íƒtƒ‰ƒO
-	int tf_flag;					//–Ú•WŒÌáƒtƒ‰ƒO
+	int flag;					    //ãƒ•ãƒ©ã‚°
+	int ppo_flag;				    //æ“¬ä¼¼å¤–éƒ¨å‡ºåŠ›ãƒ•ãƒ©ã‚°
+	int tf_flag;					//ç›®æ¨™æ•…éšœãƒ•ãƒ©ã‚°
 
-	int val_1t;						//1–Ú‚Ì˜_—’l
-	int val_2t;						//2–Ú‚Ì˜_—’l
+	int val_1t;						//1æ™‚åˆ»ç›®ã®è«–ç†å€¤
+	int val_2t;						//2æ™‚åˆ»ç›®ã®è«–ç†å€¤
 
-	unsigned int suf_1t;			//1–Ú‚Ìƒu[ƒ‹•Ï”
-	unsigned int suf_2t;			//2–Ú‚Ìƒu[ƒ‹•Ï”
-	unsigned int suf_fc;			//ŒÌá‰ñ˜H‚Ìƒu[ƒ‹•Ï”
-	//’Ç‰Á
-	unsigned int prop;              //ŒÌá“`”À•Ï”‚Ìƒu[ƒ‹•Ï”
+	unsigned int suf_1t;			//1æ™‚åˆ»ç›®ã®ãƒ–ãƒ¼ãƒ«å¤‰æ•°
+	unsigned int suf_2t;			//2æ™‚åˆ»ç›®ã®ãƒ–ãƒ¼ãƒ«å¤‰æ•°
+	unsigned int suf_fc;			//æ•…éšœå›è·¯ã®ãƒ–ãƒ¼ãƒ«å¤‰æ•°
+	//è¿½åŠ 
+	unsigned int prop;              //æ•…éšœä¼æ¬å¤‰æ•°ã®ãƒ–ãƒ¼ãƒ«å¤‰æ•°
 
-	//’Ç‰Á
+	//è¿½åŠ 
 	unsigned int	varsgc;			    /**< variables for good-circuit  */
 	unsigned int	varsfc;				/**< variables for faulty-circuit  */
 	char* consgc;						/**< constraints for good-circuit  */
@@ -66,46 +66,46 @@ typedef struct _Netlist_Format_ {
 } NLIST;
 
 //------------------------------------------------------------------------
-// ŠO•”•Ï”
+// å¤–éƒ¨å¤‰æ•°
 //------------------------------------------------------------------------
-//ƒlƒbƒgƒŠƒXƒg
+//ãƒãƒƒãƒˆãƒªã‚¹ãƒˆ
 NLIST *nl;
 
-//ƒ‚ƒWƒ…[ƒ‹–¼
+//ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å
 char *module_name;
 
-//M†”
+//ä¿¡å·æ•°
 int n_net;
 
-//ŠO•”“ü—Í”, ŠO•”“ü—Í
+//å¤–éƒ¨å…¥åŠ›æ•°, å¤–éƒ¨å…¥åŠ›
 NLIST **pi;
 int n_pi;
 
-//‹^—ŠO•”o—Í”, ‹^—ŠO•”o—Í
+//ç–‘ä¼¼å¤–éƒ¨å‡ºåŠ›æ•°, ç–‘ä¼¼å¤–éƒ¨å‡ºåŠ›
 NLIST **ppi;
 int n_ppi;
 
-//ŠO•”o—Í”, ŠO•”o—Í
+//å¤–éƒ¨å‡ºåŠ›æ•°, å¤–éƒ¨å‡ºåŠ›
 NLIST **po;
 int n_po;
 
-//‹^—ŠO•”o—Í”, ‹^—ŠO•”o—Í
+//ç–‘ä¼¼å¤–éƒ¨å‡ºåŠ›æ•°, ç–‘ä¼¼å¤–éƒ¨å‡ºåŠ›
 NLIST **ppo;
 int n_ppo;
 
-//DFF, DFF”
+//DFF, DFFæ•°
 NLIST **dff;
 int n_dff;
 
-//RDFF, RDFF”
+//RDFF, RDFFæ•°
 NLIST **rdff;
 int n_rdff;
 
-//DFFS, DFFS”
+//DFFS, DFFSæ•°
 NLIST **dffs;
 int n_dffs;
 
-//RDFFS, RDFFS”
+//RDFFS, RDFFSæ•°
 NLIST **rdffs;
 int n_rdffs;
 

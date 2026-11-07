@@ -1,4 +1,4 @@
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+ï»¿/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*																											 */
 /*	program		:	urashima																				 */
 /*	file		:	./src/lib/lib.h																	         */
@@ -166,31 +166,31 @@ bool isSingleByte(
 	int					  c					  /** characters */
 );
 
-//‘Sƒrƒbƒg‚ğ0‚ÉƒZƒbƒg
+//å…¨ãƒ“ãƒƒãƒˆã‚’0ã«ã‚»ãƒƒãƒˆ
 void All_INT_Zero_XP(BIT_INT_XP*);
 
-//‘Sƒrƒbƒg‚ğ1‚ÉƒZƒbƒg
+//å…¨ãƒ“ãƒƒãƒˆã‚’1ã«ã‚»ãƒƒãƒˆ
 void All_INT_One_XP(BIT_INT_XP*);
 
-//‘Sƒrƒbƒg‚ğX‚ÉƒZƒbƒg
+//å…¨ãƒ“ãƒƒãƒˆã‚’Xã«ã‚»ãƒƒãƒˆ
 void All_Bit_X_XP(BIT_INT_XP*);
 
-//w’èƒrƒbƒg–Ú‚ğ0‚ÉƒZƒbƒg
+//æŒ‡å®šãƒ“ãƒƒãƒˆç›®ã‚’0ã«ã‚»ãƒƒãƒˆ
 void Set_NINT_Zero_XP(BIT_INT_XP*, unsigned int);
 
-//w’èƒrƒbƒg–Ú‚ğ1‚ÉƒZƒbƒg
+//æŒ‡å®šãƒ“ãƒƒãƒˆç›®ã‚’1ã«ã‚»ãƒƒãƒˆ
 void Set_NINT_One_XP(BIT_INT_XP*, unsigned int);
 
-//w’èƒrƒbƒg–Ú‚ğX‚ÉƒZƒbƒg
+//æŒ‡å®šãƒ“ãƒƒãƒˆç›®ã‚’Xã«ã‚»ãƒƒãƒˆ
 void Set_NBit_X_XP(BIT_INT_XP*, unsigned int);
 
-//w’èƒrƒbƒg–Ú‚Ì’l‚ğƒQƒbƒg(0, 1)
+//æŒ‡å®šãƒ“ãƒƒãƒˆç›®ã®å€¤ã‚’ã‚²ãƒƒãƒˆ(0, 1)
 unsigned int  Get_NBit_INT_XP(BIT_INT_XP*, unsigned int);
 
-//Xƒoƒbƒtƒ@‚Ì‚İ‚Ìw’èƒrƒbƒg‚Ì’l‚ğ“¾‚é
+//Xãƒãƒƒãƒ•ã‚¡ã®ã¿ã®æŒ‡å®šãƒ“ãƒƒãƒˆã®å€¤ã‚’å¾—ã‚‹
 unsigned int  Get_NBit_Xbuf(BIT_INT_XP*, unsigned int);
 
-//w’èƒrƒbƒg‚Ì’l‚ğ“¾‚é(xbuf, pbuf)
+//æŒ‡å®šãƒ“ãƒƒãƒˆã®å€¤ã‚’å¾—ã‚‹(xbuf, pbuf)
 unsigned int  Get_NBit_XP(BIT_INT_XP* get_n, unsigned int pi_num);
 
 

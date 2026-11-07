@@ -1,4 +1,4 @@
-//-------------------------------------------------------------------------------------------------------------
+ï»¿//-------------------------------------------------------------------------------------------------------------
 //	include
 //-------------------------------------------------------------------------------------------------------------
 #include <string.h>
@@ -13,39 +13,39 @@
 //#include "../../debug/debug.h"
 
 //*************************************************************************************************************
-//	@name		F@AssigneVarsGC
-//	@function	F	assigne the variable for good-circuit
-//	@return		F	(void)
+//	@name		ï¼šã€€AssigneVarsGC
+//	@function	ï¼š	assigne the variable for good-circuit
+//	@return		ï¼š	(void)
 //*************************************************************************************************************
 void AssigneVarsGC(
 	void
 )
 {
-	/** for lfsr *///LFSR‚Ì‚½‚ß‚Ì•Ï”‚ğŠm•Û
-	//opb.constant.vars:‚±‚ê‚Ü‚Å‚ÉŠ„‚è“–‚Ä‚ç‚ê‚½•Ï”‚Ì‘”‚ğ•Û‚·‚éƒJƒEƒ“ƒ^[B‚Â‚Ü‚èbool_id‚É‘Š“–
-	//readdata.lfsrnet.num:LFSR‚ÌM†ü”
+	/** for lfsr *///LFSRã®ãŸã‚ã®å¤‰æ•°ã‚’ç¢ºä¿
+	//opb.constant.vars:ã“ã‚Œã¾ã§ã«å‰²ã‚Šå½“ã¦ã‚‰ã‚ŒãŸå¤‰æ•°ã®ç·æ•°ã‚’ä¿æŒã™ã‚‹ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼ã€‚ã¤ã¾ã‚Šbool_idã«ç›¸å½“
+	//readdata.lfsrnet.num:LFSRã®ä¿¡å·ç·šæ•°
 	opb.constant.vars += readdata.lfsrnet.num;
 
 	/** assigne the variable for primary inputs */
-	//ŠO•”“ü—Í‚É•Ï”ƒCƒ“ƒfƒbƒNƒX‚ğŠ„‚è“–‚Ä
+	//å¤–éƒ¨å…¥åŠ›ã«å¤‰æ•°ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’å‰²ã‚Šå½“ã¦
 	for (int i = 0; i < n_pi; i++) {
-		//pi[i]->varsgc:i”Ô–Ú‚ÌŠO•”“ü—ÍM†ü‚ÉŠ„‚è“–‚Ä‚ç‚ê‚½•Ï”ƒCƒ“ƒfƒbƒNƒX
+		//pi[i]->varsgc:iç•ªç›®ã®å¤–éƒ¨å…¥åŠ›ä¿¡å·ç·šã«å‰²ã‚Šå½“ã¦ã‚‰ã‚ŒãŸå¤‰æ•°ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
 		pi[i]->varsgc = ++opb.constant.vars;
-		//printf("x%d¨%s varsgc\n", pi[i]->varsgc, pi[i]->name);
+		//printf("x%dâ†’%s varsgc\n", pi[i]->varsgc, pi[i]->name);
 	}
-	//‹^—ŠO•”“ü—Í‚É•Ï”ƒCƒ“ƒfƒbƒNƒXŠ„“–‚Ä
+	//ç–‘ä¼¼å¤–éƒ¨å…¥åŠ›ã«å¤‰æ•°ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹å‰²å½“ã¦
 	for (int i = 0; i < n_ppi; i++) {
-		//pi[i]->varsgc:i”Ô–Ú‚Ì‹^—ŠO•”“ü—ÍM†ü‚ÉŠ„‚è“–‚Ä‚ç‚ê‚½•Ï”ƒCƒ“ƒfƒbƒNƒX
+		//pi[i]->varsgc:iç•ªç›®ã®ç–‘ä¼¼å¤–éƒ¨å…¥åŠ›ä¿¡å·ç·šã«å‰²ã‚Šå½“ã¦ã‚‰ã‚ŒãŸå¤‰æ•°ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
 		ppi[i]->varsgc = ++opb.constant.vars;
-		//printf("x%d¨%s varsgc\n", ppi[i]->varsgc, ppi[i]->name);
+		//printf("x%dâ†’%s varsgc\n", ppi[i]->varsgc, ppi[i]->name);
 	}
 	/** assigne the variable for others */
-	//‚»‚Ì‘¼‚ÌM†ü‚É•Ï”ƒCƒ“ƒfƒbƒNƒX‚ğŠ„‚è“–‚Ä
+	//ãã®ä»–ã®ä¿¡å·ç·šã«å¤‰æ•°ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’å‰²ã‚Šå½“ã¦
 	//for (int i = 0; i < n_net; i++)
 	//{
 	//	if (nl[i].varsgc == UNASSIGN)
 	//		nl[i].varsgc = ++opb.constant.vars;
-	//		printf("x%d¨%s varsgc\n", nl[i].varsgc, nl[i].name);
+	//		printf("x%dâ†’%s varsgc\n", nl[i].varsgc, nl[i].name);
 	//}
 
 	return;

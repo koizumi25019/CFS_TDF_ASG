@@ -1,4 +1,4 @@
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+Ôªø/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*																											 */
 /*	program		:	ASG																						 */
 /*	file		:	./src/asg/init/init.c																     */
@@ -20,9 +20,9 @@
 #include "./opb/opb.h"
 
 //*************************************************************************************************************
-//	@name		ÅFÅ@InitGlobalVars
-//	@function	ÅF	initialize the global variable
-//	@return		ÅF	(bool) okay, error 
+//	@name		Ôºö„ÄÄInitGlobalVars
+//	@function	Ôºö	initialize the global variable
+//	@return		Ôºö	(bool) okay, error 
 //*************************************************************************************************************
 bool InitGlobalVars(
 	void
@@ -45,9 +45,9 @@ bool InitGlobalVars(
 
 
 //*************************************************************************************************************
-//	@name		ÅFÅ@InitGlobalVarsOPB
-//	@function	ÅF	initialize the opb
-//	@return		ÅF	(void) 
+//	@name		Ôºö„ÄÄInitGlobalVarsOPB
+//	@function	Ôºö	initialize the opb
+//	@return		Ôºö	(void) 
 //*************************************************************************************************************
 void InitGlobalVarsOPB(
 	void
@@ -66,9 +66,9 @@ void InitGlobalVarsOPB(
 }
 
 //*************************************************************************************************************
-//	@name		ÅFÅ@InitGlobalVarsREADDATA
-//	@function	ÅF	initialize the reading data
-//	@return		ÅF	(void) 
+//	@name		Ôºö„ÄÄInitGlobalVarsREADDATA
+//	@function	Ôºö	initialize the reading data
+//	@return		Ôºö	(void) 
 //*************************************************************************************************************
 //void InitGlobalVarsREADDATA(
 //	void
@@ -88,9 +88,9 @@ void InitGlobalVarsOPB(
 //}
 
 //*************************************************************************************************************
-//	@name		ÅFÅ@InitGlobalVarsCLASP
-//	@function	ÅF	initialize the scip
-//	@return		ÅF	(void) 
+//	@name		Ôºö„ÄÄInitGlobalVarsCLASP
+//	@function	Ôºö	initialize the scip
+//	@return		Ôºö	(void) 
 //*************************************************************************************************************
 #if 1
 void InitGlobalVarsCLASP(

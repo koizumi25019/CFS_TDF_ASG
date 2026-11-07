@@ -1,35 +1,35 @@
-#pragma once
+ï»¿#pragma once
 #include"Netlist.h"
 #include"../lib/lib.h"
 
 //------------------------------------------------------------------------
-//–¢ŒŸoŒÌáW‡
+//æœªæ¤œå‡ºæ•…éšœé›†åˆ
 //------------------------------------------------------------------------
 typedef struct Undet_fault_list{
-	int type;						   //ŒÌáƒ^ƒCƒv(STF:1->0 or STR:0->1)
-	char name[256];					   //ŒÌáM†ü–¼
-	NLIST* netlist;	                   //ƒlƒbƒgƒŠƒXƒg
-	int node_id;                       //M†üID
-	int tfl_det_suffix;			       //–Ú•WŒÌá‚ÌŒÌáŒŸo‰ñ˜H‚Ìƒu[ƒ‹•Ï””Ô†
-	int tfl_suf_fc;                    //suf_fc‚Í–Ú•WŒÌá‚²‚Æ‚É•Ï‚í‚é‚Ì‚ÅŠi”[
-	int tfl_fc_ppo;					   //ŒÌá‰ñ˜H‚ÉŠÜ‚Ü‚ê‚éPPO”Zo
-	struct Undet_fault_list* next;	   //Œã‘±ƒAƒhƒŒƒX
-	//’Ç‰Á fromASG_read.h_FNODE\‘¢‘Ì
+	int type;						   //æ•…éšœã‚¿ã‚¤ãƒ—(STF:1->0 or STR:0->1)
+	char name[256];					   //æ•…éšœä¿¡å·ç·šå
+	NLIST* netlist;	                   //ãƒãƒƒãƒˆãƒªã‚¹ãƒˆ
+	int node_id;                       //ä¿¡å·ç·šID
+	int tfl_det_suffix;			       //ç›®æ¨™æ•…éšœæ™‚ã®æ•…éšœæ¤œå‡ºå›è·¯ã®ãƒ–ãƒ¼ãƒ«å¤‰æ•°ç•ªå·
+	int tfl_suf_fc;                    //suf_fcã¯ç›®æ¨™æ•…éšœã”ã¨ã«å¤‰ã‚ã‚‹ã®ã§æ ¼ç´
+	int tfl_fc_ppo;					   //æ•…éšœå›è·¯ã«å«ã¾ã‚Œã‚‹PPOæ•°ç®—å‡º
+	struct Undet_fault_list* next;	   //å¾Œç¶šã‚¢ãƒ‰ãƒ¬ã‚¹
+	//è¿½åŠ  fromASG_read.h_FNODEæ§‹é€ ä½“
 	char* string;                      //string
-	char* nece;						   //•K{Š„‚è“–‚Äî•ñƒtƒ@ƒCƒ‹‚ğ1s‚¸‚ÂŠi”[
+	char* nece;						   //å¿…é ˆå‰²ã‚Šå½“ã¦æƒ…å ±ãƒ•ã‚¡ã‚¤ãƒ«ã‚’1è¡Œãšã¤æ ¼ç´
 	BIT_INT_XP* necenet;			   //bit int necessary
 	BIT_INT* edge;				       //compatible edge
-	int n_edge;                        //Œq‚ª‚Á‚Ä‚¢‚é•Ó‚Ì”
-	//’Ç‰Á
-	//int resolving_count;               //ÄƒV[ƒh¶¬‰ñ”
+	int n_edge;                        //ç¹‹ãŒã£ã¦ã„ã‚‹è¾ºã®æ•°
+	//è¿½åŠ 
+	//int resolving_count;               //å†ã‚·ãƒ¼ãƒ‰ç”Ÿæˆå›æ•°
 }UNDET_FAULT_LIST;
 
 //------------------------------------------------------------------------
-//PBO‚ÌƒTƒCƒY
+//PBOã®ã‚µã‚¤ã‚º
 //------------------------------------------------------------------------
 typedef struct Size_Pbo{
-	int val;		  //•Ï”‚Ì”
-	int h_constraint; //§–ñ”
-	int s_constraint; //ƒ\ƒtƒg§–ñ”
-	int lit;		  //ƒŠƒeƒ‰ƒ‹”
+	int val;		  //å¤‰æ•°ã®æ•°
+	int h_constraint; //åˆ¶ç´„æ•°
+	int s_constraint; //ã‚½ãƒ•ãƒˆåˆ¶ç´„æ•°
+	int lit;		  //ãƒªãƒ†ãƒ©ãƒ«æ•°
 }PBO;

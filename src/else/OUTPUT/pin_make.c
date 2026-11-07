@@ -1,5 +1,5 @@
-//------------------------------------------------------------------------
-//ƒCƒ“ƒNƒ‹[ƒh
+ï»¿//------------------------------------------------------------------------
+//ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰
 //------------------------------------------------------------------------
 #include <stdio.h>
 #include <time.h>
@@ -7,39 +7,39 @@
 #include<string.h>
 
 //------------------------------------------------------------------------
-//©ìƒCƒ“ƒNƒ‹[ƒh
+//è‡ªä½œã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰
 //------------------------------------------------------------------------
 #include"../../header/Define.h"
 
 //===================================================
-//ŠÖ”–¼:pin_make
-//‹@”\:PINƒtƒ@ƒCƒ‹ì¬
-//–ß‚è’lFint ³íI—¹:SUCCESS(=0) , ˆÙíI—¹:ERROR(=-1)
-//ˆø”F‚È‚µ
+//é–¢æ•°å:pin_make
+//æ©Ÿèƒ½:PINãƒ•ã‚¡ã‚¤ãƒ«ä½œæˆ
+//æˆ»ã‚Šå€¤ï¼šint æ­£å¸¸çµ‚äº†:SUCCESS(=0) , ç•°å¸¸çµ‚äº†:ERROR(=-1)
+//å¼•æ•°ï¼šãªã—
 //===================================================
 int pin_make(void) {
 	int i;
 	char txt_cmd[300];
 
-	//“ü—Íƒsƒ“ƒtƒ@ƒCƒ‹ƒI[ƒvƒ“
+	//å…¥åŠ›ãƒ”ãƒ³ãƒ•ã‚¡ã‚¤ãƒ«ã‚ªãƒ¼ãƒ—ãƒ³
 	sprintf(txt_cmd, "%spin_input.txt", folder_out);
 	if ((fout_pin_input = (fopen(txt_cmd, "w"))) == NULL) {
-		printf("yERRORz:File open pin_input.txt(pin_make.c)\n");
+		printf("ã€ERRORã€‘:File open pin_input.txt(pin_make.c)\n");
 		return ERROR;
 	}
-	//“ü—Íƒsƒ“ƒtƒ@ƒCƒ‹ƒI[ƒvƒ“(ŒÌáƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“)
+	//å…¥åŠ›ãƒ”ãƒ³ãƒ•ã‚¡ã‚¤ãƒ«ã‚ªãƒ¼ãƒ—ãƒ³(æ•…éšœã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³)
 	sprintf(txt_cmd, "%spin.txt", folder_out);
 	if ((fout_pin = (fopen(txt_cmd, "w"))) == NULL) {
-		printf("yERRORz:File open pin.txt(pin_make.c)\n");
+		printf("ã€ERRORã€‘:File open pin.txt(pin_make.c)\n");
 		return ERROR;
 	}
 
-	//ŠO•”“ü—Í
+	//å¤–éƒ¨å…¥åŠ›
 	for (i = 0; i < n_pi; i++) {
 		fprintf(fout_pin_input, "%s\n", pi[i]->name);
 		fprintf(fout_pin, "%s\n", pi[i]->name);
 	}
-	//‹^—ŠO•”“ü—Í
+	//ç–‘ä¼¼å¤–éƒ¨å…¥åŠ›
 	for (i = 0; i < n_dff; i++) {
 		fprintf(fout_pin_input, "%s\n", dff[i]->name); 
 		fprintf(fout_pin, "%s\n", dff[i]->name);
