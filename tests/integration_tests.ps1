@@ -32,3 +32,23 @@ if ($LASTEXITCODE -eq 0) { throw 'Missing option value was accepted.' }
     -xor_tap ./input/xor_tap/tap_4.txt -scan_chain ./input/scan_chain/s27_sc_4.txt -power ON `
     -folder "./audit_conflict_$suffix/" -regen ON -resolving ON *> audit_build\regen_conflict.log
 if ($LASTEXITCODE -eq 0) { throw '-regen with -resolving was accepted.' }
+
+# .set file: CRLF line ends, experimental modes and options after -set
+$setFile = "audit_build\crlf_$suffix.set"
+$setLines = @('# CRLF setting file', '-net ./input/circuit/s27.v', '-fault ./input/rprf/s27_rpr_1.txt',
+    '-xor_tap ./input/xor_tap/tap_4.txt', '-scan_chain ./input/scan_chain/s27_sc_4.txt', '-seed seed.txt',
+    '-nece ./input/necessary/s27_nece.txt', '-target_limit 2', '-time 5', '-power ON', '-fp ON', '-sttg_wsath ON')
+[IO.File]::WriteAllText($setFile, ($setLines -join "`r`n") + "`r`n")
+$setFolder = "./audit_set_$suffix/"
+& .\audit_build\TDF_ASG.exe -set $setFile -folder $setFolder -wsath 25 *> audit_build\set_crlf.log
+if ($LASTEXITCODE -ne 0) { throw '.set file with CRLF line ends failed.' }
+$setLog = Get-Content "${setFolder}log.txt" -Raw
+if ($setLog -notmatch 'FP Experimental Mode\s+:ON' -or $setLog -notmatch 'WSA\s+:25') { throw '.set options were not applied.' }
+# a .set file without -power must be rejected, not crash
+[IO.File]::WriteAllText($setFile, (($setLines | Where-Object { $_ -notmatch '^-power' }) -join "`n") + "`n")
+& .\audit_build\TDF_ASG.exe -set $setFile -folder "./audit_set_nopower_$suffix/" *> audit_build\set_nopower.log
+if ($LASTEXITCODE -eq 0) { throw '.set file without -power was accepted.' }
+# an unknown option (typo) must be rejected, even with a complete .set file
+[IO.File]::WriteAllText($setFile, ($setLines -join "`n") + "`n")
+& .\audit_build\TDF_ASG.exe -set $setFile -folder "./audit_set_typo_$suffix/" -wsat 20 *> audit_build\set_unknown.log
+if ($LASTEXITCODE -eq 0) { throw 'Unknown option was accepted.' }

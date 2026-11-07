@@ -194,7 +194,7 @@ int ppo_ppi_cat(void);
 //test_v_read.c
 int test_v_read(void);
 //fault_judge.c
-int fault_judge(int sttg_flag, int change_wsath_flag);
+int fault_judge(int sttg_flag, int wsa_relaxed_flag);
 //file_output.c
 int file_output(clock_t time, int mode);
 //pin_make.c
@@ -215,7 +215,8 @@ NLIST* open_pop(void);
 //transition_delay_fault_set.c
 int transition_delay_fault_set(void);
 //fault_select.c
-int fault_select(int unsat_flag,SORTED* sorted,int loop);
+int fault_select(int sttg_flag,SORTED* sorted,int loop);
+int fault_select_single(const UNDET_FAULT_LIST* primary);
 //mini_calc_pbo_size.c
 PBO mini_calc_pbo_size(void);
 int mini_calc_hard_constraint(void);
@@ -233,8 +234,6 @@ void pbo_generate_normal_c(FILE *fp);
 void pbo_generate_fault_c(FILE *fp, UNDET_FAULT_LIST* node,int i);
 void pbo_generate_fdetect_c(FILE *fp, UNDET_FAULT_LIST* node);
 void pbo_generate_power(FILE *fp);
-//fault_select.c
-int fault_select(int unsat_flag,SORTED* sorted,int loop);
 //mttg_calc_pbo_size.c
 PBO mttg_calc_pbo_size(void);
 PBO mttg_calc_hard_constraint(void);

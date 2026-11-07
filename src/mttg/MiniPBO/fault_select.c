@@ -32,16 +32,17 @@ static void free_fault_copies(UNDET_FAULT_LIST* head)
     }
 }
 
-static int select_single_fault(void)
+/* Make `source` the only target fault (STTG). */
+static int select_single_fault(const UNDET_FAULT_LIST* source)
 {
     UNDET_FAULT_LIST* selected;
 
-    if (ufl == NULL) {
+    if (source == NULL) {
         printf("[WARNING] No undetected faults available.\n");
         return ERROR;
     }
 
-    selected = copy_fault(ufl);
+    selected = copy_fault(source);
     if (selected == NULL) {
         printf("[ERROR] Memory allocation failed.\n");
         return ERROR;
@@ -126,14 +127,21 @@ static int select_random_faults(int fault_limit)
     return SUCCESS;
 }
 
+// Retry a solver-aborted primary fault alone (-sttg_wsath).
+int fault_select_single(const UNDET_FAULT_LIST* primary)
+{
+    return select_single_fault(primary);
+}
+
 // Select target faults for multi-target or single-target test generation.
+// With sttg_flag == ON the first undetected fault becomes the only target (-cps retry).
 int fault_select(int sttg_flag, SORTED* sorted, int loop)
 {
     int result;
     int fault_limit = fi[TARGET_LIMIT].value;
 
     if (sttg_flag == ON) {
-        return select_single_fault();
+        return select_single_fault(ufl);
     }
 
     if (ufl == NULL || ufl_num <= 0) {

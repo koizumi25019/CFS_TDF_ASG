@@ -105,19 +105,28 @@ static int is_option_on(int option_index) {
 	return strcmp(fi[option_index].name, "ON") == 0;
 }
 
-// 今回のシード生成で使うWSA閾値[%]
-static int current_wsa_threshold(int regen_stage, int change_wsath_25, int change_wsath_30) {
-	if (is_option_on(STTG_WSATH_MODE)) { // [STTG/WSATH INTEGRATION] 既存の実験モード(変更なし)
-		return change_wsath_30 == ON ? 30 : (change_wsath_25 == ON ? 25 : 29);
-	}
-	return fi[WSATH].value + REGEN_WSA_STEP * regen_stage; // -regen 無効時は regen_stage == 0
+// WSA閾値[%] = 指定値(-wsath, 既定20%) + 5% × 緩和段階(0,1,2)
+// -regen と -sttg_wsath のどちらも、この段階(wsa_stage)で閾値を緩和する。
+static int wsa_threshold_at(int wsa_stage) {
+	return fi[WSATH].value + REGEN_WSA_STEP * wsa_stage;
 }
 
-// 論文 step10: さらにWSA閾値を緩和して再生成できるか
-static int can_relax_wsa(int regen_stage) {
-	return is_option_on(REGEN_MODE) && is_option_on(LOW_POWER) &&
-		regen_stage < REGEN_WSA_MAX_STAGE &&
-		fi[WSATH].value + REGEN_WSA_STEP * (regen_stage + 1) <= 100;
+// さらにWSA閾値を緩和して再生成できるか(低消費電力指向のときだけ)
+static int can_relax_wsa(int wsa_stage) {
+	return is_option_on(LOW_POWER) &&
+		wsa_stage < REGEN_WSA_MAX_STAGE &&
+		wsa_threshold_at(wsa_stage + 1) <= 100;
+}
+
+// 打ち切られた一次故障(tfl の先頭)を複製して返す。STTG での再生成の対象にする。
+static UNDET_FAULT_LIST* copy_primary_fault(void) {
+	UNDET_FAULT_LIST* copy;
+	if (tfl == NULL) return NULL;
+	copy = (UNDET_FAULT_LIST*)malloc(sizeof(*copy));
+	if (copy == NULL) return NULL;
+	*copy = *tfl;
+	copy->next = NULL;
+	return copy;
 }
 
 int mttg_main(void) {
@@ -129,11 +138,10 @@ int mttg_main(void) {
 	int detected_fault_count;
 	int generation_attempt_count = 0;
 	SORTED sorted = {0};
-	int change_wsath_25 = OFF; // [STTG/WSATH INTEGRATION]
-	int change_wsath_30 = OFF; // [STTG/WSATH INTEGRATION]
-	int sttg_flag = OFF;
+	int sttg_flag = OFF;          // -sttg_wsath: 単一目標故障(STTG)で再生成中
+	UNDET_FAULT_LIST* retry_primary = NULL; // -sttg_wsath: 打ち切られた一次故障(STTGの対象)
 	int retry_single_fault = OFF; // [CPS INTEGRATION]
-	int regen_stage = 0;          // -regen: WSA閾値の緩和段階(0:指定値, 1:+5%, 2:+10%)
+	int wsa_stage = 0;            // WSA閾値の緩和段階(0:指定値, 1:+5%, 2:+10%)
 	int reuse_targets = OFF;      // -regen: 前回と同じ目標故障集合で再生成する
 	int wsa_threshold;
 
@@ -191,17 +199,22 @@ int mttg_main(void) {
 			return ERROR;
 		}
 
-		//目標故障選択(-regen の再生成時は前回の目標故障集合をそのまま使う)
+		//目標故障選択
+		//  -regen の再生成時 : 前回の目標故障集合をそのまま使う
+		//  -sttg_wsath のSTTG: 打ち切られた一次故障だけを目標にする
 		int single_fault_flag = (sttg_flag == ON || retry_single_fault == ON) ? ON : OFF;
 		if (reuse_targets == OFF) {
-			if (fault_select(single_fault_flag, &sorted, generation_attempt_count++) != SUCCESS) {
+			int select_result = (sttg_flag == ON && retry_primary != NULL)
+				? fault_select_single(retry_primary)
+				: fault_select(single_fault_flag, &sorted, generation_attempt_count++);
+			if (select_result != SUCCESS) {
 				printf("【ERROR】:Fault Select(mttg_main.c)\n");
 				return ERROR;
 			}
 			file_output(0, 3);
 		}
 		reuse_targets = OFF;
-		wsa_threshold = current_wsa_threshold(regen_stage, change_wsath_25, change_wsath_30);
+		wsa_threshold = wsa_threshold_at(wsa_stage);
 
 		//PBOサイズ記述
 
@@ -304,14 +317,15 @@ int mttg_main(void) {
 			//system("cls");
 
 			//検出故障特定&検出故障数を未検出故障から削除
-			if ((detected_fault_count = fault_judge(sttg_flag, change_wsath_25)) == ERROR) {
+			if ((detected_fault_count = fault_judge(sttg_flag, wsa_stage > 0)) == ERROR) {
 				printf("【ERROR】:Fault Judge(mttg_main.c)\n");
 				return ERROR;
 			}
 			if (detected_fault_count > 0) {
 				fprintf(fout_seed, "%s\n", clasp.sol[SOL_SEED]);
-				if (regen_stage > 0) {
-					printf("[REGEN] Seed generated with WSA threshold %d%%.\n", wsa_threshold);
+				if (wsa_stage > 0) {
+					printf("[WSA] Seed generated with relaxed WSA threshold %d%% (specified: %d%%).\n",
+						wsa_threshold, fi[WSATH].value);
 				}
 			}
 			if (detected_fault_count == 0 && (single_fault_flag == ON || strcmp(fi[CPS_MODE].name, "ON") != 0)) {
@@ -320,10 +334,10 @@ int mttg_main(void) {
 			}
 			// [CPS INTEGRATION] Retry the next iteration with one fault after zero detection.
 			tfl = NULL; // fault_judge releases the copied target list
+			free(retry_primary);
+			retry_primary = NULL;
 			sttg_flag = OFF;
-			change_wsath_25 = OFF;
-			change_wsath_30 = OFF;
-			regen_stage = 0;
+			wsa_stage = 0;
 			if (strcmp(fi[CPS_MODE].name, "ON") == 0) {
 				retry_single_fault = (detected_fault_count == 0) ? ON : OFF;
 				if (retry_single_fault == ON) {
@@ -336,60 +350,60 @@ int mttg_main(void) {
 			// 論文 step10: 打ち切り時間を延ばしても(CLASP内で60/180/300秒)求まらない、
 			// または充足不能なら、同じ目標故障集合でWSA閾値を緩和して再生成する。
 			if (is_option_on(REGEN_MODE)) {
-				if (can_relax_wsa(regen_stage)) {
-					regen_stage++;
+				if (can_relax_wsa(wsa_stage)) {
+					wsa_stage++;
 					reuse_targets = ON;
-					printf("[REGEN] Retry with WSA threshold %d%%.\n",
-						current_wsa_threshold(regen_stage, OFF, OFF));
+					printf("[REGEN] Retry with WSA threshold %d%%.\n", wsa_threshold_at(wsa_stage));
 					continue;
 				}
 				if (discard_target_as_unseed() != SUCCESS) {
 					printf("[ERROR] Failed to discard the current target fault.\n");
 					return ERROR;
 				}
-				regen_stage = 0;
+				wsa_stage = 0;
 				printf("[REGEN] Regeneration exhausted; primary target moved to the unseed list.\n");
 				continue;
 			}
 
-			// [STTG/WSATH INTEGRATION] Bounded state machine for solver UNKNOWN.
-			if (clasp.status == CLASP_UNSAT || strcmp(fi[STTG_WSATH_MODE].name, "ON") != 0) {
+			// -sttg_wsath: 打ち切られた一次故障を対象に、
+			//   STTG(閾値そのまま) -> STTG(+5%) -> STTG(+10%) の順で再生成する。
+			if (clasp.status == CLASP_UNSAT || !is_option_on(STTG_WSATH_MODE) ||
+				(sttg_flag == ON && !can_relax_wsa(wsa_stage))) {
 				if (discard_target_as_unseed() != SUCCESS) {
 					printf("[ERROR] Failed to discard the current target fault.\n");
 					return ERROR;
 				}
+				free(retry_primary);
+				retry_primary = NULL;
 				sttg_flag = OFF;
-				change_wsath_25 = OFF;
-				change_wsath_30 = OFF;
+				wsa_stage = 0;
 				retry_single_fault = OFF;
-				printf("[MTTG] Target fault moved to the unseed list.\n");
+				if (is_option_on(STTG_WSATH_MODE) && clasp.status != CLASP_UNSAT) {
+					printf("[STTG/WSATH] Retry stages exhausted; target moved to unseed.\n");
+				}
+				else {
+					printf("[MTTG] Target fault moved to the unseed list.\n");
+				}
 				continue;
 			}
 
-			if (sttg_flag == ON && (strcmp(fi[LOW_POWER].name, "ON") != 0 || change_wsath_30 == ON)) {
-				if (discard_target_as_unseed() != SUCCESS) {
-					printf("[ERROR] Failed to discard the final STTG target fault.\n");
+			if (sttg_flag == OFF) {
+				// 打ち切られた一次故障を、tfl を解放する前に保持する
+				retry_primary = copy_primary_fault();
+				if (retry_primary == NULL) {
+					printf("[ERROR] Failed to keep the primary target fault.\n");
 					return ERROR;
 				}
-				sttg_flag = OFF;
-				change_wsath_25 = OFF;
-				change_wsath_30 = OFF;
-				printf("[STTG/WSATH] Retry stages exhausted; target moved to unseed.\n");
-				continue;
-			}
-
-			release_target_faults();
-			if (sttg_flag == OFF) {
+				release_target_faults();
 				sttg_flag = ON;
-				printf("[STTG/WSATH] Retry with STTG.\n");
-			}
-			else if (change_wsath_25 == OFF) {
-				change_wsath_25 = ON;
-				printf("[STTG/WSATH] Retry STTG with WSA threshold 25.\n");
+				printf("[STTG/WSATH] Retry with STTG for %s at WSA threshold %d%%.\n",
+					retry_primary->name, wsa_threshold_at(wsa_stage));
 			}
 			else {
-				change_wsath_30 = ON;
-				printf("[STTG/WSATH] Retry STTG with WSA threshold 30.\n");
+				release_target_faults();
+				wsa_stage++;
+				printf("[STTG/WSATH] Retry STTG for %s with WSA threshold %d%%.\n",
+					retry_primary->name, wsa_threshold_at(wsa_stage));
 			}
 			continue;
 		}
