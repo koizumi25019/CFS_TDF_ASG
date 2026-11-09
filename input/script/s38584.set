@@ -12,14 +12,8 @@
 # set scan-chain(.txt)
 -scan_chain ./input/scan_chain/s38584_sc_64.txt
 
-# set necessary(.txt)
--nece ./input/necessary/s38584_nece.txt
-
 # set folder out(.txt)
 -folder ./s38584_output/
-
-# set seed set(.txt)
--seed s38584_seed.txt
 
 # set target limit (value)
 -target_limit 300
@@ -32,5 +26,4 @@
 
 # set parallel mode (value)
 -parallel 24
-
 

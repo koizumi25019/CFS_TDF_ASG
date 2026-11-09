@@ -141,6 +141,9 @@
     <ClCompile Include="src\mttg\clasp_mode.c">
       <Filter>mttg</Filter>
     </ClCompile>
+    <ClCompile Include="src\mttg\diagnose.c">
+      <Filter>mttg</Filter>
+    </ClCompile>
     <ClCompile Include="src\mttg\fault_cone.c">
       <Filter>mttg</Filter>
     </ClCompile>
@@ -157,6 +160,9 @@
       <Filter>mttg</Filter>
     </ClCompile>
     <ClCompile Include="src\mttg\pbo_target.c">
+      <Filter>mttg</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mttg\problem.c">
       <Filter>mttg</Filter>
     </ClCompile>
     <ClCompile Include="src\mttg\regen.c">
@@ -221,10 +227,16 @@
     <ClInclude Include="src\main\external_tools.h">
       <Filter>main</Filter>
     </ClInclude>
+    <ClInclude Include="src\mttg\diagnose.h">
+      <Filter>mttg</Filter>
+    </ClInclude>
     <ClInclude Include="src\mttg\mttg_check_wsa.h">
       <Filter>mttg</Filter>
     </ClInclude>
     <ClInclude Include="src\mttg\pbo_generate.h">
+      <Filter>mttg</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mttg\problem.h">
       <Filter>mttg</Filter>
     </ClInclude>
     <ClInclude Include="src\mttg\regen.h">

@@ -51,12 +51,14 @@
     <ClCompile Include="src\main\main.c" />
     <ClCompile Include="src\main\open_stack.c" />
     <ClCompile Include="src\mttg\clasp_mode.c" />
+    <ClCompile Include="src\mttg\diagnose.c" />
     <ClCompile Include="src\mttg\fault_cone.c" />
     <ClCompile Include="src\mttg\fault_select.c" />
     <ClCompile Include="src\mttg\mttg_check_wsa.c" />
     <ClCompile Include="src\mttg\mttg_main.c" />
     <ClCompile Include="src\mttg\pbo_circuit.c" />
     <ClCompile Include="src\mttg\pbo_target.c" />
+    <ClCompile Include="src\mttg\problem.c" />
     <ClCompile Include="src\mttg\regen.c" />
     <ClCompile Include="src\opt\opt.c" />
   </ItemGroup>
@@ -79,8 +81,10 @@
     <ClInclude Include="src\header\Stack.h" />
     <ClInclude Include="src\lib\lib.h" />
     <ClInclude Include="src\main\external_tools.h" />
+    <ClInclude Include="src\mttg\diagnose.h" />
     <ClInclude Include="src\mttg\mttg_check_wsa.h" />
     <ClInclude Include="src\mttg\pbo_generate.h" />
+    <ClInclude Include="src\mttg\problem.h" />
     <ClInclude Include="src\mttg\regen.h" />
     <ClInclude Include="src\opt\opt.h" />
   </ItemGroup>

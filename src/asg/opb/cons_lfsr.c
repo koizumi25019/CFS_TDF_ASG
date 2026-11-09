@@ -63,13 +63,6 @@ bool CreateLFSRmodel(
 	assert(lfsr == NULL);
 #endif
 
-	/** alloc the memory for solution for seed */
-	//readdata.lfsrnet.num + 1:シードのビット数に加えて、文字列の終端を表す\0を格納するための余分な1バイトのため+1
-	//2次元配列にすることで異なる種類のclaspの応答を管理
-	//clasp.sol[0]にはシードに関するclasp応答を、clasp.sol[1]にはテストパターンに対するclasp応答を格納するような感じ
-	clasp.sol[SOL_SEED] = (char*)allocMemory(readdata.lfsrnet.num + 1, sizeof(char));
-	clasp.sol[SOL_SEED][readdata.lfsrnet.num] = '\0';
-
 #ifdef __DEBUG_OPB_CONS_PS__
 	_CALL_DEBUG_OPB_CONS_PS_
 #endif // __DEBUG_OPB_CONS_PS__

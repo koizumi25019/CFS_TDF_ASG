@@ -12,14 +12,8 @@
 # set scan-chain(.txt)
 -scan_chain ./input/scan_chain/s13207_sc_64.txt
 
-# set necessary(.txt)
--nece ./input/necessary/s13207_nece.txt
-
 # set folder out(.txt)
 -folder ./s13207_output/
-
-# set seed set(.txt)
--seed s13207_seed.txt
 
 # set target limit (value)
 -target_limit 300
@@ -32,5 +26,4 @@
 
 # set parallel mode (value)
 -parallel 24
-
 

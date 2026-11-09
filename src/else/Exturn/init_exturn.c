@@ -75,6 +75,9 @@ static int init_output_folder(void) {
 //===================================================
 int init_exturn(void) {
 
+	//LFSRの変数の数(回路の変数番号の前に置く)
+	n_lfsr_var = opt.lfsr ? LFSR_BITS : 0;
+
 	//集計
 	hpfl = NULL;
 	abortfl = NULL;
@@ -84,6 +87,10 @@ int init_exturn(void) {
 	untest_num = 0;
 	untestfl = NULL;
 	unseed_num = 0;
+	wsafl_num = 0;
+	wsafl = NULL;
+	unknownfl_num = 0;
+	unknownfl = NULL;
 	hpfl_num = 0;
 	seed_num = 0;
 	seed_relaxed_num = 0;

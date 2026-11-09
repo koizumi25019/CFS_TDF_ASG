@@ -12,14 +12,8 @@
 # set scan-chain(.txt)
 -scan_chain ./input/scan_chain/s15850_sc_64.txt
 
-# set necessary(.txt)
--nece ./input/necessary/s15850_nece.txt
-
 # set folder out(.txt)
 -folder ./s15850_output/
-
-# set seed set(.txt)
--seed s15850_seed.txt
 
 # set target limit (value)
 -target_limit 300
@@ -32,5 +26,4 @@
 
 # set parallel mode (value)
 -parallel 24
-
 

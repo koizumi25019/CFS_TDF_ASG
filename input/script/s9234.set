@@ -12,14 +12,8 @@
 # set scan-chain(.txt)
 -scan_chain ./input/scan_chain/s9234_sc_32.txt
 
-# set necessary(.txt)
--nece ./input/necessary/s9234_nece.txt
-
 # set folder out(.txt)
 -folder ./s9234_output/
-
-# set seed set(.txt)
--seed s9234_seed.txt
 
 # set target limit (value)
 -target_limit 300
@@ -32,5 +26,4 @@
 
 # set parallel mode (value)
 -parallel 24
-
 

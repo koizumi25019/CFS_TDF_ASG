@@ -6,17 +6,11 @@
 # set fault list(.txt)
 -fault ./input/rprf/s5378_rpr_1.txt
 
-# set seed set(.txt)
--seed s5378_seed.txt
-
 # set xor-tap list(.txt)
 -xor_tap ./input/xor_tap/tap_32.txt
 
 # set scan-chain(.txt)
 -scan_chain ./input/scan_chain/s5378_sc_32.txt
-
-# set necessary(.txt)
--nece ./input/necessary/s5378_nece.txt
 
 # set power mode (ON，OFF)
 -power ON
@@ -32,5 +26,4 @@
 
 # set parallel mode (value)
 -parallel 24
-
 

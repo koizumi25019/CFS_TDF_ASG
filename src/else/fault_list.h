@@ -20,3 +20,6 @@ void fault_list_free(UNDET_FAULT_LIST* head);
 /** 未検出故障リスト ufl から target と同じ故障を取り除く(有効故障ビットも落とす)。
     見つからなければ ERROR */
 int fault_remove_undetected(const UNDET_FAULT_LIST* target);
+
+/** 有効な(未検出の)故障を表すビット列 detflag を、全ての故障(0 .. all_num-1)を有効にして作る */
+void fault_flags_init(void);

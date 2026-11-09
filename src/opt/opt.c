@@ -68,6 +68,9 @@ static bool OPTapply(const char* name, const char* value)
 	else if (!strcmp(name, "-xor_tap"))     opt.xor_tap_file = _strdup(value);
 	else if (!strcmp(name, "-scan_chain"))  opt.scan_chain_file = _strdup(value);
 	else if (!strcmp(name, "-folder"))      opt.folder = _strdup(value);
+	/* 生成するもの */
+	else if (!strcmp(name, "-lfsr"))        return OPTparseOnOff(name, value, &opt.lfsr);
+	else if (!strcmp(name, "-untest_mode")) return OPTparseOnOff(name, value, &opt.untest_mode);
 	/* 低消費電力 */
 	else if (!strcmp(name, "-power"))       return OPTparseOnOff(name, value, &opt.low_power);
 	else if (!strcmp(name, "-wsath"))       return OPTparseInt(name, value, &opt.wsa_threshold);
@@ -119,6 +122,7 @@ static bool OPTapply(const char* name, const char* value)
 static void OPTinit(void)
 {
 	memset(&opt, 0, sizeof(opt));
+	opt.lfsr = true;
 	opt.solver_time = -1;
 	opt.wsa_threshold = -1;
 	opt.target_limit = -1;
@@ -220,8 +224,8 @@ bool OPTcheck(void)
 	/* 必須オプション */
 	if (opt.circuit == NULL)         { printf("回路ファイル名を入力してください (-net)\n");                  return OPT_ERROR; }
 	if (opt.fault_file == NULL)      { printf("故障ファイル名を入力してください (-fault)\n");                return OPT_ERROR; }
-	if (opt.scan_chain_file == NULL) { printf("スキャンチェーンファイル名を入力してください (-scan_chain)\n"); return OPT_ERROR; }
-	if (opt.xor_tap_file == NULL)    { printf("XORタップファイル名を入力してください (-xor_tap)\n");          return OPT_ERROR; }
+	if (opt.lfsr && opt.scan_chain_file == NULL) { printf("スキャンチェーンファイル名を入力してください (-scan_chain。-lfsr OFF なら不要)\n"); return OPT_ERROR; }
+	if (opt.lfsr && opt.xor_tap_file == NULL)    { printf("XORタップファイル名を入力してください (-xor_tap。-lfsr OFF なら不要)\n");          return OPT_ERROR; }
 	if (opt.folder == NULL)          { printf("出力フォルダー名を入力してください (-folder)\n");              return OPT_ERROR; }
 	if (!power_given)                { printf("低消費電力指向か否かを入力してください (-power ON/OFF)\n");    return OPT_ERROR; }
 
@@ -251,8 +255,11 @@ bool OPTcheck(void)
 	/* 入力ファイル(実行の最後で見つかるより、最初に分かるほうがよい) */
 	if (OPTcheckInputFile("-net", opt.circuit) != OPT_OKAY) return OPT_ERROR;
 	if (OPTcheckInputFile("-fault", opt.fault_file) != OPT_OKAY) return OPT_ERROR;
-	if (OPTcheckInputFile("-xor_tap", opt.xor_tap_file) != OPT_OKAY) return OPT_ERROR;
-	if (OPTcheckInputFile("-scan_chain", opt.scan_chain_file) != OPT_OKAY) return OPT_ERROR;
+	if (opt.xor_tap_file != NULL && OPTcheckInputFile("-xor_tap", opt.xor_tap_file) != OPT_OKAY) return OPT_ERROR;
+	if (opt.scan_chain_file != NULL && OPTcheckInputFile("-scan_chain", opt.scan_chain_file) != OPT_OKAY) return OPT_ERROR;
+	if (!opt.lfsr && (opt.xor_tap_file != NULL || opt.scan_chain_file != NULL)) {
+		printf("[WARNING] -xor_tap and -scan_chain are not used with -lfsr OFF.\n");
+	}
 
 	return OPT_OKAY;
 }
@@ -269,10 +276,14 @@ void OPTdispHelp(void)
 	printf("\n		>> files \n");
 	printf("		   -net(essential)         :   netlist <.v> \n");
 	printf("		   -fault(essential)       :   fault list <.txt> \n");
-	printf("		   -xor_tap(essential)     :   xor-tap list <.txt> \n");
-	printf("		   -scan_chain(essential)  :   scan-chain <.txt> \n");
+	printf("		   -xor_tap(essential)     :   xor-tap list <.txt> (not needed with -lfsr OFF) \n");
+	printf("		   -scan_chain(essential)  :   scan-chain <.txt> (not needed with -lfsr OFF) \n");
 	printf("		   -folder(essential)      :   output folder (must not exist) \n");
 	printf("		   -set                    :   setting file <.set> \n");
+
+	printf("\n		>> what to generate \n");
+	printf("		   -lfsr                   :   [ON/OFF] ON (default): seeds of the LFSR + phase shifter. OFF: test patterns only (ATPG) \n");
+	printf("		   -untest_mode            :   [ON/OFF] first check every fault alone and remove the untestable ones. OFF is default. \n");
 
 	printf("\n		>> test generation \n");
 	printf("		   -power(essential)       :   [ON/OFF] keep the capture power (WSA) below the threshold \n");

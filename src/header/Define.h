@@ -30,11 +30,11 @@
 
 //------------------------------------------------------------------------
 // ブール変数の番号(clasp に渡す問題の変数)
-//   1 .. LFSR_BITS                 : LFSR(シード)
+//   1 .. n_lfsr_var                : LFSR(シード)。-lfsr OFF のときは無い(n_lfsr_var = 0)
 //   VAR_FIRST_CIRCUIT ..           : 外部入力・FF・各信号線の1時刻目の値(suf_1t)、続けて2時刻目の値(suf_2t)。それぞれ n_net 個
 //   VAR_FIRST_FAULT_CIRCUIT ..     : 故障回路・故障検出回路・緩和変数・WSAの変数(目標故障ごとに割り当てる)
 //------------------------------------------------------------------------
-#define		VAR_FIRST_CIRCUIT		(LFSR_BITS + 1)
+#define		VAR_FIRST_CIRCUIT		(n_lfsr_var + 1)
 #define		VAR_FIRST_FAULT_CIRCUIT	(VAR_FIRST_CIRCUIT + 2 * n_net)
 
 //------------------------------------------------------------------------
@@ -45,6 +45,7 @@ extern NLIST** sort_nl;				//レベル順に並べた信号線
 extern STACK Level;					//レベライズ用のスタック
 extern STACK Open;					//オープンパス用のスタック
 extern QUE Que;						//キュー(故障範囲の探索用)
+extern int n_lfsr_var;				//LFSRのブール変数の数(-lfsr ON: LFSR_BITS, OFF: 0)
 extern unsigned int bool_id;		//clasp 用ブール変数IDの割り当てカウンタ
 extern unsigned int fc_ppo;			//故障回路に含まれるPPO数
 
@@ -57,10 +58,14 @@ extern int ufl_num;					//未検出故障数
 extern UNDET_FAULT_LIST* ufl;		//未検出故障リスト
 extern int dfl_num;					//検出故障数
 extern UNDET_FAULT_LIST* dfl;		//検出故障リスト
-extern int untest_num;				//検出不能(冗長)故障数
-extern UNDET_FAULT_LIST* untestfl;	//検出不能故障リスト(必須割当てだけで、検出するテストが無いと分かった故障)
+extern int untest_num;				//冗長故障数
+extern UNDET_FAULT_LIST* untestfl;	//冗長故障リスト(検出するテストが無いと、必須割当てまたはソルバで分かった故障)
 extern int unseed_num;				//シード生成不能故障数
-extern UNDET_FAULT_LIST* unseed;	//シード生成不能故障リスト(ソルバが解を求められなかった一次故障)
+extern UNDET_FAULT_LIST* unseed;	//シード生成不能故障リスト(LFSR+フェーズシフタのモデルでだけ解がない故障。-lfsr ON のみ)
+extern int wsafl_num;				//WSA閾値のために検出できない故障数
+extern UNDET_FAULT_LIST* wsafl;		//WSA閾値のために検出できない故障リスト(消費電力の制約を外せば検出できる故障)
+extern int unknownfl_num;			//判定できなかった故障数
+extern UNDET_FAULT_LIST* unknownfl;	//判定できなかった故障リスト(ソルバが打ち切り時間内に解も解なしも出せなかった一次故障)
 extern int abortfl_num;				//打ち切り故障数
 extern UNDET_FAULT_LIST* abortfl;	//打ち切り故障リスト(MTTGが求まらず、STTGで検出できた故障)
 extern int hpfl_num;				//高消費電力故障数

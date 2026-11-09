@@ -10,14 +10,17 @@
 //  出力ファイル名(出力フォルダー内)
 //------------------------------------------------------------------------
 #define FILE_LOG			"log.txt"					//実行情報
-#define FILE_SEED			"seed.txt"					//生成したシード(1行1シード)
+#define FILE_SEED			"seed.txt"					//生成したシード(1行1シード。-lfsr ON のみ)
+#define FILE_TEST_PATTERN_SET	"tp_set.txt"				//適用したテストパターン(1行1パターン。-lfsr ON のときは seed.txt の同じ行のシードから生成される)
 #define FILE_TEST_PATTERN	"tp.txt"					//直近のテストパターン
 #define FILE_TARGET_LOG		"tfl_log.txt"				//目標故障集合の履歴
 #define FILE_SEED_LOG		"mttg.txt"					//シードごとの検出故障数・WSA閾値
 #define FILE_DETECTED		"det.txt"					//検出できた故障
 #define FILE_UNDETECTED		"undet.txt"					//最後まで検出できなかった故障(正常終了ならば空)
-#define FILE_UNTESTABLE		"untestable_fault.txt"		//検出不能(冗長)故障(必須割当てだけで、検出するテストが無いと分かった故障)
-#define FILE_UNSEED			"unseed_fault.txt"			//シード生成不能故障(ソルバが解を求められなかった一次故障)
+#define FILE_UNTESTABLE		"untestable_fault.txt"		//冗長な故障(検出するテストが無いと、必須割当てまたはソルバで分かった故障)
+#define FILE_UNSEED			"unseed_fault.txt"			//シード生成不能故障(LFSR+フェーズシフタのモデルでだけ解がない故障)
+#define FILE_WSA_INFEASIBLE	"wsa_infeasible_fault.txt"	//WSA閾値のために検出できない故障(消費電力の制約を外せば検出できる故障)
+#define FILE_UNKNOWN		"unknown_fault.txt"			//判定できなかった故障(ソルバが打ち切り時間内に解も解なしも出せなかった一次故障)
 #define FILE_ABORT			"abort_fault.txt"			//MTTGが求まらず，STTGで検出できた故障
 #define FILE_HIGH_POWER		"high_power_fault.txt"		//緩和したWSA閾値でないと検出できなかった故障
 

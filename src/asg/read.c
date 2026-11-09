@@ -18,24 +18,14 @@
 
 //*************************************************************************************************************
 //	@name		：　ReadFile
-//	@function	：	read the file
+//	@function	：	read the input files of the LFSR / phase-shifter model (-lfsr ON only)
 //	@return		：	(bool) okay, error
 //*************************************************************************************************************
 bool ReadFile(
 	void
 )
 {
-	//追加
-    /** create the detection infomation list */
-	detflag = (BIT_INT*)allocMemory(1, sizeof(BIT_INT));
-	detflag->int_num = all_num / MAXSIZE_BITINT + 1;
-	detflag->flag = (unsigned int*)allocMemory(detflag->int_num, sizeof(unsigned int));
-	bitintSetAll_Zero(detflag);
-	for (int fault_id = 0; fault_id < all_num; fault_id++) {
-		bitintSetNbit_One(detflag, fault_id);
-	}
-
-	/** read the xor-tap */
+	/** create the lfsr list */
 	if (CreateLFSRList() != READ_OKAY) return READ_ERROR;
 
 	/** read the xor-tap */

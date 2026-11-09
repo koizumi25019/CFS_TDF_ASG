@@ -59,3 +59,13 @@ int fault_remove_undetected(const UNDET_FAULT_LIST* target) {
 	ufl_num--;
 	return SUCCESS;
 }
+
+void fault_flags_init(void) {
+	detflag = (BIT_INT*)allocMemory(1, sizeof(BIT_INT));
+	detflag->int_num = all_num / MAXSIZE_BITINT + 1;
+	detflag->flag = (unsigned int*)allocMemory(detflag->int_num, sizeof(unsigned int));
+	bitintSetAll_Zero(detflag);
+	for (int fault_id = 0; fault_id < all_num; fault_id++) {
+		bitintSetNbit_One(detflag, fault_id);
+	}
+}

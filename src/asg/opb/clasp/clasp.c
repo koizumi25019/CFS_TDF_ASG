@@ -99,7 +99,8 @@ void CLASPgetSol(FILE* log)
     free(line);
 }
 
-bool CLASP(void)
+/* want_solution: false なら、状態だけを読む(解なし・打ち切りの判定に使う。解の読み取りは行わない) */
+bool CLASP_solve(bool want_solution)
 {
     int attempt_count = opt.regen ? CLASP_RETRY_COUNT : 1;
     char log_path[1024];
@@ -116,7 +117,7 @@ bool CLASP(void)
             return CLASP_ERROR;
         }
         CLASPgetStatus(log);
-        if (clasp.status == CLASP_STATUS_SAT) {
+        if (clasp.status == CLASP_STATUS_SAT && want_solution) {
             CLASPgetSol(log);
         }
         fclose(log);
@@ -129,4 +130,9 @@ bool CLASP(void)
         }
     }
     return CLASP_OKAY;
+}
+
+bool CLASP(void)
+{
+    return CLASP_solve(true);
 }

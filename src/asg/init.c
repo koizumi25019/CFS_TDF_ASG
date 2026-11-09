@@ -14,6 +14,7 @@
 #include <stdio.h>
 
 #include "init.h"
+#include "../header/Define.h"
 #include "read.h"
 #include "./opb/clasp/clasp.h"
 #include "../lib/lib.h"
@@ -100,6 +101,10 @@ void InitGlobalVarsCLASP(
 	
 	clasp.sol = (char**)NULL;
 	clasp.sol = (char**)allocMemory(N_SOL, sizeof(char*));
+
+	/** for seed (-lfsr OFF: empty) */
+	clasp.sol[SOL_SEED] = (char*)allocMemory(n_lfsr_var + 1, sizeof(char));
+	clasp.sol[SOL_SEED][n_lfsr_var] = '\0';
 
 	/** for test pattern */
 	clasp.sol[SOL_TP] = (char*)allocMemory(n_dff + n_pi + 1, sizeof(char));

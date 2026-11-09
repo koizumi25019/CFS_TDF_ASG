@@ -32,6 +32,9 @@ extern CLASPLOG			  clasp;			  /**< 直近の clasp の結果 */
 /** clasp.exe を1回実行する(attempt_index: 0,1,2 = 打ち切り時間の延長の段階。-regen のとき 60/180/300秒) */
 int clasp_call(int attempt_index);
 
+/** CLASP() と同じ。want_solution が false なら状態(clasp.status)だけを読み、解は読まない */
+bool CLASP_solve(bool want_solution);
+
 /** clasp を実行して結果を clasp に読む(-regen のときは打ち切り時間を延ばして再試行) */
 bool CLASP(void);
 

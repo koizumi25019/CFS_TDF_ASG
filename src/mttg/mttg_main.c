@@ -5,11 +5,11 @@
 //      mttg_prepare()           入力の読み込み・回路モデルの準備
 //      generate_seed()          未検出故障が無くなるまで繰り返す。1回でシードを1つ作る
 //        select_targets()         目標故障の選択(先頭が一次故障)
-//        write_problem()          PBOの問題ファイルを作る
+//        problem_write()          PBOの問題ファイルを作る(problem.c)
 //        CLASP()                  ソルバで解く
 //        apply_solution()         解けたら: テストパターン→WSA確認→故障シミュレーション→検出故障の整理
 //        regen_next_attempt()     解けなかったら: 再生成の方針(regen.h)に従って次の試行へ
-//        give_up_on_primary()     次が無ければ一次故障をシード生成不能にする
+//        give_up_on_primary()     次が無ければ一次故障を断念し、原因を調べて分類する(diagnose.c)
 //------------------------------------------------------------------------
 #include <stdio.h>
 #include <stdlib.h>
@@ -18,7 +18,6 @@
 #include "../header/Define.h"
 #include "../asg/opb/clasp/clasp.h"
 #include "../asg/createSGmodel.h"
-#include "../asg/opb/opb.h"
 #include "../else/fault_list.h"
 #include "../else/Fsim/fault_judge.h"
 #include "../else/OUTPUT/report.h"
@@ -26,10 +25,13 @@
 #include "pbo_generate.h"
 #include "mttg_check_wsa.h"
 #include "regen.h"
+#include "problem.h"
+#include "diagnose.h"
 #include "../asg/essential.h"
 #include "../asg/screen.h"
 
-static FILE* seed_file;				//seed.txt(1行1シード)
+static FILE* seed_file;				//seed.txt(1行1シード。-lfsr ON のみ)
+static FILE* tp_set_file;			//tp_set.txt(1行1テストパターン。seed.txt の同じ行のシードから生成される)
 
 typedef struct {
 	int cps_single_next;			//-cps: 前のシードが1件も検出できなかったので、次は単一目標にする
@@ -43,8 +45,15 @@ typedef struct {
 static int mttg_prepare(void) {
 	char path[1024];
 
-	if (output_path(path, sizeof(path), FILE_SEED) != SUCCESS) return ERROR;
-	if (fopen_s(&seed_file, path, "w") != 0 || seed_file == NULL) {
+	if (opt.lfsr) {
+		if (output_path(path, sizeof(path), FILE_SEED) != SUCCESS) return ERROR;
+		if (fopen_s(&seed_file, path, "w") != 0 || seed_file == NULL) {
+			printf("[ERROR] Cannot create %s\n", path);
+			return ERROR;
+		}
+	}
+	if (output_path(path, sizeof(path), FILE_TEST_PATTERN_SET) != SUCCESS) return ERROR;
+	if (fopen_s(&tp_set_file, path, "w") != 0 || tp_set_file == NULL) {
 		printf("[ERROR] Cannot create %s\n", path);
 		return ERROR;
 	}
@@ -55,121 +64,19 @@ static int mttg_prepare(void) {
 	}
 	if (transition_delay_fault_set() != SUCCESS) return ERROR;
 	all_num = ufl_num;
-	if (ReadFile() != true) return ERROR;
+	fault_flags_init();
+	if (opt.lfsr && ReadFile() != true) return ERROR;		//LFSR+フェーズシフタの入力ファイル
 	if (!essential_open()) return ERROR;
 	if (screen_untestable_faults() != SUCCESS) return ERROR;		//必須割当てだけで検出不能と分かる故障を外す
 
 	report_summary(stdout, "RUNNING", NULL);
 	AssigneVarsGC();					//正常回路のブール変数番号
-	if (CreateLFSRmodel() != true) {	//LFSR+フェーズシフタの制約式
+	if (opt.lfsr && CreateLFSRmodel() != true) {	//LFSR+フェーズシフタの制約式
 		printf("[ERROR] Creating the LFSR / phase-shifter model failed.\n");
 		return ERROR;
 	}
+	if (opt.untest_mode && untest_mode_run() != SUCCESS) return ERROR;	//冗長な故障などを最初に除く
 	return SUCCESS;
-}
-
-//===================================================
-//関数名:write_problem_file
-//機能:PBOの問題ファイルを書く(ヘッダ・目的関数・制約)。
-//     変数の数・制約の数は、実際に出力した制約から数える(別に予測しない)
-//引数：制約の本体(一時ファイル)，問題ファイルのパス，緩和変数の最初の番号
-//===================================================
-static int write_problem_file(FILE* body, const char* path, unsigned int relaxation_start) {
-	FILE* output = NULL;
-	unsigned int maximum_variable = 0;
-	unsigned int constraint_count = 0;
-	int character;
-	int transition_count = opt.low_power ? pbo_count_transition_nets() : 0;
-
-	rewind(body);
-	while ((character = fgetc(body)) != EOF) {
-		if (character == ';') {
-			constraint_count++;
-		}
-		if (character == 'x') {
-			unsigned int variable;
-			if (fscanf_s(body, "%u", &variable) == 1 && variable > maximum_variable) {
-				maximum_variable = variable;
-			}
-		}
-	}
-	if (ferror(body)) {
-		printf("[ERROR] Cannot read the constraint buffer.\n");
-		return ERROR;
-	}
-	if (fopen_s(&output, path, "w") != 0 || output == NULL) {
-		printf("[ERROR] Cannot create %s\n", path);
-		return ERROR;
-	}
-
-	fprintf(output, "* #variable= %u #constraint= %u #product= %d sizeproduct= %d\n",
-		maximum_variable, constraint_count, 2 * transition_count, 4 * transition_count);
-	fprintf(output, "min:");
-	for (int target = 1; target < tfl_num; target++) {		//二次故障の緩和変数の個数だけ最小化する
-		fprintf(output, " +1 x%u", relaxation_start + target - 1);
-	}
-	fprintf(output, ";\n");
-	rewind(body);
-	while ((character = fgetc(body)) != EOF) {
-		fputc(character, output);
-	}
-	{
-		int failed = ferror(body) || ferror(output);
-		if (fclose(output) != 0) {
-			failed = 1;
-		}
-		if (failed) {
-			printf("[ERROR] Cannot write %s\n", path);
-		}
-		return failed ? ERROR : SUCCESS;
-	}
-}
-
-//===================================================
-//関数名:write_problem
-//機能:目標故障集合 tfl と WSA閾値から、PBOの問題ファイル mttg_pbo.txt を作る
-//戻り値：int 正常終了:SUCCESS , 異常終了:ERROR
-//===================================================
-static int write_problem(const MttgAttempt* attempt) {
-	char path[1024];
-	FILE* body;
-	unsigned int relaxation_start;
-	int index;
-	int result;
-
-	if (output_path(path, sizeof(path), "mttg_pbo.txt") != SUCCESS) return ERROR;
-	if ((body = tmpfile()) == NULL) {
-		printf("[ERROR] Cannot create a temporary file for the constraints.\n");
-		return ERROR;
-	}
-
-	makeProbFileConsPS_clasp(body);					//LFSR + フェーズシフタ
-	pbo_generate_good_circuit(body);				//正常回路(2時刻分)
-
-	bool_id = VAR_FIRST_FAULT_CIRCUIT;				//故障回路・故障検出回路の変数はここから
-	index = 0;
-	for (UNDET_FAULT_LIST* target = tfl; target != NULL; target = target->next, index++) {
-		build_fault_cone(target->netlist, index);	//故障箇所から到達できる範囲を求める
-		pbo_generate_faulty_circuit(body, target);
-		pbo_generate_fault_detection(body, target);
-		if (index == 0 && opt.fault_propagation) {	//一次故障だけ
-			pbo_generate_fault_propagation(body, target);
-		}
-	}
-
-	relaxation_start = bool_id;						//以降の変数は、二次故障の緩和変数
-	index = 0;
-	for (UNDET_FAULT_LIST* target = tfl; target != NULL; target = target->next, index++) {
-		pbo_generate_fault_excitation(body, target, index == 0);	//一次故障は必ず励起、二次故障は緩和変数つき
-	}
-
-	if (opt.low_power) {
-		pbo_generate_power(regen_wsa_threshold(attempt), body);
-	}
-
-	result = write_problem_file(body, path, relaxation_start);
-	fclose(body);
-	return result;
 }
 
 //===================================================
@@ -252,8 +159,12 @@ static int apply_solution(const MttgAttempt* attempt, int switched_to_single, Mt
 		seed_num++;
 		if (attempt->wsa_stage > 0) seed_relaxed_num++;
 		if (opt.low_power && wsa > wsa_used_max) wsa_used_max = wsa;
-		fprintf(seed_file, "%s\n", clasp.sol[SOL_SEED]);
-		fflush(seed_file);			//途中でエラー終了しても、ここまでのシードは残す
+		if (opt.lfsr) {
+			fprintf(seed_file, "%s\n", clasp.sol[SOL_SEED]);
+			fflush(seed_file);			//途中でエラー終了しても、ここまでのシードは残す
+		}
+		fprintf(tp_set_file, "%s\n", clasp.sol[SOL_TP]);
+		fflush(tp_set_file);
 		if (report_append_seed_log(tfl_num, result.detected_target_count, result.detected_count, wsa, regen_phase_name(attempt->phase)) != SUCCESS) return ERROR;
 		printf("[SEED %d] detected %d faults (targets %d/%d, %s), %d undetected faults remain", seed_num,
 			result.detected_count, result.detected_target_count, tfl_num, regen_phase_name(attempt->phase), ufl_num);
@@ -281,23 +192,33 @@ static int apply_solution(const MttgAttempt* attempt, int switched_to_single, Mt
 
 //===================================================
 //関数名:give_up_on_primary
-//機能:再生成してもソルバが解けなかった一次故障を、シード生成不能故障にする
-//引数：解なしと確定していたか(0: 打ち切り)
+//機能:再生成してもソルバが解けなかった一次故障を断念する。解なしのときは原因を調べて分類する
+//引数：解なしと確定していたか(0: 打ち切り)，最後に使ったWSA閾値
 //===================================================
-static int give_up_on_primary(int solver_unsat) {
-	const UNDET_FAULT_LIST* primary = tfl;
+static int give_up_on_primary(int solver_unsat, int wsa) {
+	UNDET_FAULT_LIST* primary = fault_copy(tfl);
+	DiagVerdict verdict = DIAG_UNKNOWN;
 
 	if (primary == NULL) {
 		printf("[ERROR] Internal error: there is no primary fault to give up.\n");
 		return ERROR;
 	}
-	if (fault_list_push_copy(&unseed, &unseed_num, primary) != SUCCESS) return ERROR;
-	printf("[MTTG] The primary fault %s %s was moved to the unseed list (%s).\n",
-		primary->name, fault_type_name(primary->type), solver_unsat ? "the solver proved it unsatisfiable" : "the solver found no seed in time");
-	if (fault_remove_undetected(primary) != SUCCESS) {
-		printf("[ERROR] Internal error: the primary fault %s is not in the undetected list.\n", primary->name);
+	if (solver_unsat) {
+		printf("[DIAG] %s %s: no solution. Checking the cause ...\n", primary->name, fault_type_name(primary->type));
+		verdict = diagnose_unsat(primary, opt.low_power ? wsa : -1);
+		if (verdict == DIAG_ERROR) {
+			printf("[ERROR] The solver run failed while checking the cause.\n");
+			free(primary);
+			return ERROR;
+		}
+	}
+	printf("[MTTG] The primary fault %s %s was given up: %s.\n", primary->name, fault_type_name(primary->type),
+		solver_unsat ? diagnose_verdict_text(verdict) : "the solver found neither a solution nor unsatisfiability in time");
+	if (diagnose_commit(primary, verdict) != SUCCESS) {
+		free(primary);
 		return ERROR;
 	}
+	free(primary);
 	release_targets();
 	return SUCCESS;
 }
@@ -350,7 +271,12 @@ static int generate_seed(MttgState* state) {
 		MttgAttempt next;
 		int solver_unsat;
 
-		if (write_problem(&attempt) != SUCCESS) return ERROR;
+		{
+			ProblemSpec spec;
+			spec.with_lfsr = opt.lfsr;
+			spec.wsa_threshold = opt.low_power ? regen_wsa_threshold(&attempt) : -1;
+			if (problem_write(&spec) != SUCCESS) return ERROR;
+		}
 		if (CLASP() != CLASP_OKAY) {
 			printf("[ERROR] The solver run failed.\n");
 			return ERROR;
@@ -361,7 +287,7 @@ static int generate_seed(MttgState* state) {
 
 		solver_unsat = (clasp.status == CLASP_STATUS_UNSAT);
 		if (!regen_next_attempt(&attempt, solver_unsat, &next)) {
-			return give_up_on_primary(solver_unsat);
+			return give_up_on_primary(solver_unsat, regen_wsa_threshold(&attempt));
 		}
 		if (next.phase != attempt.phase) {
 			if (switch_to_primary_only() != SUCCESS) return ERROR;
@@ -394,6 +320,10 @@ int mttg_main(void) {
 	if (seed_file != NULL) {
 		fclose(seed_file);
 		seed_file = NULL;
+	}
+	if (tp_set_file != NULL) {
+		fclose(tp_set_file);
+		tp_set_file = NULL;
 	}
 	return result;
 }

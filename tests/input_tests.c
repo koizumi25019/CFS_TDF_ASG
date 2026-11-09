@@ -4,6 +4,7 @@
 #include <string.h>
 #include "../src/header/Define.h"
 #include "../src/asg/opb/opb.h"
+#include "../src/asg/essential.h"
 
 static void write_fixture(const char* path, const char* text)
 {
@@ -45,26 +46,26 @@ void test_input_readers(void)
     nets[2].name = "output"; nets[2].type = INV;
     nets[3].name = "internal"; nets[3].type = INV; nets[3].n_out = 1;
     readdata.lfsrnet.num = 100;
-    opt.file.input.xortap = "audit_build/test_taps.txt";
-    opt.file.input.scanchain = "audit_build/test_scan.txt";
+    opt.xor_tap_file = "audit_build/test_taps.txt";
+    opt.scan_chain_file = "audit_build/test_scan.txt";
     for (int index = 0; index < sizeof(bad_taps) / sizeof(*bad_taps); index++) {
         printf("[TEST] Invalid tap fixture %d.\n", index);
         fflush(stdout);
-        write_fixture(opt.file.input.xortap, bad_taps[index]);
+        write_fixture(opt.xor_tap_file, bad_taps[index]);
         assert(ReadXORtap() == READ_ERROR);
         release_channels();
     }
     for (int index = 0; index < sizeof(bad_scans) / sizeof(*bad_scans); index++) {
-        write_fixture(opt.file.input.xortap, "0:_1_2\n1:_3\n");
+        write_fixture(opt.xor_tap_file, "0:_1_2\n1:_3\n");
         assert(ReadXORtap());
-        write_fixture(opt.file.input.scanchain, bad_scans[index]);
+        write_fixture(opt.scan_chain_file, bad_scans[index]);
         assert(ReadScanChain() == READ_ERROR);
         release_channels();
     }
-    write_fixture(opt.file.input.xortap, "\n0:_1_2\n\t\n1:_3\n");
+    write_fixture(opt.xor_tap_file, "\n0:_1_2\n\t\n1:_3\n");
     assert(ReadXORtap());
     assert(readdata.psnet.nlist[0].nin == 2);
-    write_fixture(opt.file.input.scanchain, "G0, output\n\nG1\n");
+    write_fixture(opt.scan_chain_file, "G0, output\n\nG1\n");
     assert(ReadScanChain());
     assert(readdata.psnet.nlist[0].nout_slength == 2);
     assert(readdata.psnet.nlist[1].nout_slength == 1);
@@ -147,50 +148,76 @@ void test_phase_constraints(void)
     puts("PASS: phase-shifter parity truth tables (64 assignments), zero parity and short channel.");
 }
 
-void test_gate_simulation(void)
+/* 1つのゲート Z = f(A, B) について、Z が良値のとき必ず成り立つ値を全探索で求め、必須割当て(強い含意)と一致するか調べる */
+void test_essential_gates(void)
 {
     NLIST gates[3] = {0};
-    NLIST* sorted[] = {&gates[0], &gates[1], &gates[2]};
     NLIST* inputs[] = {&gates[0], &gates[1]};
+    NLIST* outputs_a[] = {&gates[2]};
+    NLIST* outputs_b[] = {&gates[2]};
     const int types[] = {AND, NAND, OR, NOR, INV, BUF, FOUT, EXOR};
+    int checked = 0;
     nl = gates;
-    sort_nl = sorted;
     n_net = 3;
-    n_pi = 2;
-    n_ppi = 0;
+    n_po = 0;
     gates[0].type = gates[1].type = IN;
     gates[0].name = "A"; gates[1].name = "B"; gates[2].name = "Z";
+    gates[0].level = gates[1].level = 1;
+    gates[2].level = 2;
+    gates[2].ppo_flag = 1;
+    gates[0].out = outputs_a; gates[0].n_out = 1;
     gates[2].in = inputs;
+    assert(essential_open());
     for (int kind = 0; kind < sizeof(types) / sizeof(*types); kind++) {
         int type = types[kind];
+        int single_input = type == INV || type == BUF || type == FOUT;
         gates[2].type = type;
-        gates[2].n_in = type == INV || type == BUF || type == FOUT ? 1 : 2;
+        gates[2].n_in = single_input ? 1 : 2;
+        gates[1].out = single_input ? NULL : outputs_b;
+        gates[1].n_out = single_input ? 0 : 1;
         assert(validate_circuit_gates() == SUCCESS);
-        for (int assignment = 0; assignment < 4; assignment++) {
-            int a = assignment & 1;
-            int b = (assignment >> 1) & 1;
-            int expected;
-            switch (type) {
-            case AND: expected = a & b; break;
-            case NAND: expected = !(a & b); break;
-            case OR: expected = a | b; break;
-            case NOR: expected = !(a | b); break;
-            case INV: expected = !a; break;
-            case EXOR: expected = a ^ b; break;
-            default: expected = a; break;
+        for (int fault_type = STF; fault_type <= STR; fault_type++) {
+            EssentialOptions options = essential_default_options();
+            EssentialResult result;
+            int good_value = fault_type == STR;
+            int forced[3] = {-1, -1, -1};		/* 全ての成立する割当てで同じ値になる信号線 */
+            int consistent = 0;
+            options.frames = 1;
+            for (int assignment = 0; assignment < 4; assignment++) {
+                int a = assignment & 1, b = (assignment >> 1) & 1, z;
+                switch (type) {
+                case AND: z = a & b; break;
+                case NAND: z = !(a & b); break;
+                case OR: z = a | b; break;
+                case NOR: z = !(a | b); break;
+                case INV: z = !a; break;
+                case EXOR: z = a ^ b; break;
+                default: z = a; break;
+                }
+                if (z != good_value || (single_input && b)) continue;
+                for (int net = 0; net < 3; net++) {
+                    int value = net == 0 ? a : (net == 1 ? b : z);
+                    if (!consistent) forced[net] = value; else if (forced[net] != value) forced[net] = -2;
+                }
+                consistent = 1;
             }
-            gates[0].val_1t = gates[0].val_2t = a;
-            gates[1].val_1t = gates[1].val_2t = b;
-            assert(logic_sim_1time() == SUCCESS && gates[2].val_1t == expected);
-            assert(logic_sim_2time() == SUCCESS && gates[2].val_2t == expected);
+            assert(essential_compute(&gates[2], fault_type, &options, &result));
+            assert(result.status == ESSENTIAL_OK);
+            for (int net = 0; net < 3; net++) {
+                int found = -1;
+                for (int k = 0; k < result.count; k++) if (result.net[k] == net) found = result.value[k];
+                if (single_input && net == 1) continue;
+                assert(found == (forced[net] == -2 ? -1 : forced[net]));
+                checked++;
+            }
         }
     }
+    essential_close();
     gates[2].type = EXNOR;
     assert(validate_circuit_gates() == ERROR);
     gates[2].type = EXOR;
     gates[2].n_in = 1;
     assert(validate_circuit_gates() == ERROR);
     nl = NULL;
-    sort_nl = NULL;
-    puts("PASS: 8 gate truth tables in both frames (64 cases), unsupported type and bad arity.");
+    puts("PASS: implications of 8 gate types match the exhaustive truth tables (both fault types), unsupported type and bad arity.");
 }

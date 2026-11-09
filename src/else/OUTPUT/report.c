@@ -62,7 +62,7 @@ void report_summary(FILE* out, const char* status, const char* reason) {
 	fprintf(out, "//---------------------------------------------------\n");
 	fprintf(out, "// Target Circuit              :%s\n", opt.circuit);
 	fprintf(out, "// Fault Type                  :TDF\n");
-	fprintf(out, "// Seed Generation             :%s\n", opt.target_limit == 1 ? "STTG" : "MTTG");
+	fprintf(out, "// Generation                  :%s, %s\n", opt.lfsr ? "seeds (LFSR + phase shifter)" : "test patterns (no LFSR)", opt.target_limit == 1 ? "single target" : "multiple targets");
 	fprintf(out, "// Status                      :%s\n", status);
 	if (reason != NULL && reason[0] != '\0') {
 		fprintf(out, "// Reason                      :%s\n", reason);
@@ -71,17 +71,21 @@ void report_summary(FILE* out, const char* status, const char* reason) {
 	fprintf(out, "// Number of Total Faults      :%d\n", all_num);
 	fprintf(out, "// Number of Detected Faults   :%d\n", dfl_num);
 	fprintf(out, "// Number of Undetected Faults :%d\n", ufl_num);
-	fprintf(out, "// Number of Untestable Faults :%d   (-> %s)\n", untest_num, FILE_UNTESTABLE);
+	fprintf(out, "// Number of Redundant Faults  :%d   (-> %s)\n", untest_num, FILE_UNTESTABLE);
 	fprintf(out, "// Number of Unseed Faults     :%d   (-> %s)\n", unseed_num, FILE_UNSEED);
+	fprintf(out, "// Number of WSA-infeasible    :%d   (-> %s)\n", wsafl_num, FILE_WSA_INFEASIBLE);
+	fprintf(out, "// Number of Unknown Faults    :%d   (-> %s)\n", unknownfl_num, FILE_UNKNOWN);
 	fprintf(out, "// Number of Abort Faults      :%d   (-> %s)\n", abortfl_num, FILE_ABORT);
 	fprintf(out, "// Number of High Power Faults :%d   (-> %s)\n", hpfl_num, FILE_HIGH_POWER);
 	fprintf(out, "// Number of Seeds             :%d\n", seed_num);
 	fprintf(out, "// Seeds with relaxed WSA      :%d\n", seed_relaxed_num);
 	fprintf(out, "// Rate of Detected Faults     :%.2lf%%\n", rate);
-	fprintf(out, "// Rate excluding untestable   :%.2lf%%\n", efficiency);
+	fprintf(out, "// Rate excluding redundant    :%.2lf%%\n", efficiency);
 	fprintf(out, "// Elapsed time                :%.2lfsec\n", elapsed);
 	fprintf(out, "// Time to graph               :%.2lfsec\n", (double)time_graph / CLOCKS_PER_SEC);
 	fprintf(out, "//---- setting\n");
+	fprintf(out, "// LFSR (-lfsr)                :%s\n", OPTonoff(opt.lfsr));
+	fprintf(out, "// Untestable check (-untest_mode):%s\n", OPTonoff(opt.untest_mode));
 	fprintf(out, "// Low Power Mode              :%s\n", OPTonoff(opt.low_power));
 	if (opt.low_power) {
 		fprintf(out, "// WSA threshold (specified)   :%d%%\n", opt.wsa_threshold);
@@ -160,6 +164,8 @@ int report_write_final(const char* status, const char* reason) {
 	if (write_fault_list(FILE_UNDETECTED, ufl) != SUCCESS) result = ERROR;
 	if (write_fault_list(FILE_UNTESTABLE, untestfl) != SUCCESS) result = ERROR;
 	if (write_fault_list(FILE_UNSEED, unseed) != SUCCESS) result = ERROR;
+	if (write_fault_list(FILE_WSA_INFEASIBLE, wsafl) != SUCCESS) result = ERROR;
+	if (write_fault_list(FILE_UNKNOWN, unknownfl) != SUCCESS) result = ERROR;
 	if (write_fault_list(FILE_ABORT, abortfl) != SUCCESS) result = ERROR;
 	if (write_fault_list(FILE_HIGH_POWER, hpfl) != SUCCESS) result = ERROR;
 	return result;

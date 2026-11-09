@@ -12,14 +12,8 @@
 # set scan-chain(.txt)
 -scan_chain ./input/scan_chain/s27_sc_4.txt
 
-# set necessary(.txt)
--nece ./input/necessary/s27_nece.txt
-
 # set folder out(.txt)
 -folder ./s27_output/
-
-# set seed set(.txt)
--seed s27_seed.txt
 
 # set target limit (value)
 -target_limit 2
@@ -30,13 +24,9 @@
 # set power mode (ON，OFF)
 -power OFF
 
-# set random mode (ON，OFF)
--rand OFF
-
 # set parallel mode (value)
 -parallel 6
 
 # set clasp mode 1 (ON，OFF)
 #-mode_1 OFF
-
 
