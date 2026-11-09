@@ -1,4 +1,4 @@
-//------------------------------------------------------------------------
+﻿//------------------------------------------------------------------------
 //  目標故障の選択
 //------------------------------------------------------------------------
 #include <stdio.h>
@@ -6,10 +6,10 @@
 #include <string.h>
 #include <time.h>
 
-#include "../../header/Define.h"
-#include "../../asg/read.h"
-#include "../../asg/compat.h"
-#include "../../else/fault_list.h"
+#include "../header/Define.h"
+#include "../asg/read.h"
+#include "../asg/compat.h"
+#include "../else/fault_list.h"
 
 static bool compat_graph_ready = false;	//両立可能故障グラフを作成済みか
 

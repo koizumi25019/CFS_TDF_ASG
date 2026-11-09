@@ -105,7 +105,6 @@ void InitGlobalVarsCLASP(
 	clasp.sol[SOL_TP] = (char*)allocMemory(n_dff + n_pi + 1, sizeof(char));
 	clasp.sol[SOL_TP][n_dff + n_pi] = '\0';
 
-	clasp.objval = CLASP_OBJVAL_ERROR;
 	clasp.status = CLASP_STATUS_ERROR;
 
 	return;

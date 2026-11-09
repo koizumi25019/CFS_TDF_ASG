@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\asg\compat.c" />
     <ClCompile Include="src\asg\init.c" />
     <ClCompile Include="src\asg\opb\clasp\clasp.c" />
     <ClCompile Include="src\asg\opb\cons_gc.c" />
@@ -35,41 +36,48 @@
     <ClCompile Include="src\else\Netlist\Netlist.c" />
     <ClCompile Include="src\else\Netlist\make_ppo_ppi.c" />
     <ClCompile Include="src\else\Netlist\validate_gates.c" />
-    <ClCompile Include="src\else\OUTPUT\file_output.c" />
     <ClCompile Include="src\else\OUTPUT\pin_make.c" />
-    <ClCompile Include="src\else\OUTPUT\standard_output.c" />
+    <ClCompile Include="src\else\OUTPUT\report.c" />
     <ClCompile Include="src\else\Que.c" />
+    <ClCompile Include="src\else\fault_list.c" />
     <ClCompile Include="src\else\reset_flag.c" />
     <ClCompile Include="src\else\transition_delay_fault_set.c" />
+    <ClCompile Include="src\header\globals.c" />
     <ClCompile Include="src\lib\lib.c" />
     <ClCompile Include="src\main\check_open_pass.c" />
+    <ClCompile Include="src\main\external_tools.c" />
     <ClCompile Include="src\main\main.c" />
     <ClCompile Include="src\main\open_stack.c" />
-    <ClCompile Include="src\mttg\MiniPBO\fault_select.c" />
-    <ClCompile Include="src\mttg\Untest_delete\untest_calc_pbo_size.c" />
-    <ClCompile Include="src\mttg\Untest_delete\untest_pbo_generate.c" />
     <ClCompile Include="src\mttg\clasp_mode.c" />
+    <ClCompile Include="src\mttg\fault_cone.c" />
+    <ClCompile Include="src\mttg\fault_select.c" />
     <ClCompile Include="src\mttg\mttg_check_wsa.c" />
     <ClCompile Include="src\mttg\mttg_main.c" />
-    <ClCompile Include="src\mttg\mttg_pbo_generate.c" />
-    <ClCompile Include="src\mttg\specific_fault_range.c" />
-    <ClCompile Include="src\mttg\undet_fault_delete.c" />
+    <ClCompile Include="src\mttg\pbo_circuit.c" />
+    <ClCompile Include="src\mttg\pbo_target.c" />
+    <ClCompile Include="src\mttg\regen.c" />
     <ClCompile Include="src\opt\opt.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\asg\compat.h" />
     <ClInclude Include="src\asg\createSGmodel.h" />
     <ClInclude Include="src\asg\init.h" />
     <ClInclude Include="src\asg\opb\clasp\clasp.h" />
     <ClInclude Include="src\asg\opb\opb.h" />
     <ClInclude Include="src\asg\polynomial.h" />
     <ClInclude Include="src\asg\read.h" />
-    <ClInclude Include="src\asg\target.h" />
-    <ClInclude Include="src\header\Command_Info.h" />
+    <ClInclude Include="src\else\Fsim\fault_judge.h" />
+    <ClInclude Include="src\else\OUTPUT\report.h" />
+    <ClInclude Include="src\else\fault_list.h" />
     <ClInclude Include="src\header\Define.h" />
     <ClInclude Include="src\header\Fault.h" />
     <ClInclude Include="src\header\Netlist.h" />
     <ClInclude Include="src\header\Stack.h" />
     <ClInclude Include="src\lib\lib.h" />
+    <ClInclude Include="src\main\external_tools.h" />
+    <ClInclude Include="src\mttg\mttg_check_wsa.h" />
+    <ClInclude Include="src\mttg\pbo_generate.h" />
+    <ClInclude Include="src\mttg\regen.h" />
     <ClInclude Include="src\opt\opt.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

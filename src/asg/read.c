@@ -13,7 +13,6 @@
 //追加
 #include"../header/Fault.h"
 #include"../header/Define.h"
-#include"target.h"
 //#include "debug.h"
 
 

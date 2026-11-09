@@ -40,17 +40,14 @@
     <Filter Include="mttg">
       <UniqueIdentifier>{1fd5424a-e232-513f-9b33-3515dfc570ff}</UniqueIdentifier>
     </Filter>
-    <Filter Include="mttg\MiniPBO">
-      <UniqueIdentifier>{26ccd423-2bfe-5df8-a377-092fd5522501}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="mttg\Untest_delete">
-      <UniqueIdentifier>{38065b30-209e-5382-9473-70b9ad07a25e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="opt">
       <UniqueIdentifier>{315b22b2-eb29-5245-820e-72030620c8e2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\asg\compat.c">
+      <Filter>asg</Filter>
+    </ClCompile>
     <ClCompile Include="src\asg\init.c">
       <Filter>asg</Filter>
     </ClCompile>
@@ -99,16 +96,16 @@
     <ClCompile Include="src\else\Netlist\validate_gates.c">
       <Filter>else\Netlist</Filter>
     </ClCompile>
-    <ClCompile Include="src\else\OUTPUT\file_output.c">
-      <Filter>else\OUTPUT</Filter>
-    </ClCompile>
     <ClCompile Include="src\else\OUTPUT\pin_make.c">
       <Filter>else\OUTPUT</Filter>
     </ClCompile>
-    <ClCompile Include="src\else\OUTPUT\standard_output.c">
+    <ClCompile Include="src\else\OUTPUT\report.c">
       <Filter>else\OUTPUT</Filter>
     </ClCompile>
     <ClCompile Include="src\else\Que.c">
+      <Filter>else</Filter>
+    </ClCompile>
+    <ClCompile Include="src\else\fault_list.c">
       <Filter>else</Filter>
     </ClCompile>
     <ClCompile Include="src\else\reset_flag.c">
@@ -117,10 +114,16 @@
     <ClCompile Include="src\else\transition_delay_fault_set.c">
       <Filter>else</Filter>
     </ClCompile>
+    <ClCompile Include="src\header\globals.c">
+      <Filter>header</Filter>
+    </ClCompile>
     <ClCompile Include="src\lib\lib.c">
       <Filter>lib</Filter>
     </ClCompile>
     <ClCompile Include="src\main\check_open_pass.c">
+      <Filter>main</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main\external_tools.c">
       <Filter>main</Filter>
     </ClCompile>
     <ClCompile Include="src\main\main.c">
@@ -129,16 +132,13 @@
     <ClCompile Include="src\main\open_stack.c">
       <Filter>main</Filter>
     </ClCompile>
-    <ClCompile Include="src\mttg\MiniPBO\fault_select.c">
-      <Filter>mttg\MiniPBO</Filter>
-    </ClCompile>
-    <ClCompile Include="src\mttg\Untest_delete\untest_calc_pbo_size.c">
-      <Filter>mttg\Untest_delete</Filter>
-    </ClCompile>
-    <ClCompile Include="src\mttg\Untest_delete\untest_pbo_generate.c">
-      <Filter>mttg\Untest_delete</Filter>
-    </ClCompile>
     <ClCompile Include="src\mttg\clasp_mode.c">
+      <Filter>mttg</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mttg\fault_cone.c">
+      <Filter>mttg</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mttg\fault_select.c">
       <Filter>mttg</Filter>
     </ClCompile>
     <ClCompile Include="src\mttg\mttg_check_wsa.c">
@@ -147,13 +147,13 @@
     <ClCompile Include="src\mttg\mttg_main.c">
       <Filter>mttg</Filter>
     </ClCompile>
-    <ClCompile Include="src\mttg\mttg_pbo_generate.c">
+    <ClCompile Include="src\mttg\pbo_circuit.c">
       <Filter>mttg</Filter>
     </ClCompile>
-    <ClCompile Include="src\mttg\specific_fault_range.c">
+    <ClCompile Include="src\mttg\pbo_target.c">
       <Filter>mttg</Filter>
     </ClCompile>
-    <ClCompile Include="src\mttg\undet_fault_delete.c">
+    <ClCompile Include="src\mttg\regen.c">
       <Filter>mttg</Filter>
     </ClCompile>
     <ClCompile Include="src\opt\opt.c">
@@ -161,6 +161,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\asg\compat.h">
+      <Filter>asg</Filter>
+    </ClInclude>
     <ClInclude Include="src\asg\createSGmodel.h">
       <Filter>asg</Filter>
     </ClInclude>
@@ -179,11 +182,14 @@
     <ClInclude Include="src\asg\read.h">
       <Filter>asg</Filter>
     </ClInclude>
-    <ClInclude Include="src\asg\target.h">
-      <Filter>asg</Filter>
+    <ClInclude Include="src\else\Fsim\fault_judge.h">
+      <Filter>else\Fsim</Filter>
     </ClInclude>
-    <ClInclude Include="src\header\Command_Info.h">
-      <Filter>header</Filter>
+    <ClInclude Include="src\else\OUTPUT\report.h">
+      <Filter>else\OUTPUT</Filter>
+    </ClInclude>
+    <ClInclude Include="src\else\fault_list.h">
+      <Filter>else</Filter>
     </ClInclude>
     <ClInclude Include="src\header\Define.h">
       <Filter>header</Filter>
@@ -199,6 +205,18 @@
     </ClInclude>
     <ClInclude Include="src\lib\lib.h">
       <Filter>lib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\main\external_tools.h">
+      <Filter>main</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mttg\mttg_check_wsa.h">
+      <Filter>mttg</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mttg\pbo_generate.h">
+      <Filter>mttg</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mttg\regen.h">
+      <Filter>mttg</Filter>
     </ClInclude>
     <ClInclude Include="src\opt\opt.h">
       <Filter>opt</Filter>

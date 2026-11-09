@@ -17,6 +17,11 @@
 //  戻り値 : なし
 //  引  数 : なし
 //=========================================================================
+static int compare_level(const void* a, const void* b)
+{
+	return (*(NLIST* const*)a)->level - (*(NLIST* const*)b)->level;
+}
+
 void Qsort(void) {
 
 	int i;
@@ -32,17 +37,6 @@ void Qsort(void) {
 	}
 
 	//クイックソート
-	qsort(sort_nl, n_net, sizeof(NLIST*), compare_int);
+	qsort(sort_nl, n_net, sizeof(NLIST*), compare_level);
 
-}
-
-
-//=========================================================================
-//  関数名 : compare_int
-//  機  能 : 入れ替え
-//  戻り値 : 入れ替えた中身
-//  引  数 : ２つの要素
-//=========================================================================
-int compare_int(void *a, void *b) {
-	return (*(NLIST**)a)->level - (*(NLIST**)b)->level;
 }

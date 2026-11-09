@@ -1,20 +1,13 @@
-﻿//11
-//------------------------------------------------------------------------
-//インクルード
+﻿//------------------------------------------------------------------------
+//  TDF_ASG: 遷移故障のシード生成(メイン)
 //------------------------------------------------------------------------
 #include <stdio.h>
-#include <time.h>
-#include<stdlib.h>
-#include<string.h>
-
-//------------------------------------------------------------------------
-//自作インクルード
-//------------------------------------------------------------------------
-#include"../header/Define.h"
-
-//追加
+#include <stdlib.h>
+#include "../header/Define.h"
 #include "../asg/init.h"
 #include "../opt/opt.h"
+#include "../else/OUTPUT/report.h"
+#include "external_tools.h"
 
 //===================================================
 //関数名:main
@@ -22,64 +15,39 @@
 //戻り値：int 正常終了:SUCCESS(=0) , 異常終了:ERROR(=-1)
 //引数：コマンドライン引数の数, コマンドライン引数
 //===================================================
-int main(int argc, char *argv[]) {
-	clock_t start_time; //タイム計測変数
+int main(int argc, char* argv[]) {
+	int result;
 
-    //オプション設定
+	//オプション設定
 	if (OPT(argc, argv) != true) return ERROR;
+	if (check_external_tools() != SUCCESS) return ERROR;
+	report_start_clock();
 
-	//ネットリスト起動
+	//ネットリストの読み込みと初期化
 	read_nl(opt.circuit);
-	if (validate_circuit_gates() != SUCCESS) {
+	if (validate_circuit_gates() != SUCCESS) return ERROR;
+	make_ppo_ppi();
+	if (init_exturn() != SUCCESS) {
+		printf("[ERROR] Initialization failed (init_exturn).\n");
 		return ERROR;
 	}
-	make_ppo_ppi();
-
-	//初期化
-	if (init_exturn() != SUCCESS) {
-		printf("【ERROR】:init exturn(main.c)\n");
-		exit(ERROR);
-	}
-	printf("【SUCCESS】:init exturn\n");
-
-	//初期化ASG部分
 	if (InitGlobalVars() != true) return ERROR;
 
-	//消費電力考慮の場合
-	if (opt.low_power) {
-		if (check_open_pass() != SUCCESS) {
-			printf("【ERROR】:open pass(main.c)\n");
-			return ERROR;
-		}
-		printf("【SUCCESS】:open pass\n");
-	}
-
-	//タイム計測
-	start_time = clock();
-
-	//遷移故障MTTG開始
-	if (mttg_main() != SUCCESS) {
-		printf("【ERROR】:MTTG(main.c)\n");
-		return ERROR;
-	}
-	if (opt.target_limit == 1) {
-		printf("【SUCCESS】:STTG\n");
-	}
-	else {
-		printf("【SUCCESS】:MTTG\n");
-	}
-
-	//ファイル生成
-	if (file_output(start_time,2) != SUCCESS) {
-		printf("【ERROR】:File Output(main.c)\n");
+	//消費電力を考慮する場合は、オープンパス(WSAの対象外)を調べる
+	if (opt.low_power && check_open_pass() != SUCCESS) {
+		printf("[ERROR] Open-path check failed.\n");
 		return ERROR;
 	}
 
-	//プログラム終了メール送信
-	//system("chcp 65001");
-	//system("chcp 932");
+	//遷移故障のシード生成。エラーで終了しても、途中までの結果を出力する
+	result = mttg_main();
+	if (report_write_final(result == SUCCESS ? RUN_COMPLETED : RUN_ABORTED,
+			result == SUCCESS ? NULL : "see the messages above") != SUCCESS) {
+		printf("[ERROR] Writing the result files failed.\n");
+		result = ERROR;
+	}
+	if (result != SUCCESS) return ERROR;
 
-	printf("\n\n----------【FINISH】TDF_ASG----------\n");
+	printf("\n----------[FINISH] TDF_ASG----------\n");
 	return SUCCESS;
-
 }

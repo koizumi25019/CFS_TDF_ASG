@@ -537,7 +537,6 @@ static void alloc_nl(void)
 		nl[i].suf_2t = 0;
 		nl[i].suf_fc = 0;
 
-		nl[i].tf_flag = OFF;
 	}
 }
 

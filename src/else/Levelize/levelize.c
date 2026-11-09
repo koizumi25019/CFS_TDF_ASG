@@ -118,7 +118,7 @@ int judge_in_level(NLIST **in_pin, int n) {
 	//全入力線のレベル付けは完了しているか判定
 	while (i < n) {
 		if (in_pin[i]->flag != 1) {
-			return FAILURE;	//失敗
+			return ERROR;	//失敗
 		}
 		i++;
 	}
