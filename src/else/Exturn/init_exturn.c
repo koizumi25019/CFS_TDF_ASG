@@ -81,6 +81,8 @@ int init_exturn(void) {
 	abortfl_num = 0;
 	ufl_num = 0;
 	dfl_num = 0;
+	untest_num = 0;
+	untestfl = NULL;
 	unseed_num = 0;
 	hpfl_num = 0;
 	seed_num = 0;

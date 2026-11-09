@@ -26,6 +26,8 @@
 #include "pbo_generate.h"
 #include "mttg_check_wsa.h"
 #include "regen.h"
+#include "../asg/essential.h"
+#include "../asg/screen.h"
 
 static FILE* seed_file;				//seed.txt(1行1シード)
 
@@ -54,6 +56,8 @@ static int mttg_prepare(void) {
 	if (transition_delay_fault_set() != SUCCESS) return ERROR;
 	all_num = ufl_num;
 	if (ReadFile() != true) return ERROR;
+	if (!essential_open()) return ERROR;
+	if (screen_untestable_faults() != SUCCESS) return ERROR;		//必須割当てだけで検出不能と分かる故障を外す
 
 	report_summary(stdout, "RUNNING", NULL);
 	AssigneVarsGC();					//正常回路のブール変数番号
@@ -386,6 +390,7 @@ int mttg_main(void) {
 	}
 
 	release_targets();
+	essential_close();
 	if (seed_file != NULL) {
 		fclose(seed_file);
 		seed_file = NULL;

@@ -57,6 +57,8 @@ extern int ufl_num;					//未検出故障数
 extern UNDET_FAULT_LIST* ufl;		//未検出故障リスト
 extern int dfl_num;					//検出故障数
 extern UNDET_FAULT_LIST* dfl;		//検出故障リスト
+extern int untest_num;				//検出不能(冗長)故障数
+extern UNDET_FAULT_LIST* untestfl;	//検出不能故障リスト(必須割当てだけで、検出するテストが無いと分かった故障)
 extern int unseed_num;				//シード生成不能故障数
 extern UNDET_FAULT_LIST* unseed;	//シード生成不能故障リスト(ソルバが解を求められなかった一次故障)
 extern int abortfl_num;				//打ち切り故障数

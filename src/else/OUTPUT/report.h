@@ -16,6 +16,7 @@
 #define FILE_SEED_LOG		"mttg.txt"					//シードごとの検出故障数・WSA閾値
 #define FILE_DETECTED		"det.txt"					//検出できた故障
 #define FILE_UNDETECTED		"undet.txt"					//最後まで検出できなかった故障(正常終了ならば空)
+#define FILE_UNTESTABLE		"untestable_fault.txt"		//検出不能(冗長)故障(必須割当てだけで、検出するテストが無いと分かった故障)
 #define FILE_UNSEED			"unseed_fault.txt"			//シード生成不能故障(ソルバが解を求められなかった一次故障)
 #define FILE_ABORT			"abort_fault.txt"			//MTTGが求まらず，STTGで検出できた故障
 #define FILE_HIGH_POWER		"high_power_fault.txt"		//緩和したWSA閾値でないと検出できなかった故障

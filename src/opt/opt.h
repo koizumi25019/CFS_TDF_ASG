@@ -25,7 +25,6 @@ typedef struct Option
 	char* fault_file;		  /**< -fault        RPR故障集合 */
 	char* xor_tap_file;		  /**< -xor_tap      フェーズシフタのXORタップ */
 	char* scan_chain_file;	  /**< -scan_chain   スキャンチェーン */
-	char* necessary_file;	  /**< -nece         必須割当て(未指定なら目標故障をランダムに選ぶ) */
 
 	/* 出力先 */
 	char* folder;			  /**< -folder       出力フォルダー(存在しないこと) */

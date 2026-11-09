@@ -58,20 +58,11 @@ typedef struct LinearFeedbackShiftRegister
 }
 LFSR;
 
-/** 必須割当て: 故障番号(node_id)で引く。assignments[node_id] は "G11=1 G17=0 ..." の文字列 */
-typedef struct Necessary
-{
-	int					  num;			      /**< 故障数(assignments の要素数) */
-	char** assignments;						  /**< 故障ごとの必須割当て */
-}
-NECESSARY;
-
 /** 読み込んだデータ */
 typedef struct ReadData
 {
 	struct PhaseShitfter  psnet;			  /**< phase-shifter net  */
 	struct LinearFeedbackShiftRegister lfsrnet;/** lfsr net */
-	struct Necessary	necenet;			  /**< necessary net */
 }
 READDATA;
 
@@ -105,5 +96,3 @@ bool ReadScanChain(void);
 /** create the lfsr list */
 bool CreateLFSRList(void);
 
-/** reading the necessary */
-bool ReadNecessary(void);

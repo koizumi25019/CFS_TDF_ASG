@@ -44,9 +44,6 @@ bool ReadFile(
 	/** read the scan-chain */
 	if (ReadScanChain() != READ_OKAY) return READ_ERROR;
 
-	/** read the necessary */
-	if (ReadNecessary() != READ_OKAY) return READ_ERROR;
-
 	printf("	Reading the files completed ... \n");
 
 	return READ_OKAY;
@@ -312,97 +309,4 @@ bool CreateLFSRList(
 	}
 	
 	return READ_OKAY;
-}
-
-//*************************************************************************************************************
-//	@name		：  ReadNeessary
-//	@function	：	Reading File Necessary
-//	@return		：	(bool) okay, error
-//*************************************************************************************************************
-/* 故障を (信号線名, 故障タイプ) で二分探索するための並び */
-static int compare_fault_key(const void* left, const void* right)
-{
-    const UNDET_FAULT_LIST* a = *(const UNDET_FAULT_LIST* const*)left;
-    const UNDET_FAULT_LIST* b = *(const UNDET_FAULT_LIST* const*)right;
-    int by_name = strcmp(a->name, b->name);
-    return by_name != 0 ? by_name : (a->type > b->type) - (a->type < b->type);
-}
-
-bool ReadNecessary(void)
-{
-    FILE* input = NULL;
-    char* line;
-    UNDET_FAULT_LIST** sorted;
-    int matched_count = 0;
-    int line_number = 0;
-    int valid = 1;
-    if (opt.necessary_file == NULL) {
-        return READ_OKAY;
-    }
-    if (fopen_s(&input, opt.necessary_file, "r") != 0 || input == NULL) {
-        printf("[ERROR] Cannot open the necessary-assignment file: %s\n", opt.necessary_file);
-        return READ_ERROR;
-    }
-    line = (char*)allocMemory(MAXSIZE_BUFFER, 1);
-    readdata.necenet.assignments = (char**)allocMemory(all_num, sizeof(char*));
-    sorted = (UNDET_FAULT_LIST**)allocMemory(all_num, sizeof(*sorted));
-    {
-        int i = 0;
-        for (UNDET_FAULT_LIST* fault = ufl; fault != NULL && i < all_num; fault = fault->next) sorted[i++] = fault;
-    }
-    qsort(sorted, all_num, sizeof(*sorted), compare_fault_key);
-    while (fgets(line, MAXSIZE_BUFFER, input) != NULL) {
-        char* context = NULL;
-        char* name = strtok_s(line, ", \t\r\n", &context);
-        char* type_name;
-        char* assignments;
-        UNDET_FAULT_LIST key;
-        UNDET_FAULT_LIST* key_pointer = &key;
-        UNDET_FAULT_LIST** found;
-        line_number++;
-        if (name == NULL) {
-            continue;
-        }
-        type_name = strtok_s(NULL, ", \t\r\n", &context);
-        assignments = strtok_s(NULL, "\r\n", &context);
-        if (type_name == NULL || assignments == NULL) {
-            printf("[ERROR] %s line %d: expected \"<signal> <SF0|SF1> <assignments>\".\n", opt.necessary_file, line_number);
-            valid = 0;
-            break;
-        }
-        memset(&key, 0, sizeof(key));
-        strcpy_s(key.name, sizeof(key.name), name);
-        if (strcmp(type_name, "SF0") == 0) {
-            key.type = STR;
-        } else if (strcmp(type_name, "SF1") == 0) {
-            key.type = STF;
-        } else {
-            printf("[ERROR] %s line %d: unknown fault type %s (SF0 or SF1 expected).\n", opt.necessary_file, line_number, type_name);
-            valid = 0;
-            break;
-        }
-        found = (UNDET_FAULT_LIST**)bsearch(&key_pointer, sorted, all_num, sizeof(*sorted), compare_fault_key);
-        if (found == NULL) {
-            continue;   /* 対象の故障集合にない故障の必須割当ては使わない */
-        }
-        if (readdata.necenet.assignments[(*found)->node_id] != NULL) {
-            printf("[ERROR] %s line %d: duplicate entry for %s %s.\n", opt.necessary_file, line_number, name, type_name);
-            valid = 0;
-            break;
-        }
-        readdata.necenet.assignments[(*found)->node_id] = _strdup(assignments);
-        matched_count++;
-    }
-    readdata.necenet.num = all_num;
-    free(sorted);
-    free(line);
-    fclose(input);
-    if (!valid) {
-        return READ_ERROR;
-    }
-    if (matched_count != all_num) {
-        printf("[ERROR] %s has necessary assignments for only %d of the %d target faults.\n", opt.necessary_file, matched_count, all_num);
-        return READ_ERROR;
-    }
-    return READ_OKAY;
 }

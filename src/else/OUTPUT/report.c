@@ -55,6 +55,7 @@ static int write_fault_list(const char* file_name, const UNDET_FAULT_LIST* list)
 void report_summary(FILE* out, const char* status, const char* reason) {
 	double elapsed = (double)(clock() - run_start_time) / CLOCKS_PER_SEC;
 	double rate = all_num > 0 ? 100.0 * dfl_num / all_num : 0.0;
+	double efficiency = all_num - untest_num > 0 ? 100.0 * dfl_num / (all_num - untest_num) : 0.0;
 
 	fprintf(out, "//---------------------------------------------------\n");
 	fprintf(out, "//	    Transition Fault ASG   Information\n");
@@ -70,12 +71,14 @@ void report_summary(FILE* out, const char* status, const char* reason) {
 	fprintf(out, "// Number of Total Faults      :%d\n", all_num);
 	fprintf(out, "// Number of Detected Faults   :%d\n", dfl_num);
 	fprintf(out, "// Number of Undetected Faults :%d\n", ufl_num);
+	fprintf(out, "// Number of Untestable Faults :%d   (-> %s)\n", untest_num, FILE_UNTESTABLE);
 	fprintf(out, "// Number of Unseed Faults     :%d   (-> %s)\n", unseed_num, FILE_UNSEED);
 	fprintf(out, "// Number of Abort Faults      :%d   (-> %s)\n", abortfl_num, FILE_ABORT);
 	fprintf(out, "// Number of High Power Faults :%d   (-> %s)\n", hpfl_num, FILE_HIGH_POWER);
 	fprintf(out, "// Number of Seeds             :%d\n", seed_num);
 	fprintf(out, "// Seeds with relaxed WSA      :%d\n", seed_relaxed_num);
 	fprintf(out, "// Rate of Detected Faults     :%.2lf%%\n", rate);
+	fprintf(out, "// Rate excluding untestable   :%.2lf%%\n", efficiency);
 	fprintf(out, "// Elapsed time                :%.2lfsec\n", elapsed);
 	fprintf(out, "// Time to graph               :%.2lfsec\n", (double)time_graph / CLOCKS_PER_SEC);
 	fprintf(out, "//---- setting\n");
@@ -155,6 +158,7 @@ int report_write_final(const char* status, const char* reason) {
 
 	if (write_fault_list(FILE_DETECTED, dfl) != SUCCESS) result = ERROR;
 	if (write_fault_list(FILE_UNDETECTED, ufl) != SUCCESS) result = ERROR;
+	if (write_fault_list(FILE_UNTESTABLE, untestfl) != SUCCESS) result = ERROR;
 	if (write_fault_list(FILE_UNSEED, unseed) != SUCCESS) result = ERROR;
 	if (write_fault_list(FILE_ABORT, abortfl) != SUCCESS) result = ERROR;
 	if (write_fault_list(FILE_HIGH_POWER, hpfl) != SUCCESS) result = ERROR;

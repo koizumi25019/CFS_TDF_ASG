@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\asg\compat.c" />
+    <ClCompile Include="src\asg\essential.c" />
     <ClCompile Include="src\asg\init.c" />
     <ClCompile Include="src\asg\opb\clasp\clasp.c" />
     <ClCompile Include="src\asg\opb\cons_gc.c" />
@@ -27,6 +28,7 @@
     <ClCompile Include="src\asg\opb\makeProbFilePS_clasp.c" />
     <ClCompile Include="src\asg\opb\size.c" />
     <ClCompile Include="src\asg\read.c" />
+    <ClCompile Include="src\asg\screen.c" />
     <ClCompile Include="src\else\Exturn\init_exturn.c" />
     <ClCompile Include="src\else\Fsim\fault_judge.c" />
     <ClCompile Include="src\else\Levelize\Level_stack.c" />
@@ -61,11 +63,13 @@
   <ItemGroup>
     <ClInclude Include="src\asg\compat.h" />
     <ClInclude Include="src\asg\createSGmodel.h" />
+    <ClInclude Include="src\asg\essential.h" />
     <ClInclude Include="src\asg\init.h" />
     <ClInclude Include="src\asg\opb\clasp\clasp.h" />
     <ClInclude Include="src\asg\opb\opb.h" />
     <ClInclude Include="src\asg\polynomial.h" />
     <ClInclude Include="src\asg\read.h" />
+    <ClInclude Include="src\asg\screen.h" />
     <ClInclude Include="src\else\Fsim\fault_judge.h" />
     <ClInclude Include="src\else\OUTPUT\report.h" />
     <ClInclude Include="src\else\fault_list.h" />

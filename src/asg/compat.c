@@ -1,158 +1,139 @@
 ﻿//-------------------------------------------------------------------------------------------------------------
 //	両立可能故障集合による目標故障の選択
-//	  1. compat_prepare(): 故障ごとの必須割当て(ビット表現)と，両立可能な故障どうしを結ぶ辺(両立可能故障グラフ)を作る。最初に1回。
+//	  1. compat_prepare(): 故障ごとの必須割当て(essential.h)から，両立可能な故障どうしを結ぶ辺(両立可能故障グラフ)を作る。最初に1回。
 //	  2. compat_select()  : 未検出故障から，互いに両立可能な故障の集合を選んで tfl にする。シードごとに呼ぶ。
-//	「両立可能」とは，2つの故障の必須割当てに衝突(同じ信号線に 0 と 1)が無いこと。
+//	「両立可能」とは，2つの故障の必須割当てに衝突(同じ信号線・同じ時刻に 0 と 1)が無いこと。
+//	必須割当ては回路と故障だけで決まるので，LFSR の有無に関係なく使える。
 //-------------------------------------------------------------------------------------------------------------
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
 
 #include "compat.h"
+#include "essential.h"
 #include "read.h"
 #include "../header/Define.h"
 #include "../else/fault_list.h"
 
 //-------------------------------------------------------------------------------------------------------------
-//	信号線名から信号線番号を探す(ソート済み配列を二分探索)
-//-------------------------------------------------------------------------------------------------------------
-static int compare_net_name(const void* left, const void* right)
-{
-	return strcmp((*(NLIST* const*)left)->name, (*(NLIST* const*)right)->name);
-}
-
-//-------------------------------------------------------------------------------------------------------------
-//	故障の必須割当て("G11=1 G17=0 ...")をビット表現にする
-//-------------------------------------------------------------------------------------------------------------
-static bool compat_set_necessary(UNDET_FAULT_LIST* fault, NLIST** sorted_nets, char* buffer)
-{
-	char* context = NULL;
-	char* name;
-
-	if (fault->node_id < 0 || fault->node_id >= readdata.necenet.num || readdata.necenet.assignments[fault->node_id] == NULL) {
-		printf("[ERROR] No necessary assignments for the fault %s %s.\n", fault->name, fault_type_name(fault->type));
-		return TARGET_ERROR;
-	}
-	if (strcpy_s(buffer, MAXSIZE_BUFFER, readdata.necenet.assignments[fault->node_id]) != 0) {
-		printf("[ERROR] Too long necessary assignments for the fault %s.\n", fault->name);
-		return TARGET_ERROR;
-	}
-
-	name = strtok_s(buffer, "=, \t\r\n", &context);
-	while (name != NULL) {
-		char* value = strtok_s(NULL, "=, \t\r\n", &context);
-		NLIST key = { 0 };
-		NLIST* key_pointer = &key;
-		NLIST** found;
-
-		if (value == NULL || (strcmp(value, "0") != 0 && strcmp(value, "1") != 0)) {
-			printf("[ERROR] Malformed necessary assignments for the fault %s (signal %s).\n", fault->name, name);
-			return TARGET_ERROR;
-		}
-		key.name = name;
-		found = (NLIST**)bsearch(&key_pointer, sorted_nets, n_net, sizeof(NLIST*), compare_net_name);
-		if (found == NULL) {
-			printf("[ERROR] The necessary assignments of the fault %s name an unknown signal: %s\n", fault->name, name);
-			return TARGET_ERROR;
-		}
-		if (*value == '0') {
-			Set_NINT_Zero_XP(fault->necenet, (unsigned int)((*found) - nl));
-		}
-		else {
-			Set_NINT_One_XP(fault->necenet, (unsigned int)((*found) - nl));
-		}
-		name = strtok_s(NULL, "=, \t\r\n", &context);
-	}
-	return TARGET_OKAY;
-}
-
-//-------------------------------------------------------------------------------------------------------------
 //	compat_prepare
+//	  衝突は「同じ (時刻, 信号線) に 0 を要求する故障 と 1 を要求する故障」の組。
+//	  故障の組を総当たりにせず，(時刻, 信号線) ごとに 0 側の故障と 1 側の故障を並べて，その組だけを調べる。
 //-------------------------------------------------------------------------------------------------------------
 bool compat_prepare(void)
 {
+	EssentialOptions options = essential_default_options();
 	UNDET_FAULT_LIST** nodes;
-	NLIST** sorted_nets;
-	char* buffer;
+	unsigned int key_count = 2u * (unsigned int)n_net;
+	int* fault_first;			/* 故障 i の必須割当てが assigned[fault_first[i] ..] にある */
+	unsigned int* assigned_key;	/* (時刻 * n_net + 信号線) */
+	unsigned char* assigned_value;
+	int* offset[2];				/* 値(0/1)ごとの、キーごとの故障リストの先頭(CSR) */
+	int* member[2];
+	int* fill;
+	int total = 0, capacity = 0;
 	clock_t start = clock();
 	int last_percent = -1;
-	int word_count = n_net / MAXSIZE_BITINT + 1;
 
-	if (readdata.necenet.assignments == NULL) {
-		printf("[ERROR] compat_prepare: no necessary assignments (-nece) were read.\n");
-		return TARGET_ERROR;
-	}
-
-	/* 故障ごとの領域: 必須割当て(0/1/未定) と 辺(両立可能な故障のビット列) */
-	for (UNDET_FAULT_LIST* fault = ufl; fault != NULL; fault = fault->next)
-	{
-		fault->necenet = (BIT_INT_XP*)allocMemory(1, sizeof(BIT_INT_XP));
-		fault->necenet->int_num = word_count;
-		fault->necenet->x_buf = (unsigned int*)allocMemory(word_count, sizeof(unsigned int));
-		fault->necenet->p_buf = (unsigned int*)allocMemory(word_count, sizeof(unsigned int));
-		All_Bit_X_XP(fault->necenet);
-
-		fault->edge = (BIT_INT*)allocMemory(1, sizeof(BIT_INT));
-		fault->edge->int_num = ufl_num / MAXSIZE_BITINT + 1;
-		fault->edge->flag = (unsigned int*)allocMemory(fault->edge->int_num, sizeof(unsigned int));
-		bitintSetAll_Zero(fault->edge);
-		for (int j = 0; j < ufl_num; j++)
-			bitintSetNbit_One(fault->edge, j);	/* 最初は全ての故障と両立可能として，衝突のあるものを外す */
-		fault->n_edge = ufl_num;
-	}
-
-	/* 必須割当てをビットにする */
-	sorted_nets = (NLIST**)allocMemory(n_net, sizeof(NLIST*));
-	for (int i = 0; i < n_net; i++) sorted_nets[i] = &nl[i];
-	qsort(sorted_nets, n_net, sizeof(NLIST*), compare_net_name);
-	buffer = (char*)allocMemory(MAXSIZE_BUFFER, sizeof(char));
-	for (UNDET_FAULT_LIST* fault = ufl; fault != NULL; fault = fault->next)
-	{
-		if (compat_set_necessary(fault, sorted_nets, buffer) != TARGET_OKAY) {
-			free(buffer);
-			free(sorted_nets);
-			return TARGET_ERROR;
-		}
-	}
-	free(buffer);
-	free(sorted_nets);
-
-	/* 辺: 全ての故障の組について、必須割当てが衝突するものを外す */
 	nodes = (UNDET_FAULT_LIST**)allocMemory(ufl_num, sizeof(*nodes));
 	{
 		UNDET_FAULT_LIST* fault = ufl;
 		for (int i = 0; i < ufl_num; i++, fault = fault->next) nodes[i] = fault;
 	}
+
+	/* 故障ごとの辺: 最初は(有効な)全ての故障と両立可能として，衝突のあるものを外す */
 	for (int i = 0; i < ufl_num; i++)
 	{
-		UNDET_FAULT_LIST* a = nodes[i];
+		UNDET_FAULT_LIST* fault = nodes[i];
+		fault->edge = (BIT_INT*)allocMemory(1, sizeof(BIT_INT));
+		fault->edge->int_num = detflag->int_num;
+		fault->edge->flag = (unsigned int*)allocMemory(fault->edge->int_num, sizeof(unsigned int));
+		memcpy(fault->edge->flag, detflag->flag, fault->edge->int_num * sizeof(unsigned int));
+		bitintSetNbit_Zero(fault->edge, fault->node_id);
+		fault->n_edge = ufl_num - 1;
+	}
+
+	/* 必須割当てを求めて、並べておく */
+	fault_first = (int*)allocMemory(ufl_num + 1, sizeof(int));
+	assigned_key = NULL;
+	assigned_value = NULL;
+	for (int i = 0; i < ufl_num; i++)
+	{
+		EssentialResult result;
+
+		if (!essential_compute(nodes[i]->netlist, nodes[i]->type, &options, &result)) {
+			printf("[ERROR] Computing the necessary assignments failed for %s.\n", nodes[i]->name);
+			return TARGET_ERROR;
+		}
+		fault_first[i] = total;
+		if (total + result.count > capacity) {
+			capacity = (total + result.count) * 2;
+			assigned_key = (unsigned int*)realloc(assigned_key, sizeof(unsigned int) * capacity);
+			assigned_value = (unsigned char*)realloc(assigned_value, capacity);
+			if (assigned_key == NULL || assigned_value == NULL) {
+				printf("[ERROR] Out of memory (necessary assignments).\n");
+				return TARGET_ERROR;
+			}
+		}
+		for (int k = 0; k < result.count; k++) {
+			assigned_key[total] = (unsigned int)result.frame[k] * (unsigned int)n_net + (unsigned int)result.net[k];
+			assigned_value[total] = result.value[k];
+			total++;
+		}
+	}
+	fault_first[ufl_num] = total;
+
+	/* (時刻, 信号線, 値) ごとの故障リストを作る */
+	for (int v = 0; v < 2; v++) {
+		offset[v] = (int*)allocMemory(key_count + 1, sizeof(int));
+		member[v] = (int*)allocMemory(total + 1, sizeof(int));
+	}
+	for (int k = 0; k < total; k++) offset[assigned_value[k]][assigned_key[k] + 1]++;
+	for (int v = 0; v < 2; v++)
+		for (unsigned int key = 0; key < key_count; key++) offset[v][key + 1] += offset[v][key];
+	fill = (int*)allocMemory(key_count, sizeof(int));
+	for (int v = 0; v < 2; v++) {
+		memset(fill, 0, sizeof(int) * key_count);
+		for (int i = 0; i < ufl_num; i++)
+			for (int k = fault_first[i]; k < fault_first[i + 1]; k++)
+				if (assigned_value[k] == v) {
+					unsigned int key = assigned_key[k];
+					member[v][offset[v][key] + fill[key]++] = i;
+				}
+	}
+
+	/* 衝突する組の辺を外す */
+	for (unsigned int key = 0; key < key_count; key++)
+	{
 		int percent;
 
-		for (int j = i + 1; j < ufl_num; j++)
+		for (int a = offset[0][key]; a < offset[0][key + 1]; a++)
 		{
-			UNDET_FAULT_LIST* b = nodes[j];
-			for (int k = 0; k < word_count; k++)
+			UNDET_FAULT_LIST* zero_fault = nodes[member[0][a]];
+			for (int b = offset[1][key]; b < offset[1][key + 1]; b++)
 			{
-				/* x_buf=1 は「値が1または未定」、p_buf=1 は「値が0または未定」。両方の積に0のビットがあれば衝突 */
-				unsigned x = a->necenet->x_buf[k] & b->necenet->x_buf[k];
-				unsigned p = a->necenet->p_buf[k] & b->necenet->p_buf[k];
-				if ((x | p) != 0xFFFFFFFFu)
+				UNDET_FAULT_LIST* one_fault = nodes[member[1][b]];
+				if (bitintGetNbit(zero_fault->edge, one_fault->node_id))
 				{
-					bitintSetNbit_Zero(a->edge, b->node_id);
-					a->n_edge--;
-					bitintSetNbit_Zero(b->edge, a->node_id);
-					b->n_edge--;
-					break;
+					bitintSetNbit_Zero(zero_fault->edge, one_fault->node_id);
+					zero_fault->n_edge--;
+					bitintSetNbit_Zero(one_fault->edge, zero_fault->node_id);
+					one_fault->n_edge--;
 				}
 			}
 		}
-
-		percent = (int)(100.0 * (i + 1) / ufl_num);
+		percent = (int)(100.0 * (key + 1) / key_count);
 		if (percent != last_percent) {	/* 進捗は1%刻みで表示する */
 			printf("\rGenerating graph progress  >> %d%%", percent);
 			last_percent = percent;
 		}
 	}
+
+	free(fill);
+	for (int v = 0; v < 2; v++) { free(offset[v]); free(member[v]); }
+	free(assigned_key);
+	free(assigned_value);
+	free(fault_first);
 	free(nodes);
 
 	time_graph = clock() - start;

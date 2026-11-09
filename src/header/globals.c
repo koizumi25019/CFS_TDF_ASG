@@ -45,6 +45,8 @@ int ufl_num;
 UNDET_FAULT_LIST* ufl;
 int dfl_num;
 UNDET_FAULT_LIST* dfl;
+int untest_num;
+UNDET_FAULT_LIST* untestfl;
 int unseed_num;
 UNDET_FAULT_LIST* unseed;
 int abortfl_num;

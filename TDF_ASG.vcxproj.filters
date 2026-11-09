@@ -48,6 +48,9 @@
     <ClCompile Include="src\asg\compat.c">
       <Filter>asg</Filter>
     </ClCompile>
+    <ClCompile Include="src\asg\essential.c">
+      <Filter>asg</Filter>
+    </ClCompile>
     <ClCompile Include="src\asg\init.c">
       <Filter>asg</Filter>
     </ClCompile>
@@ -67,6 +70,9 @@
       <Filter>asg\opb</Filter>
     </ClCompile>
     <ClCompile Include="src\asg\read.c">
+      <Filter>asg</Filter>
+    </ClCompile>
+    <ClCompile Include="src\asg\screen.c">
       <Filter>asg</Filter>
     </ClCompile>
     <ClCompile Include="src\else\Exturn\init_exturn.c">
@@ -167,6 +173,9 @@
     <ClInclude Include="src\asg\createSGmodel.h">
       <Filter>asg</Filter>
     </ClInclude>
+    <ClInclude Include="src\asg\essential.h">
+      <Filter>asg</Filter>
+    </ClInclude>
     <ClInclude Include="src\asg\init.h">
       <Filter>asg</Filter>
     </ClInclude>
@@ -180,6 +189,9 @@
       <Filter>asg</Filter>
     </ClInclude>
     <ClInclude Include="src\asg\read.h">
+      <Filter>asg</Filter>
+    </ClInclude>
+    <ClInclude Include="src\asg\screen.h">
       <Filter>asg</Filter>
     </ClInclude>
     <ClInclude Include="src\else\Fsim\fault_judge.h">

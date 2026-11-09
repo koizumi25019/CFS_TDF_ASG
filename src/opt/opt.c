@@ -67,7 +67,6 @@ static bool OPTapply(const char* name, const char* value)
 	else if (!strcmp(name, "-fault"))       opt.fault_file = _strdup(value);
 	else if (!strcmp(name, "-xor_tap"))     opt.xor_tap_file = _strdup(value);
 	else if (!strcmp(name, "-scan_chain"))  opt.scan_chain_file = _strdup(value);
-	else if (!strcmp(name, "-nece"))        opt.necessary_file = _strdup(value);
 	else if (!strcmp(name, "-folder"))      opt.folder = _strdup(value);
 	/* 低消費電力 */
 	else if (!strcmp(name, "-power"))       return OPTparseOnOff(name, value, &opt.low_power);
@@ -89,7 +88,9 @@ static bool OPTapply(const char* name, const char* value)
 	else if (!strcmp(name, "-seed"))
 		printf("[WARNING] %s is ignored. Seeds are always written to <folder>/seed.txt.\n", name);
 	else if (!strcmp(name, "-rand"))
-		printf("[WARNING] %s is ignored. Targets are selected at random only when -nece is not given.\n", name);
+		printf("[WARNING] %s is ignored. Targets are selected from the compatible fault sets.\n", name);
+	else if (!strcmp(name, "-nece"))
+		printf("[WARNING] %s is ignored. Necessary assignments are computed from the circuit.\n", name);
 	/* 廃止したオプション */
 	else if (!strcmp(name, "-resolving"))
 	{
@@ -252,7 +253,6 @@ bool OPTcheck(void)
 	if (OPTcheckInputFile("-fault", opt.fault_file) != OPT_OKAY) return OPT_ERROR;
 	if (OPTcheckInputFile("-xor_tap", opt.xor_tap_file) != OPT_OKAY) return OPT_ERROR;
 	if (OPTcheckInputFile("-scan_chain", opt.scan_chain_file) != OPT_OKAY) return OPT_ERROR;
-	if (opt.necessary_file != NULL && OPTcheckInputFile("-nece", opt.necessary_file) != OPT_OKAY) return OPT_ERROR;
 
 	return OPT_OKAY;
 }
@@ -272,7 +272,6 @@ void OPTdispHelp(void)
 	printf("		   -xor_tap(essential)     :   xor-tap list <.txt> \n");
 	printf("		   -scan_chain(essential)  :   scan-chain <.txt> \n");
 	printf("		   -folder(essential)      :   output folder (must not exist) \n");
-	printf("		   -nece                   :   necessary assignments <.txt> (without it, target faults are selected at random) \n");
 	printf("		   -set                    :   setting file <.set> \n");
 
 	printf("\n		>> test generation \n");
