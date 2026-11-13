@@ -28,6 +28,7 @@
 #include "constants.h"
 #include "problem.h"
 #include "diagnose.h"
+#include "random_screen.h"
 #include "../asg/essential.h"
 #include "../asg/screen.h"
 
@@ -77,7 +78,12 @@ static int mttg_prepare(void) {
 		printf("[ERROR] Creating the LFSR / phase-shifter model failed.\n");
 		return ERROR;
 	}
-	if (opt.untest_mode && untest_mode_run() != SUCCESS) return ERROR;	//冗長な故障などを最初に除く
+	if (opt.untest_mode) {
+		if (random_screen() != SUCCESS) return ERROR;			//ランダムパターンで検出できる故障は、冗長ではない
+		if (untest_mode_run() != SUCCESS) return ERROR;
+		random_screen_release();
+	}
+	if (0) return ERROR;	//冗長な故障などを最初に除く
 	return SUCCESS;
 }
 

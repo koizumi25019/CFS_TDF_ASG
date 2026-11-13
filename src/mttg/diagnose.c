@@ -6,6 +6,7 @@
 
 #include "diagnose.h"
 #include "problem.h"
+#include "random_screen.h"
 #include "../header/Define.h"
 #include "../asg/opb/clasp/clasp.h"
 #include "../else/fault_list.h"
@@ -98,6 +99,7 @@ int untest_mode_run(void) {
 	int redundant_before = untest_num;
 	int wsa_before = wsafl_num;
 	int last_percent = -1;
+	int skipped = 0;
 
 	faults = (UNDET_FAULT_LIST**)malloc(sizeof(*faults) * (checked_count > 0 ? checked_count : 1));
 	if (faults == NULL) {
@@ -118,11 +120,19 @@ int untest_mode_run(void) {
 	}
 
 	printf("[UNTEST] Checking %d faults one by one (the LFSR constraint is not used).\n", checked_count);
+	(void)skipped;
 	for (int i = 0; i < checked_count; i++) {
 		UNDET_FAULT_LIST* fault = faults[i];
-		int status = solve_alone(fault, false, -1);
+		int status;
 		int percent = (int)(100.0 * (i + 1) / checked_count);
 
+		if (random_screen_known_testable(fault)) {		/* ランダムパターンで検出できたので、冗長ではない */
+			status = CLASP_STATUS_SAT;
+			skipped++;
+		}
+		else {
+			status = solve_alone(fault, false, -1);
+		}
 		if (status == CLASP_STATUS_ERROR) {
 			printf("[ERROR] The solver run failed while checking %s.\n", fault->name);
 			for (int j = 0; j < checked_count; j++) free(faults[j]);
@@ -150,6 +160,7 @@ int untest_mode_run(void) {
 	}
 	printf("\n[UNTEST] Removed %d faults (%d redundant, %d beyond the WSA threshold); %d faults remain.\n",
 		untest_num - redundant_before + wsafl_num - wsa_before, untest_num - redundant_before, wsafl_num - wsa_before, ufl_num);
+	printf("[UNTEST] %d faults were detected by the random patterns and skipped.\n", skipped);
 	for (int j = 0; j < checked_count; j++) free(faults[j]);
 	free(faults);
 	return SUCCESS;

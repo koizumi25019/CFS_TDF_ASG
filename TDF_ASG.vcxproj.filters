@@ -168,6 +168,9 @@
     <ClCompile Include="src\mttg\problem.c">
       <Filter>mttg</Filter>
     </ClCompile>
+    <ClCompile Include="src\mttg\random_screen.c">
+      <Filter>mttg</Filter>
+    </ClCompile>
     <ClCompile Include="src\mttg\regen.c">
       <Filter>mttg</Filter>
     </ClCompile>
@@ -243,6 +246,9 @@
       <Filter>mttg</Filter>
     </ClInclude>
     <ClInclude Include="src\mttg\problem.h">
+      <Filter>mttg</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mttg\random_screen.h">
       <Filter>mttg</Filter>
     </ClInclude>
     <ClInclude Include="src\mttg\regen.h">

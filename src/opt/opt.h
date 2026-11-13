@@ -13,6 +13,7 @@
 //------------------------------------------------------------------------
 #define DEFAULT_WSA_THRESHOLD	  20		  /**< WSA閾値の既定値[%]。論文 5章の設定値 */
 #define DEFAULT_SOLVER_TIME		  10		  /**< ソルバの打ち切り時間の既定値[s] */
+#define DEFAULT_RANDOM_PATTERNS	  1000		  /**< 冗長判定の前に故障シミュレーションするランダムパターンの数の既定値 */
 #define LFSR_BITS				  100		  /**< LFSRのビット数(-lfsr ON のとき)。回路モデルの変数番号がこの値を前提にしている */
 
 //------------------------------------------------------------------------
@@ -31,7 +32,8 @@ typedef struct Option
 
 	/* 生成するもの */
 	bool  lfsr;				  /**< -lfsr         ON: LFSRのシードを求める(LFSR+フェーズシフタのモデルを使う)。OFF: テストパターンだけを求める(ATPG) */
-	bool  untest_mode;		  /**< -untest_mode  ON: 最初に、全ての故障を単独で調べて、検出できない故障を除く */
+	bool  untest_mode;		  /**< -untest_mode  ON(既定): 複数目標の前に、全ての故障を単独で調べて、冗長な故障を除く */
+	int   random_patterns;	  /**< -random       冗長判定の前に故障シミュレーションするランダムパターンの数(0: しない)。検出できた故障は単独の判定を省く */
 
 	/* 低消費電力 */
 	bool  low_power;		  /**< -power        ON: キャプチャ時消費電力(WSA)を閾値以下にする */

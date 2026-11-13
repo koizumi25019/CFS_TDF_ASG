@@ -71,6 +71,7 @@ static bool OPTapply(const char* name, const char* value)
 	/* 生成するもの */
 	else if (!strcmp(name, "-lfsr"))        return OPTparseOnOff(name, value, &opt.lfsr);
 	else if (!strcmp(name, "-untest_mode")) return OPTparseOnOff(name, value, &opt.untest_mode);
+	else if (!strcmp(name, "-random"))      return OPTparseInt(name, value, &opt.random_patterns);
 	/* 低消費電力 */
 	else if (!strcmp(name, "-power"))       return OPTparseOnOff(name, value, &opt.low_power);
 	else if (!strcmp(name, "-wsath"))       return OPTparseInt(name, value, &opt.wsa_threshold);
@@ -126,6 +127,8 @@ static void OPTinit(void)
 {
 	memset(&opt, 0, sizeof(opt));
 	opt.lfsr = true;
+	opt.untest_mode = true;
+	opt.random_patterns = DEFAULT_RANDOM_PATTERNS;
 	opt.scope = true;
 	opt.constants = false;
 	opt.solver_time = -1;
@@ -249,6 +252,10 @@ bool OPTcheck(void)
 		printf("[ERROR] -wsath must be between 0 and 100 (given: %d).\n", opt.wsa_threshold);
 		return OPT_ERROR;
 	}
+	if (opt.random_patterns < 0) {
+		printf("[ERROR] -random must not be negative.\n");
+		return OPT_ERROR;
+	}
 	if (opt.target_limit < 0 || opt.parallel_threads < 0) {
 		printf("[ERROR] -target_limit and -parallel must not be negative.\n");
 		return OPT_ERROR;
@@ -288,7 +295,8 @@ void OPTdispHelp(void)
 
 	printf("\n		>> what to generate \n");
 	printf("		   -lfsr                   :   [ON/OFF] ON (default): seeds of the LFSR + phase shifter. OFF: test patterns only (ATPG) \n");
-	printf("		   -untest_mode            :   [ON/OFF] first check every fault alone and remove the untestable ones. OFF is default. \n");
+	printf("		   -random                 :   random patterns simulated first (XID2); the faults they detect skip the single-target check (0: none). %d is default. \n", DEFAULT_RANDOM_PATTERNS);
+	printf("		   -untest_mode            :   [ON/OFF] before the multi-target generation, check every fault alone and remove the redundant ones. ON is default. \n");
 
 	printf("\n		>> test generation \n");
 	printf("		   -power(essential)       :   [ON/OFF] keep the capture power (WSA) below the threshold \n");

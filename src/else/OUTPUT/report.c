@@ -86,6 +86,7 @@ void report_summary(FILE* out, const char* status, const char* reason) {
 	fprintf(out, "//---- setting\n");
 	fprintf(out, "// LFSR (-lfsr)                :%s\n", OPTonoff(opt.lfsr));
 	fprintf(out, "// Untestable check (-untest_mode):%s\n", OPTonoff(opt.untest_mode));
+	fprintf(out, "// Random patterns (-random)   :%d\n", opt.random_patterns);
 	fprintf(out, "// Low Power Mode              :%s\n", OPTonoff(opt.low_power));
 	if (opt.low_power) {
 		fprintf(out, "// WSA threshold (specified)   :%d%%\n", opt.wsa_threshold);
