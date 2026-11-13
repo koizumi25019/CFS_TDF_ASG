@@ -51,6 +51,7 @@
     <ClCompile Include="src\main\main.c" />
     <ClCompile Include="src\main\open_stack.c" />
     <ClCompile Include="src\mttg\clasp_mode.c" />
+    <ClCompile Include="src\mttg\constants.c" />
     <ClCompile Include="src\mttg\diagnose.c" />
     <ClCompile Include="src\mttg\fault_cone.c" />
     <ClCompile Include="src\mttg\fault_select.c" />
@@ -81,6 +82,7 @@
     <ClInclude Include="src\header\Stack.h" />
     <ClInclude Include="src\lib\lib.h" />
     <ClInclude Include="src\main\external_tools.h" />
+    <ClInclude Include="src\mttg\constants.h" />
     <ClInclude Include="src\mttg\diagnose.h" />
     <ClInclude Include="src\mttg\mttg_check_wsa.h" />
     <ClInclude Include="src\mttg\pbo_generate.h" />

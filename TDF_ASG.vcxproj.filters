@@ -141,6 +141,9 @@
     <ClCompile Include="src\mttg\clasp_mode.c">
       <Filter>mttg</Filter>
     </ClCompile>
+    <ClCompile Include="src\mttg\constants.c">
+      <Filter>mttg</Filter>
+    </ClCompile>
     <ClCompile Include="src\mttg\diagnose.c">
       <Filter>mttg</Filter>
     </ClCompile>
@@ -226,6 +229,9 @@
     </ClInclude>
     <ClInclude Include="src\main\external_tools.h">
       <Filter>main</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mttg\constants.h">
+      <Filter>mttg</Filter>
     </ClInclude>
     <ClInclude Include="src\mttg\diagnose.h">
       <Filter>mttg</Filter>

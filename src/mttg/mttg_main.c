@@ -25,6 +25,7 @@
 #include "pbo_generate.h"
 #include "mttg_check_wsa.h"
 #include "regen.h"
+#include "constants.h"
 #include "problem.h"
 #include "diagnose.h"
 #include "../asg/essential.h"
@@ -67,6 +68,7 @@ static int mttg_prepare(void) {
 	fault_flags_init();
 	if (opt.lfsr && ReadFile() != true) return ERROR;		//LFSR+フェーズシフタの入力ファイル
 	if (!essential_open()) return ERROR;
+	if (opt.constants && constants_detect() != SUCCESS) return ERROR;	//いつも同じ値の信号線を必須割当てに渡す
 	if (screen_untestable_faults() != SUCCESS) return ERROR;		//必須割当てだけで検出不能と分かる故障を外す
 
 	report_summary(stdout, "RUNNING", NULL);
