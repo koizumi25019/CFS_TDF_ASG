@@ -318,6 +318,7 @@ int mttg_main(void) {
 
 	release_targets();
 	essential_close();
+	screen_release_cache();
 	if (seed_file != NULL) {
 		fclose(seed_file);
 		seed_file = NULL;

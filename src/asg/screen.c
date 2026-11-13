@@ -7,11 +7,43 @@
 #include "essential.h"
 #include "../else/fault_list.h"
 
+/* 故障番号(node_id)ごとの、必須割当ての記録 */
+static unsigned int** cache_packed;
+static int* cache_count;
+static int cache_size;
+
+bool screen_cached_assignments(const UNDET_FAULT_LIST* fault, int* count, const unsigned int** packed)
+{
+	if (cache_packed == NULL || fault->node_id < 0 || fault->node_id >= cache_size || cache_packed[fault->node_id] == NULL) return false;
+	*count = cache_count[fault->node_id];
+	*packed = cache_packed[fault->node_id];
+	return true;
+}
+
+void screen_release_cache(void)
+{
+	for (int i = 0; i < cache_size; i++) free(cache_packed[i]);
+	free(cache_packed);
+	free(cache_count);
+	cache_packed = NULL;
+	cache_count = NULL;
+	cache_size = 0;
+}
+
 int screen_untestable_faults(void)
 {
 	EssentialOptions options = essential_default_options();
 	UNDET_FAULT_LIST** link = &ufl;
 	int conflict_count = 0, unobservable_count = 0;
+
+	screen_release_cache();
+	cache_size = all_num;
+	cache_packed = (unsigned int**)calloc(cache_size > 0 ? cache_size : 1, sizeof(*cache_packed));
+	cache_count = (int*)calloc(cache_size > 0 ? cache_size : 1, sizeof(*cache_count));
+	if (cache_packed == NULL || cache_count == NULL) {
+		printf("[ERROR] Out of memory (necessary assignments).\n");
+		return ERROR;
+	}
 
 	while (*link != NULL) {
 		UNDET_FAULT_LIST* fault = *link;
@@ -22,6 +54,16 @@ int screen_untestable_faults(void)
 			return ERROR;
 		}
 		if (result.status == ESSENTIAL_OK) {
+			unsigned int* packed = (unsigned int*)malloc(sizeof(unsigned int) * (result.count > 0 ? result.count : 1));
+			if (packed == NULL) {
+				printf("[ERROR] Out of memory (necessary assignments).\n");
+				return ERROR;
+			}
+			for (int k = 0; k < result.count; k++) {
+				packed[k] = (((unsigned int)result.frame[k] * (unsigned int)n_net + (unsigned int)result.net[k]) << 1) | result.value[k];
+			}
+			cache_packed[fault->node_id] = packed;
+			cache_count[fault->node_id] = result.count;
 			link = &fault->next;
 			continue;
 		}

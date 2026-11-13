@@ -9,3 +9,10 @@
 /** 未検出故障リスト ufl から検出不能な故障を外し、検出不能故障リスト untestfl に移す。
     SUCCESS / ERROR */
 int screen_untestable_faults(void);
+
+/** screen_untestable_faults で求めた必須割当ての記録。fault の割当てを packed[0 .. count-1] に返す。
+    要素は ((時刻 * n_net + 信号線) << 1) | 値。記録が無い(検出不能と判定した・未計算)ときは false */
+bool screen_cached_assignments(const UNDET_FAULT_LIST* fault, int* count, const unsigned int** packed);
+
+/** 記録を解放する */
+void screen_release_cache(void);
