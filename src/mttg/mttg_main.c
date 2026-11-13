@@ -92,6 +92,7 @@ static int write_test_pattern(void) {
 		printf("[ERROR] Cannot create %s\n", path);
 		return ERROR;
 	}
+	problem_fill_unused_inputs(clasp.sol[SOL_TP]);		//どの制約式にも使われない桁は、乱数で埋める
 	fprintf(file, "%s\n", clasp.sol[SOL_TP]);
 	fclose(file);
 	return SUCCESS;

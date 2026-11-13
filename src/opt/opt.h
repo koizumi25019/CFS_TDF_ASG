@@ -49,6 +49,9 @@ typedef struct Option
 	bool  regen;			  /**< -regen        論文のフロー: 打ち切り時間を延ばし(60/180/300s)，WSA閾値を緩める(+5%/+10%) */
 	bool  sttg;				  /**< -sttg         MTTGで求まらない一次故障を，単一目標(STTG)で再生成する */
 
+	/* 高速化 */
+	bool  scope;			  /**< -scope        ON(既定): 消費電力の制約が無い問題では、目標故障の制約式が使う範囲の正常回路だけを書く */
+
 	/* 実験的な機能 */
 	bool  fault_propagation;  /**< -fp           一次故障に故障伝搬変数の制約を加える */
 	bool  cps;				  /**< -cps          故障シミュレーションで1件も検出できなかったら，次は単一目標にする */

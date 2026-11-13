@@ -83,6 +83,8 @@ static bool OPTapply(const char* name, const char* value)
 	/* 再生成 */
 	else if (!strcmp(name, "-regen"))       return OPTparseOnOff(name, value, &opt.regen);
 	else if (!strcmp(name, "-sttg"))        return OPTparseOnOff(name, value, &opt.sttg);
+	/* 高速化 */
+	else if (!strcmp(name, "-scope"))       return OPTparseOnOff(name, value, &opt.scope);
 	/* 実験的な機能 */
 	else if (!strcmp(name, "-fp"))          return OPTparseOnOff(name, value, &opt.fault_propagation);
 	else if (!strcmp(name, "-cps"))         return OPTparseOnOff(name, value, &opt.cps);
@@ -123,6 +125,7 @@ static void OPTinit(void)
 {
 	memset(&opt, 0, sizeof(opt));
 	opt.lfsr = true;
+	opt.scope = true;
 	opt.solver_time = -1;
 	opt.wsa_threshold = -1;
 	opt.target_limit = -1;
@@ -296,6 +299,9 @@ void OPTdispHelp(void)
 	printf("\n		>> regeneration for a primary fault that clasp could not solve (all OFF by default) \n");
 	printf("		   -regen                  :   [ON/OFF] clasp time limit 60/180/300 s, then relax the WSA threshold by +5%%/+10%% \n");
 	printf("		   -sttg                   :   [ON/OFF] retry the primary fault alone (STTG). The WSA threshold is not changed. \n");
+
+	printf("\n		>> speed \n");
+	printf("		   -scope                  :   [ON/OFF] without the power constraint, write only the part of the good circuit the target faults use. ON is default. \n");
 
 	printf("\n		>> experimental (all OFF by default) \n");
 	printf("		   -fp                     :   [ON/OFF] fault-propagation variables for the primary fault \n");

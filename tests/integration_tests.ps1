@@ -9,6 +9,7 @@ $cases = @(
     @{ name='all'; lfsr=$true; options=@('-power','ON','-cps','ON','-fp','ON') },
     @{ name='regen'; lfsr=$true; options=@('-power','ON','-regen','ON','-wsath','20') },
     @{ name='parallel'; lfsr=$true; options=@('-power','OFF','-mode_1','ON','-parallel','2') },
+    @{ name='noscope'; lfsr=$true; options=@('-power','OFF','-scope','OFF') },
     @{ name='untest'; lfsr=$true; options=@('-power','OFF','-untest_mode','ON') },
     @{ name='atpg'; lfsr=$false; options=@('-power','OFF','-lfsr','OFF') },
     @{ name='atpg_power'; lfsr=$false; options=@('-power','ON','-lfsr','OFF','-untest_mode','ON') }

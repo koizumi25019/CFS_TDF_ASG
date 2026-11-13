@@ -8,6 +8,7 @@
 #include "../src/asg/essential.h"
 #include "../src/asg/screen.h"
 #include "../src/asg/compat.h"
+#include "../src/mttg/pbo_generate.h"
 #include "../src/else/fault_list.h"
 void test_input_readers(void);
 void test_phase_constraints(void);
@@ -251,6 +252,39 @@ static void test_s27_essential_and_compat(void)
         fault_list_free(tfl);
         tfl = NULL;
         tfl_num = 0;
+    }
+    /* 範囲を絞った正常回路: 故障箇所と観測点を含み、入力側へ閉じている。回路の一部だけになる故障がある */
+    {
+        unsigned char need1[4096], need2[4096];
+        int smaller = 0;
+        Que.max = n_net + 1;
+        Que.front = Que.rear = Que.num = 0;
+        Que.que = (NLIST**)calloc(Que.max, sizeof(NLIST*));
+        for (UNDET_FAULT_LIST* fault = ufl; fault != NULL; fault = fault->next) {
+            int site = (int)(fault->netlist - nl), needed = 0;
+            memset(need1, 0, sizeof(need1));
+            memset(need2, 0, sizeof(need2));
+            bool_id = VAR_FIRST_FAULT_CIRCUIT;
+            build_fault_cone(fault->netlist, 0);
+            pbo_scope_add_target(fault, 1, need1, need2);
+            pbo_scope_close(need1, need2);
+            assert(need1[site] && need2[site]);
+            for (int i = 0; i < n_net; i++) {
+                if (nl[i].fault_pass == YES && nl[i].ppo_flag == 1) assert(need2[i]);
+                if (nl[i].type == IN && need2[i]) assert(need1[i]);
+                if (nl[i].type == DFF && need2[i]) assert(need1[nl[i].in[0] - nl]);
+                if (nl[i].type != IN && nl[i].type != DFF) {
+                    for (int j = 0; j < nl[i].n_in; j++) {
+                        if (need2[i]) assert(need2[nl[i].in[j] - nl]);
+                        if (need1[i]) assert(need1[nl[i].in[j] - nl]);
+                    }
+                }
+                needed += need1[i] + need2[i];
+            }
+            if (needed < 2 * n_net) smaller++;
+        }
+        assert(smaller > 0);
+        free(Que.que);
     }
     essential_close();
     puts("PASS: s27 exhaustive check: necessary assignments hold in every detecting test, redundant faults have none, compatibility graph and target sets.");

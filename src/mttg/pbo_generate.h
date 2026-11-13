@@ -9,8 +9,14 @@
     idx: 目標故障の番号(0 が一次故障)。-fp のときは一次故障の各信号線に故障伝搬変数 prop も割り当てる。 */
 int build_fault_cone(NLIST* site, int idx);
 
-/** 正常回路(1時刻目・2時刻目)の制約式 */
-void pbo_generate_good_circuit(FILE* fp);
+/** 正常回路(1時刻目・2時刻目)の制約式。need1 / need2 は信号線ごとに、その時刻の制約式を書くか(NULL なら全て) */
+void pbo_generate_good_circuit(FILE* fp, const unsigned char* need1, const unsigned char* need2);
+
+/** 目標故障 target(build_fault_cone 済み)の制約式が使う正常値の信号線を need1 / need2 に加える。primary=1 は一次故障 */
+void pbo_scope_add_target(const UNDET_FAULT_LIST* target, int primary, unsigned char* need1, unsigned char* need2);
+
+/** 加えた信号線の値を決める、入力側の信号線へ広げる(全ての目標故障を加えた後に1回) */
+void pbo_scope_close(unsigned char* need1, unsigned char* need2);
 
 /** 故障回路(build_fault_cone の範囲)の制約式 */
 void pbo_generate_faulty_circuit(FILE* fp, const UNDET_FAULT_LIST* node);
