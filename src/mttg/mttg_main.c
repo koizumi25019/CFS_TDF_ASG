@@ -69,6 +69,12 @@ static int mttg_prepare(void) {
 	if (opt.lfsr && ReadFile() != true) return ERROR;		//LFSR+フェーズシフタの入力ファイル
 	if (!essential_open()) return ERROR;
 	if (opt.constants && constants_detect() != SUCCESS) return ERROR;	//いつも同じ値の信号線を必須割当てに渡す
+	if (opt.learn) {		//静的学習(間接含意)
+		int learned = 0, constants = 0;
+		clock_t learn_start = clock();
+		if (!essential_learn(&learned, &constants)) { printf("[ERROR] Static learning failed.\n"); return ERROR; }
+		printf("[INFO] Static learning: %d indirect implications, %d constant signals, %.2f s.\n", learned, constants, (double)(clock() - learn_start) / CLOCKS_PER_SEC);
+	}
 	if (screen_untestable_faults() != SUCCESS) return ERROR;		//必須割当てだけで検出不能と分かる故障を外す
 
 	report_summary(stdout, "RUNNING", NULL);

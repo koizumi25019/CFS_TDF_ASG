@@ -44,6 +44,10 @@ void essential_close(void);
 /** 信号線 net が常に value であることが分かっているとき(定数)に登録する。以後の必須割当てに、時刻の両方で加える */
 bool essential_set_constant(const NLIST* net, int value);
 
+/** 静的学習: 直接の含意では分からない間接含意を、回路ごとに1回見つけて記録する。以後の essential_compute が使う。
+    見つかった間接含意の数と、矛盾から分かった定数の数を返す(定数は essential_set_constant に登録する)。失敗したら false */
+bool essential_learn(int* learned_count, int* constant_count_found);
+
 /** 信号線 site の遷移故障 type(STR/STF) の必須割当てを求める。
     status が ESSENTIAL_OK でないときも、そこまでに求めた割当てを返す */
 bool essential_compute(const NLIST* site, int type, const EssentialOptions* options, EssentialResult* result);

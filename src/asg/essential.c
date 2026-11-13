@@ -53,6 +53,11 @@ static int* constant_net;
 static unsigned char* constant_value;
 static int constant_count;
 
+/* 静的学習で見つけた間接含意: (信号線, 値) を置いたら必ず成り立つ (信号線, 値)。要素は (信号線 << 1) | 値 */
+static bool learn_on;
+static int* learn_first;			/* キー = 信号線 * 2 + 値 の先頭(CSR) */
+static unsigned int* learn_item;
+
 /* 今の計算の指定と状態 */
 static EssentialOptions current;
 static bool conflict;
@@ -91,6 +96,7 @@ void essential_close(void)
 	free(tfo_mark); free(useful_mark); free(queued_mark); free(done_mark);
 	tfo_mark = useful_mark = queued_mark = done_mark = NULL;
 	free(tfo_list); free(dfs_stack); free(heap); tfo_list = dfs_stack = heap = NULL;
+	free(learn_first); free(learn_item); learn_first = NULL; learn_item = NULL; learn_on = false;
 	free(constant_net); free(constant_value); constant_net = NULL; constant_value = NULL; constant_count = 0;
 	opened = false;
 }
@@ -248,6 +254,10 @@ static void propagate(void)
 		gate = &nl[net];
 
 		imply_gate(frame, net);
+		if (learn_on) {		/* 学習した間接含意(組合せ回路の性質なので、どの時刻でも成り立つ) */
+			unsigned int key = (unsigned int)net * 2u + (unsigned int)value_of[frame][net];
+			for (int k = learn_first[key]; k < learn_first[key + 1]; k++) set_value(frame, (int)(learn_item[k] >> 1), (int)(learn_item[k] & 1u));
+		}
 		for (int i = 0; i < gate->n_out; i++) {
 			const NLIST* successor = gate->out[i];
 			if (successor->type == DFF) {
@@ -391,6 +401,104 @@ static EssentialStatus sensitize_unique_path(int site)
 		heap_enqueue_outputs(net);
 	}
 	return ESSENTIAL_OK;
+}
+
+//------------------------------------------------------------------------
+//  静的学習
+//    全ての (信号線 n, 値 v) について、n = v を置いて含意を計算し、成り立つ (m, w) を集める(直接含意)。
+//    n = v ならば m = w の対偶「m = !w ならば n = !v」が、m = !w からの直接含意に無いものを、間接含意として記録する。
+//    n = v が矛盾するなら、n はいつも !v(定数)。
+//------------------------------------------------------------------------
+static int compare_unsigned(const void* left, const void* right)
+{
+	unsigned int a = *(const unsigned int*)left, b = *(const unsigned int*)right;
+	return (a > b) - (a < b);
+}
+
+static bool implied_directly(const int* first, const unsigned int* items, unsigned int key, unsigned int item)
+{
+	return bsearch(&item, items + first[key], (size_t)(first[key + 1] - first[key]), sizeof(unsigned int), compare_unsigned) != NULL;
+}
+
+bool essential_learn(int* learned_count, int* constant_count_found)
+{
+	unsigned int keys = 2u * (unsigned int)n_net;
+	int* direct_first;
+	unsigned int* direct_item = NULL;
+	size_t direct_count = 0, direct_capacity = 0;
+	int* fill;
+	size_t total = 0;
+	EssentialOptions saved = current;
+	int constants_found = 0;
+
+	if (!opened) return false;
+	learn_on = false;
+	free(learn_first); free(learn_item); learn_first = NULL; learn_item = NULL;
+	current = essential_default_options();
+	current.frames = 1;
+	direct_first = (int*)malloc(sizeof(int) * (keys + 1));
+	if (direct_first == NULL) { current = saved; return false; }
+
+	/* 直接含意 */
+	direct_first[0] = 0;
+	for (unsigned int key = 0; key < keys; key++) {
+		int net = (int)(key >> 1), value = (int)(key & 1u);
+		for (int k = 0; k < log_count; k++) value_of[log_frame[k]][log_net[k]] = VALUE_UNKNOWN;
+		log_count = work_count = 0;
+		conflict = false;
+		set_value(1, net, value);
+		propagate();
+		if (conflict) {		/* n = v にできない: n はいつも !v */
+			if (essential_set_constant(&nl[net], !value)) constants_found++;
+		}
+		else {
+			size_t start = direct_count;
+			if (direct_count + (size_t)log_count > direct_capacity) {
+				direct_capacity = (direct_count + (size_t)log_count) * 2 + 1024;
+				direct_item = (unsigned int*)realloc(direct_item, sizeof(unsigned int) * direct_capacity);
+				if (direct_item == NULL) { free(direct_first); current = saved; return false; }
+			}
+			for (int k = 0; k < log_count; k++) {
+				if (log_net[k] == net) continue;
+				direct_item[direct_count++] = ((unsigned int)log_net[k] << 1) | log_value[k];
+			}
+			qsort(direct_item + start, direct_count - start, sizeof(unsigned int), compare_unsigned);
+		}
+		direct_first[key + 1] = (int)direct_count;
+	}
+	for (int k = 0; k < log_count; k++) value_of[log_frame[k]][log_net[k]] = VALUE_UNKNOWN;
+	log_count = work_count = 0;
+	conflict = false;
+
+	/* 間接含意: 数えてから、並べる(2回走査) */
+	learn_first = (int*)calloc(keys + 1, sizeof(int));
+	fill = (int*)calloc(keys + 1, sizeof(int));
+	if (learn_first == NULL || fill == NULL) { free(direct_first); free(direct_item); free(fill); current = saved; return false; }
+	for (int pass = 0; pass < 2; pass++) {
+		for (unsigned int key = 0; key < keys; key++) {
+			unsigned int n = key >> 1, v = key & 1u;
+			for (int k = direct_first[key]; k < direct_first[key + 1]; k++) {
+				unsigned int m = direct_item[k] >> 1, w = direct_item[k] & 1u;
+				unsigned int target = m * 2u + (1u - w);
+				unsigned int implied = (n << 1) | (1u - v);
+				if (implied_directly(direct_first, direct_item, target, implied)) continue;
+				if (pass == 0) learn_first[target + 1]++;
+				else learn_item[learn_first[target] + fill[target]++] = implied;
+			}
+		}
+		if (pass == 0) {
+			for (unsigned int key = 0; key < keys; key++) learn_first[key + 1] += learn_first[key];
+			total = (size_t)learn_first[keys];
+			learn_item = (unsigned int*)malloc(sizeof(unsigned int) * (total > 0 ? total : 1));
+			if (learn_item == NULL) { free(direct_first); free(direct_item); free(fill); free(learn_first); learn_first = NULL; current = saved; return false; }
+		}
+	}
+	free(direct_first); free(direct_item); free(fill);
+	current = saved;
+	learn_on = true;
+	if (learned_count != NULL) *learned_count = (int)total;
+	if (constant_count_found != NULL) *constant_count_found = constants_found;
+	return true;
 }
 
 //------------------------------------------------------------------------

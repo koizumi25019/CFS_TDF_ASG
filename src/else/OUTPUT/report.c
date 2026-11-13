@@ -96,6 +96,7 @@ void report_summary(FILE* out, const char* status, const char* reason) {
 	fprintf(out, "// Regeneration (-regen)       :%s\n", OPTonoff(opt.regen));
 	fprintf(out, "// STTG retry (-sttg)          :%s\n", OPTonoff(opt.sttg));
 	fprintf(out, "// Constant signals (-const)   :%s\n", OPTonoff(opt.constants));
+	fprintf(out, "// Static learning (-learn)    :%s\n", OPTonoff(opt.learn));
 	fprintf(out, "// Circuit scope (-scope)      :%s\n", OPTonoff(opt.scope));
 	fprintf(out, "// FP mode (-fp)               :%s\n", OPTonoff(opt.fault_propagation));
 	fprintf(out, "// CPS mode (-cps)             :%s\n", OPTonoff(opt.cps));

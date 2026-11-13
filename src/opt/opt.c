@@ -85,6 +85,7 @@ static bool OPTapply(const char* name, const char* value)
 	else if (!strcmp(name, "-sttg"))        return OPTparseOnOff(name, value, &opt.sttg);
 	/* 高速化 */
 	else if (!strcmp(name, "-const"))       return OPTparseOnOff(name, value, &opt.constants);
+	else if (!strcmp(name, "-learn"))       return OPTparseOnOff(name, value, &opt.learn);
 	else if (!strcmp(name, "-scope"))       return OPTparseOnOff(name, value, &opt.scope);
 	/* 実験的な機能 */
 	else if (!strcmp(name, "-fp"))          return OPTparseOnOff(name, value, &opt.fault_propagation);
@@ -306,6 +307,8 @@ void OPTdispHelp(void)
 	printf("		   -scope                  :   [ON/OFF] without the power constraint, write only the part of the good circuit the target faults use. ON is default. \n");
 
 	printf("		   -const                  :   [ON/OFF] find signals that are always the same value and use them in the necessary assignments. OFF is default (no measured effect). \n");
+
+	printf("		   -learn                  :   [ON/OFF] use static learning (indirect implications) in the necessary assignments. OFF is default. \n");
 
 	printf("\n		>> experimental (all OFF by default) \n");
 	printf("		   -fp                     :   [ON/OFF] fault-propagation variables for the primary fault \n");

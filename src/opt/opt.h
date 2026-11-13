@@ -54,6 +54,8 @@ typedef struct Option
 
 	bool  constants;		  /**< -const        ON: いつも同じ値の信号線を検出して、必須割当てに使う */
 
+	bool  learn;			  /**< -learn        ON: 静的学習の間接含意を必須割当てに使う */
+
 	/* 実験的な機能 */
 	bool  fault_propagation;  /**< -fp           一次故障に故障伝搬変数の制約を加える */
 	bool  cps;				  /**< -cps          故障シミュレーションで1件も検出できなかったら，次は単一目標にする */
